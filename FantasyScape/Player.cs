@@ -55,11 +55,11 @@ namespace FantasyScape {
 		}
 	
 		private float LookingAtX(float s){
-			return (float) ((Math.Cos(xrot) * Math.Cos(yrot) * s) + xpos);
+			return (float)((-Math.Cos(xrot) * Math.Cos(yrot) * s) + xpos);
 		}
 
 		private float LookingAtY(float s) {
-			return (float)((-Math.Sin(xrot) * Math.Cos(yrot) * s) + ypos);
+			return (float)((Math.Sin(xrot) * Math.Cos(yrot) * s) + ypos);
 		}
 
 		private float LookingAtZ(float s){
@@ -74,7 +74,7 @@ namespace FantasyScape {
 				GraphicsManager.SetCamera(new Vector3d(xpos + 20, ypos + 20, zpos + 20));
 				GraphicsManager.SetLookAt(new Vector3d(xpos, ypos, zpos));
 			} else {
-				GraphicsManager.SetCamera(new Vector3d(xpos, ypos + PlayerHeight, zpos));
+				GraphicsManager.SetCamera(new Vector3d(xpos, ypos, zpos + PlayerHeight));
 				GraphicsManager.SetLookAt(new Vector3d(LookingAtX(1), LookingAtY(1), LookingAtZ(1)));
 			}
 			Vector3 pos = new Vector3((float)(xpos + 3 * (xpos - LookingAtX(1))),

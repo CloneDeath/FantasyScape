@@ -31,19 +31,20 @@ namespace FantasyScape {
 		}
 
 		public override void update(int x, int y, int z, World world) {
-			moveDown(x, y, z - 1, world);
+			/*moveDown(x, y, z - 1, world);
 			if (level > minLevel) {
 				moveTo(x + 1, y, z, world);
 				moveTo(x - 1, y, z, world);
 				moveTo(x, y + 1, z, world);
 				moveTo(x, y - 1, z, world);
-			}
+			}*/
 		}
 
 		public override void postUpdate(int x, int y, int z, World world) {
-			if (level <= minLevel) {
-				world.removeBlock(x, y, z);
-			}
+			//if (level <= minLevel) {
+			//	world.removeBlock(x, y, z);
+			//}
+			base.postUpdate(x, y, z, world);
 		}
 
 		public void moveDown(int x, int y, int z, World world) {

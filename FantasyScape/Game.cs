@@ -22,7 +22,7 @@ namespace FantasyScape {
 	
 		public const int FINDGAME = 4;
 		public const int LOBBY = 5;
-	
+
 		int Mode = MAINMENU;
 	
 		bool Multiplayer = false;
@@ -30,7 +30,7 @@ namespace FantasyScape {
 
 		WindowControl ConstructMainMenu() {
 			WindowControl MainMenu = new WindowControl(MainCanvas.GetCanvas());
-			MainMenu.SetSize(100, 100);
+			MainMenu.SetSize(300, 300);
 
 			Button SinglePlayer = new Button(MainMenu);
 			SinglePlayer.SetText("Single Player");
