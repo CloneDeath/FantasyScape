@@ -190,17 +190,17 @@ namespace FantasyScape {
 		}
 
 		public void draw(Player p) {
-			int ViewDistance = 20;
+			int ViewDistance = 100;
 			for (int i = 0; i < exposedBlocks.Count(); i++) {
 				int[] loc = exposedLocations[i];
 				if (Math.Abs(p.xpos - loc[0]) < ViewDistance &&
 						Math.Abs(p.ypos - loc[1]) < ViewDistance &&
 						Math.Abs(p.zpos - loc[2]) < ViewDistance) {
 					Vector3 box = new Vector3(loc[0] + 0.5f, loc[1] + 0.5f, loc[2] + 0.5f);
-					//if (p.frustum.pointInFrustum(box) != Frustum.OUTSIDE) {
+					if (p.frustum.pointInFrustum(box) != Frustum.OUTSIDE) {
 						exposedBlocks[i].draw(loc[0], loc[1], loc[2], this);
 						//Console.WriteLine("x:"+loc[0]+" y:"+loc[1]+" z:"+loc[2]);
-					//}
+					}
 				}
 			}
 		}
@@ -237,11 +237,11 @@ namespace FantasyScape {
 			int yat = (int)y;
 			int zat = (int)z;
 
-			if (xat >= XSize || xat < 0 || zat >= ZSize || zat < 0 || yat < 0) {
+			if (xat >= XSize || xat < 0 || yat >= YSize || yat < 0 || zat < 0) {
 				return true;
 			}
 
-			if (yat >= YSize) {
+			if (zat >= ZSize) {
 				return false;
 			}
 

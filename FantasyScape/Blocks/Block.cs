@@ -27,26 +27,26 @@ namespace FantasyScape {
 		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex, float height) {
 			GL.PushMatrix();
 			GL.Translate(x, y, z);
-			GL.Scale(1.0f, height, 1.0f);
+			GL.Scale(1.0f, 1.0f, height);
 			GL.Color3(1.0f, 1.0f, 1.0f);
 
 			//GL11.glColor4f(1.0f,1.0f,1.0f, 1.0f);                 // Set The Color To Blue One Time Only
 			GL.BindTexture(TextureTarget.Texture2D, SideTex.ID);
 			GL.Begin(BeginMode.Quads);                        // Draw A Quad
 			//Back
-			if (!world.isSolid(x, y, z - 1)) {
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
+			if (!world.isSolid(x, y - 1, z)) {
+				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
+				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
+				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
+				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
 			}
 
 			//Front
-			if (!world.isSolid(x, y, z + 1)) {
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
+			if (!world.isSolid(x, y + 1, z)) {
+				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
+				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
+				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
+				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
 			}
 
 			//Left
@@ -72,22 +72,22 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, BottomTex.ID);
 			GL.Begin(BeginMode.Quads);
 			//Bottom
-			if (!world.isSolid(x, y - 1, z)) {
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
+			if (!world.isSolid(x, y, z - 1)) {
+				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
+				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
+				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
+				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
 			}
 			GL.End();
 
 			GL.BindTexture(TextureTarget.Texture2D, TopTex.ID);
 			GL.Begin(BeginMode.Quads);
 			//Top
-			if (!world.isSolid(x, y + 1, z)) {
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
+			if (!world.isSolid(x, y, z + 1)) {
+				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
+				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
+				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
+				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
 			}
 			GL.End();
 			GL.PopMatrix();

@@ -11,6 +11,7 @@ namespace FantasyScape {
 		public double xpos, ypos, zpos;
 		double xrot, yrot;
 		double xspeed, yspeed, zspeed;
+		double Gravity = 0.05;
 	
 		World world;
 	
@@ -24,27 +25,28 @@ namespace FantasyScape {
 			frustum.setCamInternals(angle, ratio, nearD, farD);
 		}
 	
-		public Player(float x, float z, World w){
-			float Angle = 90;
+		public Player(float x, float y, World w){
+			float Angle = 45;
 			float Ratio = (float)GraphicsManager.WindowWidth / (float)GraphicsManager.WindowHeight;
 			float nearD = 0.01f;
-			float farD = 100.0f;
-			Ratio = 0.6f;
+			float farD = 50.0f;
+			Ratio = 0.1f;
+			//Angle = 1000;
 			Angle = Angle / Ratio + 20f;
 
 			setCamInternals(Angle, GraphicsManager.WindowWidth / GraphicsManager.WindowHeight, nearD, farD);
-			ypos = 0;
+			zpos = 0;
 			xpos = x;
-			zpos = z;
+			ypos = y;
 			world = w;
 		
 			xspeed = 0;
 			yspeed = 0;
 			zspeed = 0;
 		
-			for (int i = w.YSize; i >= 0; i--){
-				if (w.isSolid(x, i, z)){
-					ypos = i+1;
+			for (int i = w.ZSize; i >= 0; i--){
+				if (w.isSolid(x, y, i)){
+					zpos = i+1;
 					break;
 				}
 			}
@@ -63,7 +65,7 @@ namespace FantasyScape {
 		}
 
 		private float LookingAtZ(float s){
-			return (float)(Math.Sin(yrot)*s + PlayerHeight + zpos);
+			return (float)(-Math.Sin(yrot)*s + PlayerHeight + zpos);
 		}
 	
 		
@@ -77,11 +79,12 @@ namespace FantasyScape {
 				GraphicsManager.SetCamera(new Vector3d(xpos, ypos, zpos + PlayerHeight));
 				GraphicsManager.SetLookAt(new Vector3d(LookingAtX(1), LookingAtY(1), LookingAtZ(1)));
 			}
-			Vector3 pos = new Vector3((float)(xpos + 3 * (xpos - LookingAtX(1))),
-					(float)(ypos + PlayerHeight + 0 * (ypos - LookingAtY(1))),
-					(float)(zpos + 3 * (zpos - LookingAtZ(1))));
+			Vector3 pos = new Vector3(
+					(float)(xpos + 3 * (xpos - LookingAtX(1))),
+					(float)(ypos + 3 * (ypos - LookingAtY(1))),
+					(float)(zpos + 0 * (zpos - LookingAtZ(1)) + PlayerHeight));
 			Vector3 lat = new Vector3(LookingAtX(1), LookingAtY(1), LookingAtZ(1));
-			Vector3 up = new Vector3(0, 1, 0);
+			Vector3 up = new Vector3(0, 0, 1);
 			frustum.setCamDef(pos,lat,up);
 			if (KeyboardManager.IsDown(Key.F2)){
 				//frustum.drawPlanes();
@@ -93,39 +96,37 @@ namespace FantasyScape {
 	
 		public void update(){
 			double newx = xpos;
-			double newz = zpos;
+			double newy = ypos;
 		
 			if (KeyboardManager.IsDown(Key.W)){
-				newx += Math.Cos(xrot)*Speed;
-				newz -= Math.Sin(xrot)*Speed;
-
+				newx -= Math.Cos(xrot)*Speed;
+				newy += Math.Sin(xrot)*Speed;
 			}
 			if (KeyboardManager.IsDown(Key.S)) {
-				newx -= Math.Cos(xrot)*Speed;
-				newz += Math.Sin(xrot)*Speed;
+				newx += Math.Cos(xrot)*Speed;
+				newy -= Math.Sin(xrot)*Speed;
 			}
 			if (KeyboardManager.IsDown(Key.A)) {
 				newx += Math.Cos(xrot+(Math.PI/2))*Speed;
-				newz -= Math.Sin(xrot+(Math.PI/2))*Speed;
+				newy -= Math.Sin(xrot+(Math.PI/2))*Speed;
 			}
 			if (KeyboardManager.IsDown(Key.D)) {
 				newx += Math.Cos(xrot-(Math.PI/2))*Speed;
-				newz -= Math.Sin(xrot-(Math.PI/2))*Speed;
+				newy -= Math.Sin(xrot-(Math.PI/2))*Speed;
 			}
-		
-			if (!world.isSolid(newx, ypos+1.5f, newz) && !world.isSolid(newx, ypos+0.5f, newz))
-			{
+
+			if (!world.isSolid(newx, newy, zpos + 1.5f) && !world.isSolid(newx, newy, zpos + 0.5f)) {
 				xpos = newx;
-				zpos = newz;
+				ypos = newy;
 			} else {
-				if (!world.isSolid(newx, ypos+1.5f, zpos) && !world.isSolid(newx, ypos+0.5f, zpos)){
+				if (!world.isSolid(newx, ypos, zpos + 1.5f) && !world.isSolid(newx, ypos, zpos + 0.5f)) {
 					xpos = newx;
-				} else if (!world.isSolid(xpos, ypos+1.5f, newz) && !world.isSolid(xpos, ypos+0.5f, newz)){
-					zpos = newz;
+				} else if (!world.isSolid(xpos, newy, zpos + 1.5f) && !world.isSolid(xpos, newy, zpos + 0.5f)) {
+					ypos = newy;
 				} 
 			}
 		
-			xrot -= (MouseManager.GetMousePositionWindows().X - 320) / 150.0f;
+			xrot += (MouseManager.GetMousePositionWindows().X - 320) / 150.0f;
 			yrot += (MouseManager.GetMousePositionWindows().Y - 240) / 150.0f;
 		
 			if (yrot >= Math.PI/2){
@@ -136,26 +137,25 @@ namespace FantasyScape {
 		
 			MouseManager.SetMousePositionWindows(320, 240);
 		
-			if (!world.isSolid(xpos, ypos+(yspeed), zpos)){
-				yspeed -= (0.1);
+			if (!world.isSolid(xpos, ypos, zpos + zspeed)){
+				zspeed -= Gravity;
 			}
-			if (yspeed < 0){
-				if (world.isSolid(xpos, ypos+(yspeed), zpos)){
-					ypos = (float)(Math.Floor(ypos+(yspeed)))+1.0f;
-					yspeed = 0;
+			if (zspeed < 0){
+				if (world.isSolid(xpos, ypos, zpos + zspeed)){
+					zpos = (float)(Math.Floor(zpos+(zspeed)))+1.0f;
+					zspeed = 0;
 				}
-			} else if (yspeed > 0) {
-				if (world.isSolid(xpos, ypos+(yspeed)+PlayerHeight, zpos)){
-					ypos = (float)(Math.Floor(ypos+(yspeed)+PlayerHeight))-1.0f;
-					yspeed = 0;
+			} else if (zspeed > 0) {
+				if (world.isSolid(xpos, ypos, zpos + (zspeed) + PlayerHeight)) {
+					zpos = (float)(Math.Floor(zpos+(zspeed)+PlayerHeight))-1.0f;
+					zspeed = 0;
 				}
 			}
 		
-			ypos += yspeed;
+			zpos += zspeed;
 		
-			if (KeyboardManager.IsDown(Key.Space) && 
-					world.isSolid(xpos, ypos-1, zpos) && !world.isSolid(xpos, ypos+2, zpos)){
-				yspeed = 1;
+			if (KeyboardManager.IsDown(Key.Space) && world.isSolid(xpos, ypos, zpos - 1) && !world.isSolid(xpos, ypos, zpos + 2)){
+				zspeed = 1;
 			}
 		
 			if (MouseManager.IsPressed(MouseButton.Left)){
@@ -179,8 +179,8 @@ namespace FantasyScape {
 		
 			Vector3 source = new Vector3();
 			source.X = (float)xpos;
-			source.Y = (float)(ypos + PlayerHeight);
-			source.Z = (float)zpos;
+			source.Y = (float)ypos;
+			source.Z = (float)(zpos + PlayerHeight);
 		
 			Vector3 dest = new Vector3();
 			dest.X = LookingAtX(CDist);
@@ -190,11 +190,11 @@ namespace FantasyScape {
 			for (int x = -CDist; x <= CDist; x++){
 				for (int y = -CDist; y <= CDist; y++){
 					for (int z = -CDist; z <= CDist; z++){
-						if (world.isSolid(xpos + x, ypos + y + PlayerHeight, zpos + z)){
+						if (world.isSolid(xpos + x, ypos + y, zpos + z + PlayerHeight)) {
 							Vector3 B1 = new Vector3();
 							B1.X = (int)(xpos+x);
-							B1.Y = (int)(ypos+y+PlayerHeight);
-							B1.Z = (int)(zpos+z);
+							B1.Y = (int)(ypos+y);
+							B1.Z = (int)(zpos + z + PlayerHeight);
 						
 							Vector3 B2 = new Vector3();
 							B2.X = B1.X + 1;
@@ -206,8 +206,8 @@ namespace FantasyScape {
 								if (length < bestDist){
 									bestDist = length;
 									bestX = (int)(xpos+x);
-									bestY = (int)(ypos+y+PlayerHeight);
-									bestZ = (int)(zpos+z);
+									bestY = (int)(ypos+y);
+									bestZ = (int)(zpos + z + PlayerHeight);
 								}
 							}
 						}
@@ -236,8 +236,8 @@ namespace FantasyScape {
 		
 			Vector3 source = new Vector3();
 			source.X = (float)xpos;
-			source.Y = (float)(ypos + PlayerHeight);
-			source.Z = (float)zpos;
+			source.Y = (float)ypos;
+			source.Z = (float)(zpos + PlayerHeight);
 		
 			Vector3 dest = new Vector3();
 			dest.X = LookingAtX(CDist);
@@ -247,11 +247,11 @@ namespace FantasyScape {
 			for (int x = -CDist; x <= CDist; x++){
 				for (int y = -CDist; y <= CDist; y++){
 					for (int z = -CDist; z <= CDist; z++){
-						if (world.isSolid(xpos + x, ypos + y + PlayerHeight, zpos + z)){
+						if (world.isSolid(xpos + x, ypos + y, zpos + z + PlayerHeight)) {
 							Vector3 B1 = new Vector3();
 							B1.X = (int)(xpos+x);
-							B1.Y = (int)(ypos+y+PlayerHeight);
-							B1.Z = (int)(zpos+z);
+							B1.Y = (int)(ypos+y);
+							B1.Z = (int)(zpos + z + PlayerHeight);
 						
 							Vector3 B2 = new Vector3();
 							B2.X = B1.X + 1;
@@ -260,8 +260,8 @@ namespace FantasyScape {
 						
 							int clb = CheckLineBox(B1, B2, source, dest);
 							int[] temp = getBlockSide((int)(xpos+x), 
-									(int)(ypos+y+PlayerHeight), 
-									(int)(zpos+z), 
+									(int)(ypos+y),
+									(int)(zpos + z + PlayerHeight), 
 									clb);
 							if (clb != NONE && clb != INSIDE && 
 									world.blockAt(temp[0],temp[1], temp[2]) == null){
@@ -270,8 +270,8 @@ namespace FantasyScape {
 								if (length < bestDist){
 									bestDist = length;
 									bestX = (int)(xpos+x);
-									bestY = (int)(ypos+y+PlayerHeight);
-									bestZ = (int)(zpos+z);
+									bestY = (int)(ypos+y);
+									bestZ = (int)(zpos + z + PlayerHeight);
 									BestSide = clb;
 								}
 							}

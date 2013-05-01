@@ -72,8 +72,8 @@ namespace FantasyScape {
 
 			ftl = fc + Mult(Y, (fh)) - Mult(X, (fw));
 			ftr = fc + Mult(Y, (fh)) + Mult(X, (fw));
-			fbl = fc + Mult(Y, (fh)) - Mult(X, (fw));
-			fbr = fc + Mult(Y, (fh)) + Mult(X, (fw));
+			fbl = fc - Mult(Y, (fh)) - Mult(X, (fw));
+			fbr = fc - Mult(Y, (fh)) + Mult(X, (fw));
 
 			pl[TOP].set3Points(ntr, ntl, ftl);
 			pl[BOTTOM].set3Points(nbl, nbr, fbr);
