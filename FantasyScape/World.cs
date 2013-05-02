@@ -102,6 +102,15 @@ namespace FantasyScape {
 			return blocks[x, y, z];
 		}
 
+		public void ExposeBlocksAt(int x, int y, int z) {
+			exposeBlock(x + 1, y, z);
+			exposeBlock(x - 1, y, z);
+			exposeBlock(x, y + 1, z);
+			exposeBlock(x, y - 1, z);
+			exposeBlock(x, y, z + 1);
+			exposeBlock(x, y, z - 1);
+		}
+
 		public void removeBlock(int x, int y, int z) {
 			if (blockAt(x, y, z) != null) {
 				int remi = exposedBlocks.IndexOf(blocks[x, y, z]);
@@ -112,12 +121,8 @@ namespace FantasyScape {
 				removeUpdate(x, y, z);
 
 				blocks[x, y, z] = null;
-				exposeBlock(x + 1, y, z);
-				exposeBlock(x - 1, y, z);
-				exposeBlock(x, y + 1, z);
-				exposeBlock(x, y - 1, z);
-				exposeBlock(x, y, z + 1);
-				exposeBlock(x, y, z - 1);
+
+				ExposeBlocksAt(x, y, z);
 
 				refreshUpdateBlocks(x, y, z);
 			}

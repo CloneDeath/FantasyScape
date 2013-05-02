@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{57B58ACA-44FE-47E5-9CE6-1AD034E7942F}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{9647957C-A579-4E16-9671-E77069FD5B54}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FantasyScape</RootNamespace>
-    <AssemblyName>FantasyScape</AssemblyName>
+    <RootNamespace>FantasyScape.Client</RootNamespace>
+    <AssemblyName>FantasyScape.Client</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -34,19 +34,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GLImp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="GLImp">
       <HintPath>..\DLLs\GLImp.dll</HintPath>
     </Reference>
-    <Reference Include="Gwen, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Gwen">
       <HintPath>..\DLLs\Gwen.dll</HintPath>
     </Reference>
-    <Reference Include="Gwen.Renderer.OpenTK, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Gwen.Renderer.OpenTK">
       <HintPath>..\DLLs\Gwen.Renderer.OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="Lidgren.Network">
@@ -69,29 +66,18 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Blocks\Block.cs" />
-    <Compile Include="Blocks\BlockDirt.cs" />
-    <Compile Include="Blocks\BlockGranite.cs" />
-    <Compile Include="Blocks\BlockGrass.cs" />
-    <Compile Include="Blocks\BlockWater.cs" />
-    <Compile Include="Math\Frustum.cs" />
-    <Compile Include="Game.cs" />
-    <Compile Include="MainCanvas.cs" />
-    <Compile Include="MapGenerator.cs" />
-    <Compile Include="MenuManager.cs" />
-    <Compile Include="Math\PerlinMap.cs" />
-    <Compile Include="Math\Plane.cs" />
-    <Compile Include="Math\Utility.cs" />
-    <Compile Include="TextureManagement\NetTexture.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextureManagement\Textures.cs" />
-    <Compile Include="World.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FantasyScape\FantasyScape.csproj">
+      <Project>{57B58ACA-44FE-47E5-9CE6-1AD034E7942F}</Project>
+      <Name>FantasyScape</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy /E /C /Y "$(ProjectDir)..\Data\*.*" "$(TargetDir)Data\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

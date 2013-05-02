@@ -30,29 +30,35 @@ namespace FantasyScape {
 			}
 		}
 
+		bool WaterUpdated = false;
+
 		public override void update(int x, int y, int z, World world) {
-			moveDown(x, y, z - 1, world);
+			WaterUpdated = moveDown(x, y, z - 1, world);
 			if (level > minLevel) {
-				moveTo(x + 1, y, z, world);
-				moveTo(x - 1, y, z, world);
-				moveTo(x, y + 1, z, world);
-				moveTo(x, y - 1, z, world);
+				WaterUpdated |= moveTo(x + 1, y, z, world);
+				WaterUpdated |= moveTo(x - 1, y, z, world);
+				WaterUpdated |= moveTo(x, y + 1, z, world);
+				WaterUpdated |= moveTo(x, y - 1, z, world);
 			}
 		}
 
 		public override void postUpdate(int x, int y, int z, World world) {
+			if (!WaterUpdated) {
+				world.removeUpdate(x, y, z);
+			}
 			if (level <= minLevel) {
 				world.removeBlock(x, y, z);
 			}
 		}
 
-		public void moveDown(int x, int y, int z, World world) {
+		public bool moveDown(int x, int y, int z, World world) {
 			if (!world.isSolid(x, y, z)) {
 				if (world.blockAt(x, y, z) == null) {
 					BlockWater b = new BlockWater();
 					world.addBlock(x, y, z, b);
 					b.level = level;
 					level = 0;
+					return true;
 				} else {
 					Block b = world.blockAt(x, y, z);
 					if (b.BlockID == 1) {
@@ -67,19 +73,22 @@ namespace FantasyScape {
 								bw.level += diff;
 								level -= diff;
 							}
+							return true;
 						}
 					}
 				}
 			}
+			return false;
 		}
 
-		private void moveTo(int x, int y, int z, World world) {
+		private bool moveTo(int x, int y, int z, World world) {
 			if (!world.isSolid(x, y, z)) {
 				if (world.blockAt(x, y, z) == null) {
 					BlockWater b = new BlockWater();
 					world.addBlock(x, y, z, b);
 					b.level = level / 4.0f;
 					level = level * 3.0f / 4.0f;
+					return true;
 				} else {
 					Block b = world.blockAt(x, y, z);
 					if (b.BlockID == 1) {
@@ -94,10 +103,12 @@ namespace FantasyScape {
 								bw.level += cgive;
 								level -= cgive;
 							}
+							return true;
 						}
 					}
 				}
 			}
+			return false;
 		}
 	}
 }

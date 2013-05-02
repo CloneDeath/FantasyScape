@@ -29,10 +29,10 @@ namespace FantasyScape {
 			float Angle = 45;
 			float Ratio = (float)GraphicsManager.WindowWidth / (float)GraphicsManager.WindowHeight;
 			float nearD = 0.01f;
-			float farD = 50.0f;
+			float farD = 100.0f;
 			Ratio = 0.1f;
 			//Angle = 1000;
-			Angle = Angle / Ratio + 20f;
+			Angle = Angle / Ratio;
 
 			setCamInternals(Angle, GraphicsManager.WindowWidth / GraphicsManager.WindowHeight, nearD, farD);
 			zpos = 0;
@@ -79,6 +79,7 @@ namespace FantasyScape {
 				GraphicsManager.SetCamera(new Vector3d(xpos, ypos, zpos + PlayerHeight));
 				GraphicsManager.SetLookAt(new Vector3d(LookingAtX(1), LookingAtY(1), LookingAtZ(1)));
 			}
+
 			Vector3 pos = new Vector3(
 					(float)(xpos + 3 * (xpos - LookingAtX(1))),
 					(float)(ypos + 3 * (ypos - LookingAtY(1))),

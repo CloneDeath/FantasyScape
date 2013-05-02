@@ -12,7 +12,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace FantasyScape
 {
-	class MainCanvas {
+	public class MainCanvas {
 		private static Gwen.Input.OpenTK input;
 		private static Gwen.Renderer.OpenTK renderer;
 		private static Gwen.Skin.Base skin;

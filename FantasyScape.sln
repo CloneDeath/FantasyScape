@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasyScape", "FantasyScape\FantasyScape.csproj", "{57B58ACA-44FE-47E5-9CE6-1AD034E7942F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasyScapeClient", "FantasyScapeClient\FantasyScapeClient.csproj", "{9647957C-A579-4E16-9671-E77069FD5B54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FantasyScapeServer", "FantasyScapeServer\FantasyScapeServer.csproj", "{9829064A-877E-4A28-8719-66700F53548B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +17,14 @@ Global
 		{57B58ACA-44FE-47E5-9CE6-1AD034E7942F}.Debug|x86.Build.0 = Debug|x86
 		{57B58ACA-44FE-47E5-9CE6-1AD034E7942F}.Release|x86.ActiveCfg = Release|x86
 		{57B58ACA-44FE-47E5-9CE6-1AD034E7942F}.Release|x86.Build.0 = Release|x86
+		{9647957C-A579-4E16-9671-E77069FD5B54}.Debug|x86.ActiveCfg = Debug|x86
+		{9647957C-A579-4E16-9671-E77069FD5B54}.Debug|x86.Build.0 = Debug|x86
+		{9647957C-A579-4E16-9671-E77069FD5B54}.Release|x86.ActiveCfg = Release|x86
+		{9647957C-A579-4E16-9671-E77069FD5B54}.Release|x86.Build.0 = Release|x86
+		{9829064A-877E-4A28-8719-66700F53548B}.Debug|x86.ActiveCfg = Debug|x86
+		{9829064A-877E-4A28-8719-66700F53548B}.Debug|x86.Build.0 = Debug|x86
+		{9829064A-877E-4A28-8719-66700F53548B}.Release|x86.ActiveCfg = Release|x86
+		{9829064A-877E-4A28-8719-66700F53548B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
