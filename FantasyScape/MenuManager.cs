@@ -42,11 +42,6 @@ namespace FantasyScape {
 				Multiplayer = false;
 			};
 
-			Button HostGame = new Button(MainMenu);
-			HostGame.SetText("Host Game");
-			HostGame.SetPosition(10, 40);
-			HostGame.SetSize(220, 20);
-
 			Button JoinGame = new Button(MainMenu);
 			JoinGame.SetText("Join Game");
 			JoinGame.SetPosition(10, 70);
@@ -79,6 +74,8 @@ namespace FantasyScape {
 
 		WindowControl ConstructFindGame() {
 			WindowControl FindGame = new WindowControl(MainCanvas.GetCanvas());
+			FindGame.SetPosition(10, 10);
+			FindGame.SetSize(300, 300);
 
 			Button Connect = new Button(FindGame);
 			Connect.SetText("Connect");
@@ -112,7 +109,6 @@ namespace FantasyScape {
 				FindGame.Hide();
 			};
 
-			FindGame.SetPosition(10, 10);
 			return FindGame;
 		}
 		WindowControl FindGame;

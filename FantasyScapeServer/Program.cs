@@ -9,7 +9,7 @@ namespace FantasyScape.Server {
 		static Game game;
 		static NetServer Server;
 		static void Main(string[] args) {
-			game = new Game();
+			game = new Game(GameMode.Server);
 
 			NetPeerConfiguration Configuration = new NetPeerConfiguration("FantasyScape");
 			Configuration.Port = 54987;

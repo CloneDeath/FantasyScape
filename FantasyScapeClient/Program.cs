@@ -12,7 +12,7 @@ namespace FantasyScape.Client {
 
 		static void Main(string[] args){
 			GraphicsManager.EnableMipmap = false;
-			game = new Game();
+			game = new Game(GameMode.Client);
 
 			GraphicsManager.SetBackground(Color.FromArgb(200, 200, 255));
 			

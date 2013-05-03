@@ -15,9 +15,9 @@ namespace FantasyScape {
 		public override void draw(float x, float y, float z, World world) {
 			if (level > minLevel) {
 				draw(x, y, z, world,
-						Textures.Water,
-						Textures.Water,
-						Textures.Water,
+						Textures.GetTexture("Water"),
+						Textures.GetTexture("Water"),
+						Textures.GetTexture("Water"),
 						level);
 			}
 		}

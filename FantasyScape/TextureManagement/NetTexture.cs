@@ -7,7 +7,7 @@ using Lidgren.Network;
 using System.Drawing;
 
 namespace FantasyScape {
-	class NetTexture : Texture {
+	public class NetTexture : Texture {
 		Bitmap img;
 
 		public NetTexture(byte[] data, string name) : base(GetBitmap(data), name) {

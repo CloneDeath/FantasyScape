@@ -13,18 +13,23 @@ namespace FantasyScape {
 
 		MenuManager Menu = new MenuManager();
 
-		public Game() {
+		GameMode GameMode;
+
+		public Game(GameMode mode) {
+			this.GameMode = mode;
 			Initialize();
 			MouseManager.SetMousePositionWindows(320, 240);
 		}
 
 		private void Initialize() {
-			LoadTextures();
+			if (GameMode == GameMode.Server) {
+				LoadTextures();
+			}
 			InitWorld();
 		}
 
 		private void LoadTextures() {
-			Textures.Initialize();
+			Textures.ServerLoadTextures();
 			Console.WriteLine("Done Loading Textures");
 		}
 
@@ -32,8 +37,6 @@ namespace FantasyScape {
 			world = new World();
 			player = new Player(world.XSize/2,world.ZSize/2, world);
 			Console.WriteLine("World Generated");
-			//DirectionalLightSource dls = new DirectionalLightSource(objRoot);
-			//AmbientLightSource als = new AmbientLightSource(objRoot);
 		}
 
 		public void Update() {

@@ -7,9 +7,9 @@ namespace FantasyScape {
 	class BlockGranite : Block {
 		public override void draw(float x, float y, float z, World world) {
 			draw(x, y, z, world,
-					Textures.Granite,
-					Textures.Granite,
-					Textures.Granite);
+					Textures.GetTexture("Granite"),
+					Textures.GetTexture("Granite"),
+					Textures.GetTexture("Granite"));
 		}
 	}
 }

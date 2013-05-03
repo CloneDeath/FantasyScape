@@ -17,7 +17,7 @@ namespace FantasyScape {
 		}
 
 		public virtual void draw(float x, float y, float z, World world) {
-			draw(x, y, z, world, Textures.Dirt, Textures.Dirt, Textures.Dirt);
+			draw(x, y, z, world, Textures.GetTexture("Dirt"), Textures.GetTexture("Dirt"), Textures.GetTexture("Dirt"));
 		}
 
 		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex) {

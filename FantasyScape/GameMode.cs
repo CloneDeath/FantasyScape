@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace FantasyScape {
-	enum GameState {
+	public enum GameMode {
 		Client, Server
 	}
 }
