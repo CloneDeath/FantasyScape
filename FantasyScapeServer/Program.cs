@@ -29,9 +29,12 @@ namespace FantasyScape.Server {
 		private static void HandleMessages(List<NetIncomingMessage> Messages) {
 			foreach (NetIncomingMessage Message in Messages) {
 				if (Message.MessageType == NetIncomingMessageType.Data) {
-					string RequestType = Message.ReadString();
-					if (RequestType == "Textures") {
-						Textures.SendTextures(Message.SenderConnection, Server);
+					string Type = Message.ReadString();
+					if (Type == "Request") {
+						string RequestType = Message.ReadString();
+						if (RequestType == "Textures") {
+							Textures.SendTextures(Message.SenderConnection, Server);
+						}
 					}
 				}
 			}

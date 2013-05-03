@@ -37,5 +37,9 @@ namespace FantasyScape {
 				tex.Send(netConnection, Server);
 			}
 		}
+
+		public static void AddTexture(NetTexture nettex) {
+			Textures.Add(nettex);
+		}
 	}
 }

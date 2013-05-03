@@ -74,6 +74,7 @@
     <Compile Include="Blocks\BlockGranite.cs" />
     <Compile Include="Blocks\BlockGrass.cs" />
     <Compile Include="Blocks\BlockWater.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MainCanvas.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Math\PerlinMap.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />
+    <Compile Include="SequenceChannels.cs" />
     <Compile Include="TextureManagement\NetTexture.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

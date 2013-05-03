@@ -10,12 +10,12 @@ namespace FantasyScape.Client {
 	class Program {
 		static Game game;
 
-		static void Main(string[] args) {
+		static void Main(string[] args){
 			GraphicsManager.EnableMipmap = false;
 			game = new Game();
 
 			GraphicsManager.SetBackground(Color.FromArgb(200, 200, 255));
-
+			
 			GraphicsManager.SetTitle("FantasyScape");
 			GraphicsManager.SetResolution(640, 480);
 
