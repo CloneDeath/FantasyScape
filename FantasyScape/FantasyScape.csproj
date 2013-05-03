@@ -79,7 +79,6 @@
     <Compile Include="Game.cs" />
     <Compile Include="MainCanvas.cs" />
     <Compile Include="MapGenerator.cs" />
-    <Compile Include="MenuManager.cs" />
     <Compile Include="Math\PerlinMap.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />

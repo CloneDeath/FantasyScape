@@ -16,9 +16,6 @@ namespace FantasyScape {
 
 		public int Mode = MAINMENU;
 
-		bool Multiplayer = false;
-		bool Host = true;
-
 		public MenuManager() {
 			MainMenu = ConstructMainMenu();
 			MainMenu.Show();
@@ -38,8 +35,6 @@ namespace FantasyScape {
 			SinglePlayer.Clicked += delegate(Base caller) {
 				Mode = SINGLEPLAYER;
 				MainMenu.Hide();
-				Host = true;
-				Multiplayer = false;
 			};
 
 			Button JoinGame = new Button(MainMenu);
@@ -47,8 +42,6 @@ namespace FantasyScape {
 			JoinGame.SetPosition(10, 70);
 			JoinGame.SetSize(220, 20);
 			JoinGame.Clicked += delegate(Base sender) {
-				Multiplayer = true;
-				Host = false;
 				//IPAddress.selected = true;
 
 				MainMenu.Hide();

@@ -11,8 +11,6 @@ namespace FantasyScape {
 		World world;
 		Player player;
 
-		MenuManager Menu = new MenuManager();
-
 		GameMode GameMode;
 
 		public Game(GameMode mode) {
@@ -40,30 +38,13 @@ namespace FantasyScape {
 		}
 
 		public void Update() {
-			if (Menu.Mode == MenuManager.SINGLEPLAYER) {
-				player.update();
-				world.update();
-			}
-
-			if (KeyboardManager.IsPressed(Key.Escape)){
-				MainCanvas.Dispose();
-				Environment.Exit(0);
-			}
-			if (KeyboardManager.IsPressed(Key.F11)){
-				//Toggle Full Screen
-				if (GraphicsManager.windowstate != OpenTK.WindowState.Fullscreen) {
-					GraphicsManager.SetWindowState(OpenTK.WindowState.Fullscreen);
-				} else {
-					GraphicsManager.SetWindowState(OpenTK.WindowState.Normal);
-				}
-			}
+			player.update();
+			world.update();
 		}
 
 		public void Draw() {
-			if (Menu.Mode == MenuManager.SINGLEPLAYER || Menu.Mode == MenuManager.HOSTGAME || Menu.Mode == MenuManager.JOINGAME) {
-				player.updateCamera();
-				world.draw(player);
-			}
+			player.updateCamera();
+			world.draw(player);
 		}
 	}
 }
