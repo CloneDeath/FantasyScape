@@ -27,23 +27,24 @@ namespace FantasyScape {
 		WindowControl ConstructMainMenu() {
 			WindowControl MainMenu = new WindowControl(MainCanvas.GetCanvas());
 			MainMenu.SetSize(300, 300);
+			MainMenu.ClampMovement = true;
+			MainMenu.IsClosable = false;
 
 			Button SinglePlayer = new Button(MainMenu);
 			SinglePlayer.SetText("Single Player");
 			SinglePlayer.SetPosition(10, 10);
 			SinglePlayer.SetSize(220, 20);
-			SinglePlayer.Clicked += delegate(Base caller) {
-				Mode = SINGLEPLAYER;
-				MainMenu.Hide();
-			};
+			//SinglePlayer.Clicked += delegate(Base caller) {
+			//    Mode = SINGLEPLAYER;
+			//    MainMenu.Hide();
+			//};
+			SinglePlayer.Disable();
 
 			Button JoinGame = new Button(MainMenu);
 			JoinGame.SetText("Join Game");
 			JoinGame.SetPosition(10, 70);
 			JoinGame.SetSize(220, 20);
 			JoinGame.Clicked += delegate(Base sender) {
-				//IPAddress.selected = true;
-
 				MainMenu.Hide();
 				FindGame.Show();
 
@@ -69,10 +70,12 @@ namespace FantasyScape {
 			WindowControl FindGame = new WindowControl(MainCanvas.GetCanvas());
 			FindGame.SetPosition(10, 10);
 			FindGame.SetSize(300, 300);
+			FindGame.ClampMovement = true;
+			FindGame.IsClosable = false;
 
 			Button Connect = new Button(FindGame);
 			Connect.SetText("Connect");
-			Connect.SetPosition(10, 420);
+			Connect.SetPosition(10, 200);
 			Connect.SetSize(200, 20);
 			/*if (Connect.isClicked()) {
 				client = new GameClient(IPAddress.text, Port.text);
@@ -88,13 +91,13 @@ namespace FantasyScape {
 			IPAddress.SetSize(260, 20);
 
 			TextBox Port = new TextBox(FindGame);
-			Port.SetText("4444");
+			Port.SetText("54987");
 			Port.SetPosition(10, 70);
 			Port.SetSize(260, 20);
 
 			Button Back = new Button(FindGame);
 			Back.SetText("Back");
-			Back.SetPosition(10, 450);
+			Back.SetPosition(10, 225);
 			Back.SetSize(200, 20);
 			Back.Clicked += delegate(Base sender) {
 				Mode = MAINMENU;
