@@ -18,6 +18,7 @@ namespace FantasyScape.Server {
 
 			/* Generate World */
 			game.GenerateWorld();
+			Console.WriteLine("World Generated");
 
 			/* Listen for Clients */
 			NetPeerConfiguration Configuration = new NetPeerConfiguration("FantasyScape");
@@ -25,26 +26,25 @@ namespace FantasyScape.Server {
 			Configuration.MaximumConnections = 20;
 			Server = new NetServer(Configuration);
 			Server.Start();
+			Console.WriteLine("Ready!");
 
 			/* Respond to Requests */
 			while (true) {
-				Server.WaitMessage(1000);
-				List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
-				if (Server.ReadMessages(Messages) > 0) {
-					HandleMessages(Messages);
+				NetIncomingMessage Message = Server.WaitMessage(1000);
+				if (Message != null) {
+					HandleMessages(Message);
 				}
 			}
 		}
 
-		private static void HandleMessages(List<NetIncomingMessage> Messages) {
-			foreach (NetIncomingMessage Message in Messages) {
-				if (Message.MessageType == NetIncomingMessageType.Data) {
-					string Type = Message.ReadString();
-					if (Type == "Request") {
-						string RequestType = Message.ReadString();
-						if (RequestType == "Textures") {
-							Textures.SendTextures(Message.SenderConnection, Server);
-						}
+		private static void HandleMessages(NetIncomingMessage Message) {
+			if (Message.MessageType == NetIncomingMessageType.Data) {
+				string Type = Message.ReadString();
+				if (Type == "Request") {
+					string RequestType = Message.ReadString();
+					if (RequestType == "Textures") {
+						Console.WriteLine("Sending Response for 'Request Textures'");
+						Textures.SendTextures(Message.SenderConnection, Server);
 					}
 				}
 			}

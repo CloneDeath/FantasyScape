@@ -5,6 +5,8 @@ using System.Text;
 using GLImp;
 using Gwen.Control;
 using OpenTK.Input;
+using Lidgren.Network;
+using System.Threading;
 
 namespace FantasyScape {
 	public class Game {
@@ -13,27 +15,51 @@ namespace FantasyScape {
 
 		GameMode GameMode;
 
+		public enum GameState {
+			NotReady, Connecting, Playing
+		}
+
+		public GameState State = GameState.NotReady;
+
+		NetClient Client;
+
 		public Game(GameMode mode) {
 			this.GameMode = mode;
-			if (this.GameMode == FantasyScape.GameMode.Client) {
-				MouseManager.SetMousePositionWindows(320, 240);
-			}
 		}
 
 		private void InitWorld(){
 			world = new World();
 			player = new Player(world.XSize/2,world.ZSize/2, world);
-			Console.WriteLine("World Generated");
 		}
 
 		public void Update() {
-			player.update();
-			world.update();
+			if (State == GameState.Playing) {
+				player.update();
+				world.update();
+			}
+
+			if (State == GameState.Connecting) {
+				bool Ready = true;
+				List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
+				int Count = Client.ReadMessages(Messages);
+				if (Messages.Count != 0) {
+					Console.WriteLine("Got response");
+				}
+				Ready &= Textures.ReceiveClient(Messages, Client);
+
+				if (Ready) {
+					InitWorld();
+					MouseManager.SetMousePositionWindows(320, 240);
+					State = GameState.Playing;
+				}
+			}
 		}
 
 		public void Draw() {
-			player.updateCamera();
-			world.draw(player);
+			if (State == GameState.Playing) {
+				world.draw(player);
+				player.updateCamera();
+			}
 		}
 
 		public void MountTextures() {
@@ -42,6 +68,21 @@ namespace FantasyScape {
 
 		public void GenerateWorld() {
 			InitWorld();
+		}
+
+		public void Connect(string IPAddress, int Port) {
+			State = GameState.Connecting;
+
+			NetPeerConfiguration config = new NetPeerConfiguration("FantasyScape");
+			Client = new NetClient(config);
+			Client.Start();
+			Client.Connect(IPAddress, Port);
+
+			while (Client.ConnectionStatus != NetConnectionStatus.Connected) {
+				Thread.Sleep(1000);
+				Client.ReadMessages(new List<NetIncomingMessage>());
+				Console.WriteLine(Client.ConnectionStatus);
+			}
 		}
 	}
 }

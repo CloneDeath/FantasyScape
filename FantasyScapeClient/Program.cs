@@ -35,9 +35,7 @@ namespace FantasyScape.Client {
 		}
 
 		static void Update() {
-			if (menu.Mode == MenuManager.MenuMode.InGame) {
-				game.Update();
-			}
+			game.Update();
 
 			if (KeyboardManager.IsPressed(Key.Escape)) {
 				MainCanvas.Dispose();
@@ -55,13 +53,11 @@ namespace FantasyScape.Client {
 		}
 
 		static void Draw() {
-			if (menu.Mode == MenuManager.MenuMode.InGame) {
-				game.Draw();
-			}
+			game.Draw();
 		}
 
 		internal static void Connect(string IPAddress, int Port) {
-			throw new NotImplementedException();
+			game.Connect(IPAddress, Port);
 		}
 	}
 }

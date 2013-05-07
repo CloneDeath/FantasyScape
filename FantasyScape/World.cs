@@ -75,7 +75,7 @@ namespace FantasyScape {
 				//System.out.println("X:"+loc[0]+" Y:"+loc[1]+" Z:"+loc[2]+" SIZE:"+updateBlocks.size() + " ID:"+tblocks.get(i).isSolid());
 			}
 		
-			Console.WriteLine(tblocks.Count());
+			//Console.WriteLine(tblocks.Count());
 		}
 
 		public void GenerateMap() {

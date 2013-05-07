@@ -29,7 +29,7 @@ namespace FantasyScape {
 			float Angle = 45;
 			float Ratio = (float)GraphicsManager.WindowWidth / (float)GraphicsManager.WindowHeight;
 			float nearD = 0.01f;
-			float farD = 100.0f;
+			float farD = 50.0f;
 			Ratio = 0.1f;
 			//Angle = 1000;
 			Angle = Angle / Ratio;
