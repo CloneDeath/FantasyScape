@@ -9,14 +9,24 @@ namespace FantasyScape.Server {
 		static Game game;
 		static NetServer Server;
 		static void Main(string[] args) {
+			//Create Game World
 			game = new Game(GameMode.Server);
 
+			/* Mount Resources */
+			game.MountTextures();
+			Console.WriteLine("Textures Mounted");
+
+			/* Generate World */
+			game.GenerateWorld();
+
+			/* Listen for Clients */
 			NetPeerConfiguration Configuration = new NetPeerConfiguration("FantasyScape");
 			Configuration.Port = 54987;
 			Configuration.MaximumConnections = 20;
 			Server = new NetServer(Configuration);
 			Server.Start();
 
+			/* Respond to Requests */
 			while (true) {
 				Server.WaitMessage(1000);
 				List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();

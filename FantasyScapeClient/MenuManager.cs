@@ -4,17 +4,13 @@ using System.Linq;
 using System.Text;
 using Gwen.Control;
 
-namespace FantasyScape {
+namespace FantasyScape.Client {
 	class MenuManager {
-		public const int MAINMENU = 0;
-		public const int SINGLEPLAYER = 1;
-		public const int HOSTGAME = 2;
-		public const int JOINGAME = 3;
+		public enum MenuMode {
+			MainMenu, JoiningGame, InGame
+		}
 
-		public const int FINDGAME = 4;
-		public const int LOBBY = 5;
-
-		public int Mode = MAINMENU;
+		public MenuMode Mode = MenuMode.MainMenu;
 
 		public MenuManager() {
 			MainMenu = ConstructMainMenu();
@@ -48,7 +44,7 @@ namespace FantasyScape {
 				MainMenu.Hide();
 				FindGame.Show();
 
-				Mode = FINDGAME;
+				Mode = MenuMode.JoiningGame;
 			};
 
 			Button Quit = new Button(MainMenu);
@@ -73,14 +69,6 @@ namespace FantasyScape {
 			FindGame.ClampMovement = true;
 			FindGame.IsClosable = false;
 
-			Button Connect = new Button(FindGame);
-			Connect.SetText("Connect");
-			Connect.SetPosition(10, 200);
-			Connect.SetSize(200, 20);
-			/*if (Connect.isClicked()) {
-				client = new GameClient(IPAddress.text, Port.text);
-			}*/
-
 			Label EnterIP = new Label(FindGame);
 			EnterIP.SetText("Enter an IP:");
 			EnterIP.SetPosition(10, 10);
@@ -95,12 +83,22 @@ namespace FantasyScape {
 			Port.SetPosition(10, 70);
 			Port.SetSize(260, 20);
 
+			Button Connect = new Button(FindGame);
+			Connect.SetText("Connect");
+			Connect.SetPosition(10, 200);
+			Connect.SetSize(200, 20);
+			Connect.Clicked += delegate(Base sender) {
+				Program.Connect(IPAddress.Text, Int32.Parse(Port.Text));
+				MainMenu.Hide();
+				FindGame.Hide();
+			};
+
 			Button Back = new Button(FindGame);
 			Back.SetText("Back");
 			Back.SetPosition(10, 225);
 			Back.SetSize(200, 20);
 			Back.Clicked += delegate(Base sender) {
-				Mode = MAINMENU;
+				Mode = MenuMode.MainMenu;
 				MainMenu.Show();
 				FindGame.Hide();
 			};

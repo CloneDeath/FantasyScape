@@ -15,20 +15,9 @@ namespace FantasyScape {
 
 		public Game(GameMode mode) {
 			this.GameMode = mode;
-			Initialize();
-			MouseManager.SetMousePositionWindows(320, 240);
-		}
-
-		private void Initialize() {
-			if (GameMode == GameMode.Server) {
-				LoadTextures();
+			if (this.GameMode == FantasyScape.GameMode.Client) {
+				MouseManager.SetMousePositionWindows(320, 240);
 			}
-			InitWorld();
-		}
-
-		private void LoadTextures() {
-			Textures.ServerLoadTextures();
-			Console.WriteLine("Done Loading Textures");
 		}
 
 		private void InitWorld(){
@@ -45,6 +34,14 @@ namespace FantasyScape {
 		public void Draw() {
 			player.updateCamera();
 			world.draw(player);
+		}
+
+		public void MountTextures() {
+			Textures.ServerLoadTextures();
+		}
+
+		public void GenerateWorld() {
+			InitWorld();
 		}
 	}
 }
