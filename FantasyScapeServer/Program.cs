@@ -12,13 +12,19 @@ namespace FantasyScape.Server {
 			//Create Game World
 			game = new Game(GameMode.Server);
 
-			/* Mount Resources */
-			game.MountTextures();
-			Console.WriteLine("Textures Mounted");
 
+			/* Mount Resources */
+			Console.WriteLine("Mounting Textures");
+			game.MountTextures();
+
+			Console.WriteLine("Mounting Block Types");
+			BlockTypes.LoadBlockTypes();
+
+			
 			/* Generate World */
+			Console.WriteLine("Generating World");
 			game.GenerateWorld();
-			Console.WriteLine("World Generated");
+			
 
 			/* Listen for Clients */
 			NetPeerConfiguration Configuration = new NetPeerConfiguration("FantasyScape");
@@ -45,6 +51,12 @@ namespace FantasyScape.Server {
 					if (RequestType == "Textures") {
 						Console.WriteLine("Sending Response for 'Request Textures'");
 						Textures.SendTextures(Message.SenderConnection, Server);
+					} else if (RequestType == "WorldBlocks") {
+						Console.WriteLine("Sending Response for 'Request World Blocks'");
+						game.world.SendData(Message.SenderConnection, Server);
+					} else if (RequestType == "BlockTypes") {
+						Console.WriteLine("Sending Response for 'Request BlockTypes'");
+						BlockTypes.SendBlockTypes(Message.SenderConnection, Server);
 					}
 				}
 			}

@@ -8,9 +8,8 @@ namespace FantasyScape {
 		float level;
 
 		static float minLevel = 0.01f;
-		public BlockWater() {
-			level = 0.95f;
-			BlockID = 1;
+		public BlockWater() : base("Water") {
+		    level = 0.95f;
 		}
 		public override void draw(float x, float y, float z, World world) {
 			if (level > minLevel) {
@@ -61,7 +60,7 @@ namespace FantasyScape {
 					return true;
 				} else {
 					Block b = world.blockAt(x, y, z);
-					if (b.BlockID == 1) {
+					if (b.BlockType.Name == "Water") {
 						BlockWater bw = (BlockWater)b;
 						if (bw.level < 1.0f) {
 							float diff = (1.0f - bw.level);
@@ -91,7 +90,7 @@ namespace FantasyScape {
 					return true;
 				} else {
 					Block b = world.blockAt(x, y, z);
-					if (b.BlockID == 1) {
+					if (b.BlockType.Name == "Water") {
 						BlockWater bw = (BlockWater)b;
 						if (bw.level < level) {
 							float diff = (level - bw.level) / 4.0f;

@@ -6,7 +6,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace FantasyScape {
-	class Frustum {
+	public class Frustum {
 		private int TOP = 0;
 		private int BOTTOM = 1;
 		private int LEFT = 2;

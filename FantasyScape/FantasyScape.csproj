@@ -73,9 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blocks\Block.cs" />
-    <Compile Include="Blocks\BlockDirt.cs" />
-    <Compile Include="Blocks\BlockGranite.cs" />
-    <Compile Include="Blocks\BlockGrass.cs" />
+    <Compile Include="Blocks\BlockType.cs" />
+    <Compile Include="Blocks\BlockTypes.cs" />
     <Compile Include="Blocks\BlockWater.cs" />
     <Compile Include="GameMode.cs" />
     <Compile Include="Math\Frustum.cs" />
@@ -85,7 +84,6 @@
     <Compile Include="Math\PerlinMap.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />
-    <Compile Include="SequenceChannels.cs" />
     <Compile Include="TextureManagement\NetTexture.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

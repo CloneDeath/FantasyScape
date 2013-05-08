@@ -26,7 +26,7 @@ namespace FantasyScape {
 			nom.Write((Int32)data.Length);
 			nom.Write(data);
 
-			netConnection.SendMessage(nom, NetDeliveryMethod.ReliableSequenced, SequenceChannels.Textures);
+			Server.SendMessage(nom, netConnection, NetDeliveryMethod.ReliableUnordered);
 		}
 
 		internal static void Receive(NetIncomingMessage nim) {

@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace FantasyScape {
 	public class Game {
-		World world;
+		public World world;
 		Player player;
 
 		GameMode GameMode;
@@ -41,11 +41,12 @@ namespace FantasyScape {
 			if (State == GameState.Connecting) {
 				bool Ready = true;
 				List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
-				int Count = Client.ReadMessages(Messages);
-				if (Messages.Count != 0) {
-					Console.WriteLine("Got response");
-				}
+				Client.ReadMessages(Messages);
+
 				Ready &= Textures.ReceiveClient(Messages, Client);
+				Ready &= BlockTypes.ReceiveClient(Messages, Client);
+				
+				
 
 				if (Ready) {
 					InitWorld();

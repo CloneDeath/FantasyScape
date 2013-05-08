@@ -5,7 +5,7 @@ using System.Text;
 using OpenTK;
 
 namespace FantasyScape {
-	class World {
+	public class World {
 		Block[,,] blocks;
 		public int XSize = 256;
 		public int YSize = 256;
@@ -88,7 +88,7 @@ namespace FantasyScape {
 			for (int x = 0; x < XSize; x++){
 				for (int y = 0; y < YSize/2; y++){
 					for (int z = 0; z < ZSize; z++){
-						blocks[x, y, z] = new Block();
+						blocks[x, y, z] = new Block("Dirt");
 					}
 				}
 			}
@@ -257,6 +257,10 @@ namespace FantasyScape {
 				return blocks[xat, yat, zat].isSolid();
 			}
 
+		}
+
+		public void SendData(Lidgren.Network.NetConnection netConnection, Lidgren.Network.NetServer Server) {
+			throw new NotImplementedException();
 		}
 	}
 }

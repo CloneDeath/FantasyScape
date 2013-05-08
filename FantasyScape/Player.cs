@@ -7,7 +7,7 @@ using GLImp;
 using OpenTK.Input;
 
 namespace FantasyScape {
-	class Player {
+	public class Player {
 		public double xpos, ypos, zpos;
 		double xrot, yrot;
 		double xspeed, yspeed, zspeed;

@@ -61,18 +61,18 @@ namespace FantasyScape {
 			//Create Terrain
 			for (int x = 0; x < XSize; x++) {
 				for (int y = 0; y < YSize; y++) {
-					blocks[x, y, 0] = new BlockDirt();
+					blocks[x, y, 0] = new Block("Dirt");
 					for (int z = 1; z < ZSize; z++) {
 						if (z < (int)Heightmap[x, y]) {
 							if (z > (int)Heightmap[x, y] - (5 + ran.Next(3))) {
-								blocks[x, y, z] = new BlockDirt(); //Dirt
+								blocks[x, y, z] = new Block("Dirt");
 							} else {
-								blocks[x, y, z] = new BlockGranite(); //Granite
+								blocks[x, y, z] = new Block("Granite");
 							}
 						}
 
 						if (z == (int)Heightmap[x, y]) {
-							blocks[x, y, z] = new BlockGrass();
+							blocks[x, y, z] = new Block("Grass");
 						}
 					}
 				}

@@ -6,10 +6,16 @@ using GLImp;
 using OpenTK.Graphics.OpenGL;
 
 namespace FantasyScape {
-	class Block {
-		public int BlockID = 0;
+	public class Block {
+		public string BlockTypeName;
+		public BlockType BlockType {
+			get {
+				return BlockTypes.GetBlockType(BlockTypeName);
+			}
+		}
 
-		public Block() {
+		public Block(string Type) {
+			this.BlockTypeName = Type;
 		}
 
 		public virtual bool isSolid() {
@@ -17,22 +23,19 @@ namespace FantasyScape {
 		}
 
 		public virtual void draw(float x, float y, float z, World world) {
-			draw(x, y, z, world, Textures.GetTexture("Dirt"), Textures.GetTexture("Dirt"), Textures.GetTexture("Dirt"));
+			draw(x, y, z, world, Textures.GetTexture(BlockType.TopTexture), 
+				Textures.GetTexture(BlockType.SideTexture),
+				Textures.GetTexture(BlockType.BotTexture), 1.0);
 		}
 
-		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex) {
-			draw(x, y, z, world, TopTex, SideTex, BottomTex, 1.0f);
-		}
-
-		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex, float height) {
+		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex, double height) {
 			GL.PushMatrix();
 			GL.Translate(x, y, z);
 			GL.Scale(1.0f, 1.0f, height);
 			GL.Color3(1.0f, 1.0f, 1.0f);
 
-			//GL11.glColor4f(1.0f,1.0f,1.0f, 1.0f);                 // Set The Color To Blue One Time Only
 			GL.BindTexture(TextureTarget.Texture2D, SideTex.ID);
-			GL.Begin(BeginMode.Quads);                        // Draw A Quad
+			GL.Begin(BeginMode.Quads);// Draw A Quad
 			//Back
 			if (!world.isSolid(x, y - 1, z)) {
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
