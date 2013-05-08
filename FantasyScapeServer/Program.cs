@@ -51,9 +51,12 @@ namespace FantasyScape.Server {
 					if (RequestType == "Textures") {
 						Console.WriteLine("Sending Response for 'Request Textures'");
 						Textures.SendTextures(Message.SenderConnection, Server);
-					} else if (RequestType == "WorldBlocks") {
-						Console.WriteLine("Sending Response for 'Request World Blocks'");
-						game.world.SendData(Message.SenderConnection, Server);
+					} else if (RequestType == "WorldSize") {
+						Console.WriteLine("Sending Response for 'Request World Size'");
+						game.world.SendWorldSize(Message.SenderConnection, Server);
+					} else if (RequestType == "BlockLayers"){
+						Console.WriteLine("Sending Response for 'Request Block Layers'");
+						game.world.SendBlockLayers(Message.SenderConnection, Server);
 					} else if (RequestType == "BlockTypes") {
 						Console.WriteLine("Sending Response for 'Request BlockTypes'");
 						BlockTypes.SendBlockTypes(Message.SenderConnection, Server);

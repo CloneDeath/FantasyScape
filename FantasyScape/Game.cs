@@ -25,10 +25,11 @@ namespace FantasyScape {
 
 		public Game(GameMode mode) {
 			this.GameMode = mode;
+			world = new World();
 		}
 
 		private void InitWorld(){
-			world = new World();
+			world.GenerateMap();
 			player = new Player(world.XSize/2,world.ZSize/2, world);
 		}
 
@@ -45,11 +46,11 @@ namespace FantasyScape {
 
 				Ready &= Textures.ReceiveClient(Messages, Client);
 				Ready &= BlockTypes.ReceiveClient(Messages, Client);
-				
+				Ready &= world.ReceiveClient(Messages, Client);
 				
 
 				if (Ready) {
-					InitWorld();
+					player = new Player(world.XSize / 2, world.ZSize / 2, world);
 					MouseManager.SetMousePositionWindows(320, 240);
 					State = GameState.Playing;
 				}

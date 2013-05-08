@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using GLImp;
 using OpenTK.Graphics.OpenGL;
+using Lidgren.Network;
 
 namespace FantasyScape {
 	public class Block {
@@ -16,6 +17,11 @@ namespace FantasyScape {
 
 		float level;
 		const float minLevel = 0.01f;
+
+		public Block() {
+			this.BlockTypeName = "";
+			this.level = 1.0f;
+		}
 
 		public Block(string Type) {
 			this.BlockTypeName = Type;
@@ -195,6 +201,16 @@ namespace FantasyScape {
 				}
 			}
 			return false;
+		}
+
+		public void Write(NetOutgoingMessage nom) {
+			nom.Write(BlockTypeName);
+			nom.Write(level);
+		}
+
+		public void Read(NetIncomingMessage nim) {
+			BlockTypeName = nim.ReadString();
+			level = nim.ReadFloat();
 		}
 	}
 }

@@ -68,7 +68,6 @@ namespace FantasyScape {
 
 
 			if (!RequestSent) {
-				Console.WriteLine("Pinging Server");
 				NetOutgoingMessage nom = Client.CreateMessage();
 				nom.Write("Request");
 				nom.Write("Textures");
