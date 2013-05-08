@@ -40,7 +40,7 @@ namespace FantasyScape {
 			}
 			draw(x, y, z, world, Textures.GetTexture(BlockType.TopTexture),
 				Textures.GetTexture(BlockType.SideTexture),
-				Textures.GetTexture(BlockType.BotTexture), 1.0);
+				Textures.GetTexture(BlockType.BotTexture), level);
 		}
 
 		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex, double height) {

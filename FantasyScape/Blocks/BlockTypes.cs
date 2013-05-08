@@ -12,7 +12,7 @@ namespace FantasyScape {
 			AddBlockType("Dirt", "Dirt", false);
 			AddBlockType("Granite", "Granite", false);
 			AddBlockType("Grass", "Grass", false);
-			AddBlockType("Water", "Water", false);
+			AddBlockType("Water", "Water", true);
 		}
 
 		private static void AddBlockType(string BlockTypeName, string TextureName, bool Liquid) {
