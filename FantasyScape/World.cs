@@ -150,7 +150,7 @@ namespace FantasyScape {
 		}
 
 		public void addBlock(int x, int y, int z) {
-			addBlock(x, y, z, new BlockWater());
+			addBlock(x, y, z, new Block("Water"));
 		}
 
 		public void checkExposure(int x, int y, int z) {

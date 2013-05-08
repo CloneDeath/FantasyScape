@@ -20,6 +20,7 @@ namespace FantasyScape {
 		public string TopTexture;
 		public string SideTexture;
 		public string BotTexture;
+		public bool Liquid;
 
 
 		internal void Send(NetConnection netConnection, NetServer Server) {
@@ -29,6 +30,7 @@ namespace FantasyScape {
 			nom.Write(TopTexture);
 			nom.Write(SideTexture);
 			nom.Write(BotTexture);
+			nom.Write(Liquid);
 			Server.SendMessage(nom, netConnection, NetDeliveryMethod.ReliableUnordered);
 		}
 
@@ -38,6 +40,7 @@ namespace FantasyScape {
 			b.TopTexture = Message.ReadString();
 			b.SideTexture = Message.ReadString();
 			b.BotTexture = Message.ReadString();
+			b.Liquid = Message.ReadBoolean();
 			BlockTypes.AddBlockType(b);
 		}
 	}

@@ -35,7 +35,7 @@ namespace FantasyScape {
 			for (int x = 0; x < XSize; x++) {
 				for (int y = 0; y < YSize; y++) {
 					for (int z = (int)Heightmap[x,y]; z <= WaterLevel; z++) {
-						blocks[x,y,z] = new BlockWater();
+						blocks[x,y,z] = new Block("Water");
 						if (z == WaterLevel) {
 							Block b = blocks[x,y,z];
 							if (!world.updateBlocks.Contains(b)) {

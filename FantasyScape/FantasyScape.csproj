@@ -75,7 +75,6 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockType.cs" />
     <Compile Include="Blocks\BlockTypes.cs" />
-    <Compile Include="Blocks\BlockWater.cs" />
     <Compile Include="GameMode.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Game.cs" />

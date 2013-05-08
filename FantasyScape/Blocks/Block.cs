@@ -14,16 +14,31 @@ namespace FantasyScape {
 			}
 		}
 
+		float level;
+		const float minLevel = 0.01f;
+
 		public Block(string Type) {
 			this.BlockTypeName = Type;
+			level = 1.0f;
 		}
 
-		public virtual bool isSolid() {
-			return true;
+		public bool isSolid() {
+			if (BlockType.Liquid) {
+				if (level >= 0.9) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return true;
+			}
 		}
 
 		public virtual void draw(float x, float y, float z, World world) {
-			draw(x, y, z, world, Textures.GetTexture(BlockType.TopTexture), 
+			if (level < minLevel && BlockType.Liquid) {
+				return;
+			}
+			draw(x, y, z, world, Textures.GetTexture(BlockType.TopTexture),
 				Textures.GetTexture(BlockType.SideTexture),
 				Textures.GetTexture(BlockType.BotTexture), 1.0);
 		}
@@ -96,13 +111,90 @@ namespace FantasyScape {
 			GL.PopMatrix();
 		}
 
-
+		bool LiquidUpdated = false;
 		public virtual void update(int x, int y, int z, World world) {
-			world.removeUpdate(x, y, z);
+			if (BlockType.Liquid) {
+				LiquidUpdated = moveDown(x, y, z - 1, world);
+				if (level > minLevel) {
+					LiquidUpdated |= moveTo(x + 1, y, z, world);
+					LiquidUpdated |= moveTo(x - 1, y, z, world);
+					LiquidUpdated |= moveTo(x, y + 1, z, world);
+					LiquidUpdated |= moveTo(x, y - 1, z, world);
+				}
+			} else {
+				world.removeUpdate(x, y, z);
+			}
 		}
 
 		public virtual void postUpdate(int x, int y, int z, World world) {
-			world.removeUpdate(x, y, z);
+			if (BlockType.Liquid) {
+				if (!LiquidUpdated) {
+					world.removeUpdate(x, y, z);
+				}
+				if (level <= minLevel) {
+					world.removeBlock(x, y, z);
+				}
+			} else {
+				world.removeUpdate(x, y, z);
+			}
+		}
+
+		public bool moveDown(int x, int y, int z, World world) {
+			if (!world.isSolid(x, y, z)) {
+				if (world.blockAt(x, y, z) == null) {
+					Block b = new Block("Water");
+					world.addBlock(x, y, z, b);
+					b.level = level;
+					level = 0;
+					return true;
+				} else {
+					Block b = world.blockAt(x, y, z);
+					if (b.BlockType.Name == "Water") {
+						if (b.level < 1.0f) {
+							float diff = (1.0f - b.level);
+							if (diff > level) {
+								b.level += level;
+								level = 0;
+								world.removeBlock(x, y, z + 1);
+							} else {
+								b.level += diff;
+								level -= diff;
+							}
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
+
+		private bool moveTo(int x, int y, int z, World world) {
+			if (!world.isSolid(x, y, z)) {
+				if (world.blockAt(x, y, z) == null) {
+					Block b = new Block("Water");
+					world.addBlock(x, y, z, b);
+					b.level = level / 4.0f;
+					level = level * 3.0f / 4.0f;
+					return true;
+				} else {
+					Block b = world.blockAt(x, y, z);
+					if (b.BlockType.Name == "Water") {
+						if (b.level < level) {
+							float diff = (level - b.level) / 4.0f;
+							float cgive = level / 4.0f;
+							if (cgive > diff) {
+								b.level += diff;
+								level -= diff;
+							} else {
+								b.level += cgive;
+								level -= cgive;
+							}
+							return true;
+						}
+					}
+				}
+			}
+			return false;
 		}
 	}
 }

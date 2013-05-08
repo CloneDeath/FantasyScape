@@ -9,16 +9,17 @@ namespace FantasyScape {
 		static List<BlockType> Types = new List<BlockType>();
 
 		public static void LoadBlockTypes() {
-			AddBlockType("Dirt", "Dirt");
-			AddBlockType("Granite", "Granite");
-			AddBlockType("Grass", "Grass");
-			AddBlockType("Water", "Water");
+			AddBlockType("Dirt", "Dirt", false);
+			AddBlockType("Granite", "Granite", false);
+			AddBlockType("Grass", "Grass", false);
+			AddBlockType("Water", "Water", false);
 		}
 
-		private static void AddBlockType(string BlockTypeName, string TextureName) {
+		private static void AddBlockType(string BlockTypeName, string TextureName, bool Liquid) {
 			BlockType b = new BlockType();
 			b.Name = BlockTypeName;
 			b.Texture = TextureName;
+			b.Liquid = Liquid;
 			Types.Add(b);
 		}
 
