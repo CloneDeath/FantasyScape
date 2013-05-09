@@ -88,10 +88,10 @@
     <Compile Include="NetworkMessages\NumTextures.cs" />
     <Compile Include="NetworkMessages\RequestMessage.cs" />
     <Compile Include="Resource.cs" />
-    <Compile Include="TextureManagement\NetTexture.cs" />
+    <Compile Include="NetworkMessages\NetTexture.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextureManagement\Textures.cs" />
+    <Compile Include="Textures.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

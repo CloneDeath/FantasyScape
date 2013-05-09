@@ -7,7 +7,7 @@ using Lidgren.Network;
 
 namespace FantasyScape {
 	public class Textures : Resource{
-		static List<NetTexture> TextureList = new List<NetTexture>();
+		static List<Texture> TextureList = new List<Texture>();
 		static bool RequestSent = false;
 		static int TextureCount = -1;
 		public static int Count;
@@ -20,7 +20,7 @@ namespace FantasyScape {
 		}
 
 		private static void AddTexture(string filename, string name) {
-			NetTexture Dirt = new NetTexture(filename);
+			Texture Dirt = new Texture(filename);
 			Dirt.Name = name;
 
 			TextureList.Add(Dirt);
@@ -35,18 +35,7 @@ namespace FantasyScape {
 			return null;
 		}
 
-		public static void SendTextures(NetConnection netConnection, NetServer Server) {
-			NetOutgoingMessage nom = Server.CreateMessage();
-			nom.Write("NumTextures");
-			nom.Write((Int32)TextureList.Count);
-			Server.SendMessage(nom, netConnection, NetDeliveryMethod.ReliableUnordered);
-
-			foreach (NetTexture tex in TextureList) {
-				tex.Send(netConnection, Server);
-			}
-		}
-
-		public static void AddTexture(NetTexture nettex) {
+		public static void AddTexture(Texture nettex) {
 			if (GetTexture(nettex.Name) == null) {
 				TextureList.Add(nettex);
 			} else {
@@ -85,6 +74,10 @@ namespace FantasyScape {
 			nom.Write("Request");
 			nom.Write("Textures");
 			Client.SendMessage(nom, NetDeliveryMethod.ReliableUnordered);
+		}
+
+		internal static List<Texture> GetAll() {
+			return TextureList;
 		}
 	}
 }

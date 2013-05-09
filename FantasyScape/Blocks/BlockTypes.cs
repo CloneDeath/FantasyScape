@@ -25,11 +25,6 @@ namespace FantasyScape {
 		}
 
 		public static void SendBlockTypes(NetConnection netConnection, NetServer Server) {
-			NetOutgoingMessage nom = Server.CreateMessage();
-			nom.Write("BlockTypesNum");
-			nom.Write((Int32)Types.Count);
-			Server.SendMessage(nom, netConnection, NetDeliveryMethod.ReliableUnordered);
-
 			foreach (BlockType bt in Types) {
 				bt.Send(netConnection, Server);
 			}

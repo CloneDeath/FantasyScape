@@ -42,9 +42,8 @@ namespace FantasyScape {
 				Client.ReadMessages(Messages);
 
 				Ready &= Textures.ReceiveClient(Messages, Client);
-				Ready &= BlockTypes.ReceiveClient(Messages, Client);
-				Ready &= world.ReceiveClient(Messages, Client);
-				
+				//Ready &= BlockTypes.ReceiveClient(Messages, Client);
+				//Ready &= world.ReceiveClient(Messages, Client);
 
 				if (Ready) {
 					player = new Player(world.XSize / 2, world.ZSize / 2, world);

@@ -17,6 +17,10 @@ namespace FantasyScape.NetworkMessages {
 			peer.SendMessage(nom, destination, method);
 		}
 
+		public void Send(NetConnection destination, NetDeliveryMethod method) {
+			this.Send(destination.Peer, destination, method);
+		}
+
 		public void Receive(NetIncomingMessage Message) {
 			ReadData(Message);
 			ExecuteMessage();

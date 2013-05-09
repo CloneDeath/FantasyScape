@@ -45,10 +45,7 @@ namespace FantasyScape.Server {
 			if (nim.MessageType == NetIncomingMessageType.Data) {
 				Message.Handle(nim);
 
-					//if (msg.RequestType == "Textures") {
-					//    Console.WriteLine("Sending Response for 'Request Textures'");
-					//    Textures.SendTextures(nim.SenderConnection, Server);
-					//} else if (msg.RequestType == "WorldSize") {
+					//else if (msg.RequestType == "WorldSize") {
 					//    Console.WriteLine("Sending Response for 'Request World Size'");
 					//    game.world.SendWorldSize(nim.SenderConnection, Server);
 					//} else if (msg.RequestType == "BlockLayers") {
