@@ -50,7 +50,13 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		private void SendBlockTypes() {
-			
+			BlockTypesNumber btn = new BlockTypesNumber();
+			btn.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+
+			foreach (BlockType bt in BlockTypes.GetAll()) {
+				BlockTypeData btd = new BlockTypeData(bt);
+				btd.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+			}
 		}
 	}
 }
