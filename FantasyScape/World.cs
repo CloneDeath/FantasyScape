@@ -268,19 +268,19 @@ namespace FantasyScape {
 		}
 
 		public State Current = State.SendingWorldSize;
-		internal bool Ready(NetClient Client) {
+		internal bool Ready() {
 			if (Current == State.SendingWorldSize){
 				Current = State.ReceivingWorldSize;
 
 				RequestMessage msg = new RequestMessage(RequestType.WorldSize);
-				msg.Send(Client, NetDeliveryMethod.ReliableUnordered);
+				msg.Send();
 			}
 
 			if (Current == State.SendingLayersRequest) {
 				Current = State.ReceivingLayers;
 
 				RequestMessage msg = new RequestMessage(RequestType.BlockLayers);
-				msg.Send(Client, NetDeliveryMethod.ReliableUnordered);
+				msg.Send();
 			}
 
 			return Current == State.Done;

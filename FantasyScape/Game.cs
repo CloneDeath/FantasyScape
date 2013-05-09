@@ -51,9 +51,9 @@ namespace FantasyScape {
 			if (State == GameState.Connecting) {
 				bool Ready = true;
 
-				Ready &= Textures.Ready(Client);
-				Ready &= BlockTypes.Ready(Client);
-				Ready &= world.Ready(Client);
+				Ready &= Textures.Ready();
+				Ready &= BlockTypes.Ready();
+				Ready &= world.Ready();
 
 				if (Ready) {
 					player = new Player(world.XSize / 2, world.ZSize / 2, world);
@@ -85,8 +85,10 @@ namespace FantasyScape {
 			while (Client.ConnectionStatus != NetConnectionStatus.Connected) {
 				Thread.Sleep(1000);
 				Client.ReadMessages(new List<NetIncomingMessage>());
-				Console.WriteLine(Client.ConnectionStatus);
 			}
+			Console.WriteLine("Connected!");
+
+			Message.RegisterClient(Client);
 		}
 	}
 }

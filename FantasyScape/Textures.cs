@@ -43,10 +43,10 @@ namespace FantasyScape {
 			}
 		}
 
-		internal static bool Ready(NetClient Client) {
+		internal static bool Ready() {
 			if (!RequestSent) {
 				RequestMessage msg = new RequestMessage(RequestType.Textures);
-				msg.Send(Client, NetDeliveryMethod.ReliableUnordered);
+				msg.Send();
 				RequestSent = true;
 			}
 

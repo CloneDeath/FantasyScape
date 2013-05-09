@@ -35,11 +35,11 @@ namespace FantasyScape {
 
 		static bool SentRequest = false;
 		public static int Count = -1;
-		internal static bool Ready(NetClient Client) {
+		internal static bool Ready() {
 			if (!SentRequest) {
 				SentRequest = true;
 				RequestMessage msg = new RequestMessage(RequestType.BlockTypes);
-				msg.Send(Client, NetDeliveryMethod.ReliableUnordered);
+				msg.Send();
 			}
 			
 			return Count == Types.Count;

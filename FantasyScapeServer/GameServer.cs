@@ -28,6 +28,8 @@ namespace FantasyScape.Server {
 			Configuration.MaximumConnections = 20;
 			Server = new NetServer(Configuration);
 			Server.Start();
+			Message.RegisterServer(Server);
+			
 			Console.WriteLine("Ready!");
 		}
 

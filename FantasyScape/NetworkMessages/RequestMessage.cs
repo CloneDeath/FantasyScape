@@ -22,10 +22,8 @@ namespace FantasyScape.NetworkMessages {
 			Message.Write(Type.ToString());
 		}
 
-		NetConnection Sender;
 		protected override void ReadData(NetIncomingMessage Message) {
 			Type = (RequestType)Enum.Parse(typeof(RequestType), Message.ReadString());
-			Sender = Message.SenderConnection;
 		}
 
 		protected override void ExecuteMessage() {
@@ -49,35 +47,35 @@ namespace FantasyScape.NetworkMessages {
 
 		private void SendWorldSize() {
 			WorldSizeMessage wsm = new WorldSizeMessage();
-			wsm.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+			wsm.Reply();
 		}
 
 		private void SendBlockLayers() {
 			for (int x = 0; x < Game.Instance.world.XSize; x++) {
 				for (int y = 0; y < Game.Instance.world.YSize; y++) {
 					BlockLayersMessage blm = new BlockLayersMessage(x, y);
-					blm.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+					blm.Reply();
 				}
 			}
 		}
 
 		private void SendTextures() {
 			Message NumTexture = new NumTextures();
-			NumTexture.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+			NumTexture.Reply();
 
 			foreach (Texture t in Textures.GetAll()){
 				NetTexture nettex = new NetTexture(t);
-				nettex.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+				nettex.Reply();
 			}
 		}
 
 		private void SendBlockTypes() {
 			BlockTypesNumber btn = new BlockTypesNumber();
-			btn.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+			btn.Reply();
 
 			foreach (BlockType bt in BlockTypes.GetAll()) {
 				BlockTypeData btd = new BlockTypeData(bt);
-				btd.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+				btd.Reply();
 			}
 		}
 	}
