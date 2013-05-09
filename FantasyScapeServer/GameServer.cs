@@ -44,17 +44,6 @@ namespace FantasyScape.Server {
 		private static void HandleMessages(NetIncomingMessage nim) {
 			if (nim.MessageType == NetIncomingMessageType.Data) {
 				Message.Handle(nim);
-
-					//else if (msg.RequestType == "WorldSize") {
-					//    Console.WriteLine("Sending Response for 'Request World Size'");
-					//    game.world.SendWorldSize(nim.SenderConnection, Server);
-					//} else if (msg.RequestType == "BlockLayers") {
-					//    Console.WriteLine("Sending Response for 'Request Block Layers'");
-					//    game.world.SendBlockLayers(nim.SenderConnection, Server);
-					//} else if (msg.RequestType == "BlockTypes") {
-					//    Console.WriteLine("Sending Response for 'Request BlockTypes'");
-					//    BlockTypes.SendBlockTypes(nim.SenderConnection, Server);
-					//}
 			} else {
 				//Console.WriteLine(Message.ReadString());
 			}

@@ -7,11 +7,14 @@ using Gwen.Control;
 using OpenTK.Input;
 using Lidgren.Network;
 using System.Threading;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class Game {
+		public static Game Instance;
+
 		public World world;
-		Player player;
+		public Player player;
 
 		public enum GameState {
 			NotReady, Connecting, Playing
@@ -23,6 +26,7 @@ namespace FantasyScape {
 
 		public Game() {
 			world = new World();
+			Instance = this;
 		}
 
 		private void InitWorld(){
@@ -31,6 +35,14 @@ namespace FantasyScape {
 		}
 
 		public void Update() {
+			if (Client != null) {
+				List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
+				Client.ReadMessages(Messages);
+				foreach (NetIncomingMessage msg in Messages) {
+					Message.Handle(msg);
+				}
+			}
+
 			if (State == GameState.Playing) {
 				player.update();
 				world.update();
@@ -38,12 +50,10 @@ namespace FantasyScape {
 
 			if (State == GameState.Connecting) {
 				bool Ready = true;
-				List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
-				Client.ReadMessages(Messages);
 
-				Ready &= Textures.ReceiveClient(Messages, Client);
-				//Ready &= BlockTypes.ReceiveClient(Messages, Client);
-				//Ready &= world.ReceiveClient(Messages, Client);
+				Ready &= Textures.Ready(Client);
+				Ready &= BlockTypes.Ready(Client);
+				Ready &= world.Ready(Client);
 
 				if (Ready) {
 					player = new Player(world.XSize / 2, world.ZSize / 2, world);

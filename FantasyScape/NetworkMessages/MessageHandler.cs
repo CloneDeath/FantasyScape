@@ -8,15 +8,18 @@ using System.Reflection;
 namespace FantasyScape.NetworkMessages {
 	public abstract partial class Message {
 		public static void Handle(NetIncomingMessage Message) {
-			List<Type> types = FindDerivedTypes();
-			Type Match = GetMatch(types, Message.ReadString());
-			Parse(Match, Message);
+			if (Message.MessageType == NetIncomingMessageType.Data) {
+				List<Type> types = FindDerivedTypes();
+				Type Match = GetMatch(types, Message.ReadString());
+				Parse(Match, Message);
+			}
 		}
 
 		private static void Parse(Type Match, NetIncomingMessage Message) {
 			if (Match.GetConstructor(new Type[0]) == null) {
 				throw new Exception("Message '" + Match.Name + "' Does not have an empty constructor!");
 			}
+			Console.WriteLine("Received Message for '" + Match.Name + "'");
 			Message msg = (Message)Match.GetConstructor(new Type[0]).Invoke(new object[0]);
 			msg.Receive(Message);
 		}

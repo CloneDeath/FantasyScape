@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 using Lidgren.Network;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class World {
-		Block[,,] blocks;
+		public Block[,,] blocks;
 		public int XSize = 256;
 		public int YSize = 256;
 		public int ZSize = 256;
@@ -258,103 +259,28 @@ namespace FantasyScape {
 
 		}
 
-		public void SendWorldSize(NetConnection netConnection, NetServer Server) {
-			NetOutgoingMessage nom = Server.CreateMessage();
+		public int LayerCount = 0;
 
-			nom.Write("WorldSize");
-			nom.Write(XSize);
-			nom.Write(YSize);
-			nom.Write(ZSize);
-
-			Server.SendMessage(nom, netConnection, NetDeliveryMethod.ReliableUnordered);
-		}
-
-		public void SendBlockLayers(NetConnection netConnection, NetServer Server) {
-			for (int x = 0; x < XSize; x++) {
-				for (int y = 0; y < YSize; y++) {
-					NetOutgoingMessage nom = Server.CreateMessage();
-					nom.Write("BlockLayer");
-					nom.Write(x);
-					nom.Write(y);
-					bool FoundOne = false;
-					for (int z = 0; z < ZSize; z++) {
-						Block b = blocks[x, y, z];
-						if (b != null) {
-							nom.Write(z);
-							b.Write(nom);
-							FoundOne = true;
-						}
-					}
-					if (FoundOne) {
-						Server.SendMessage(nom, netConnection, NetDeliveryMethod.ReliableUnordered);
-					}
-				}
-			}
-		}
-
-		private void ReceiveWorldSize(NetIncomingMessage Message) {
-			XSize = Message.ReadInt32();
-			YSize = Message.ReadInt32();
-			ZSize = Message.ReadInt32();
-
-			blocks = new Block[XSize, YSize, ZSize];
-			Current = State.SendingLayersRequest;
-		}
-
-		int LayerCount = 0;
-		private void ReceiveBlockLayer(NetIncomingMessage Message) {
-			int x = Message.ReadInt32();
-			int y = Message.ReadInt32();
-			while (Message.PositionInBytes < Message.LengthBytes) {
-				Block b = new Block();
-				int z = Message.ReadInt32();
-				b.Read(Message);
-				blocks[x, y, z] = b;
-			}
-			LayerCount++;
-
-			if (LayerCount == XSize * YSize) {
-				Current = State.Done;
-				refreshExposedBlocks();
-			}
-		}
-
-		enum State {
+		public enum State {
 			SendingWorldSize, ReceivingWorldSize,
 			SendingLayersRequest, ReceivingLayers,
 			Done
 		}
 
-		State Current = State.SendingWorldSize;
-		internal bool ReceiveClient(List<NetIncomingMessage> Messages, NetClient Client) {
+		public State Current = State.SendingWorldSize;
+		internal bool Ready(NetClient Client) {
 			if (Current == State.SendingWorldSize){
 				Current = State.ReceivingWorldSize;
-				NetOutgoingMessage nom = Client.CreateMessage();
-				nom.Write("Request");
-				nom.Write("WorldSize");
-				Client.SendMessage(nom, NetDeliveryMethod.ReliableUnordered);
+
+				RequestMessage msg = new RequestMessage(RequestType.WorldSize);
+				msg.Send(Client, NetDeliveryMethod.ReliableUnordered);
 			}
 
 			if (Current == State.SendingLayersRequest) {
 				Current = State.ReceivingLayers;
-				NetOutgoingMessage nom = Client.CreateMessage();
-				nom.Write("Request");
-				nom.Write("BlockLayers");
-				Client.SendMessage(nom, NetDeliveryMethod.ReliableUnordered);
-			}
 
-			if (Current == State.ReceivingWorldSize || Current == State.ReceivingLayers) {
-				foreach (NetIncomingMessage Message in Messages) {
-					if (Message.MessageType == NetIncomingMessageType.Data) {
-						string Type = Message.ReadString();
-						if (Type == "WorldSize") {
-							ReceiveWorldSize(Message);
-						} else if (Type == "BlockLayer") {
-							ReceiveBlockLayer(Message);
-						}
-						Message.Position = 0;
-					}
-				}
+				RequestMessage msg = new RequestMessage(RequestType.BlockLayers);
+				msg.Send(Client, NetDeliveryMethod.ReliableUnordered);
 			}
 
 			return Current == State.Done;

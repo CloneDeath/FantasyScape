@@ -6,7 +6,7 @@ using System.Text;
 namespace FantasyScape.NetworkMessages {
 	class BlockTypesNumber : Message {
 		protected override void WriteData(Lidgren.Network.NetOutgoingMessage Message) {
-			Message.Write((Int32)BlockTypes.Count);
+			Message.Write((Int32)BlockTypes.GetAll().Count);
 		}
 
 		protected override void ReadData(Lidgren.Network.NetIncomingMessage Message) {

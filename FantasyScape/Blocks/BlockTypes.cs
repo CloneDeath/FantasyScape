@@ -24,12 +24,6 @@ namespace FantasyScape {
 			Types.Add(b);
 		}
 
-		public static void SendBlockTypes(NetConnection netConnection, NetServer Server) {
-			foreach (BlockType bt in Types) {
-				bt.Send(netConnection, Server);
-			}
-		}
-
 		internal static BlockType GetBlockType(string BlockTypeName) {
 			foreach (BlockType b in Types) {
 				if (b.Name == BlockTypeName) {
@@ -41,34 +35,22 @@ namespace FantasyScape {
 
 		static bool SentRequest = false;
 		public static int Count = -1;
-		internal static bool ReceiveClient(List<NetIncomingMessage> Messages, NetClient Client) {
+		internal static bool Ready(NetClient Client) {
 			if (!SentRequest) {
 				SentRequest = true;
 				RequestMessage msg = new RequestMessage(RequestType.BlockTypes);
-				msg.Send(Client, Client.ServerConnection, NetDeliveryMethod.ReliableUnordered);
+				msg.Send(Client, NetDeliveryMethod.ReliableUnordered);
 			}
-
-			foreach (NetIncomingMessage Message in Messages) {
-				if (Message.MessageType == NetIncomingMessageType.Data) {
-					string Type = Message.ReadString();
-					if (Type == "BlockTypesNum") {
-						Count = Message.ReadInt32();
-					} else if (Type == "BlockType") {
-						BlockType.Receive(Message);
-					}
-					Message.Position = 0;
-				}
-			}
-
-			if (Count == Types.Count) {
-				return true;
-			} else {
-				return false;
-			}
+			
+			return Count == Types.Count;
 		}
 
 		internal static void AddBlockType(BlockType b) {
 			Types.Add(b);
+		}
+
+		internal static List<BlockType> GetAll() {
+			return Types;
 		}
 	}
 }

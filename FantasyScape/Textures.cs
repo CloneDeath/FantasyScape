@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using GLImp;
 using Lidgren.Network;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class Textures : Resource{
 		static List<Texture> TextureList = new List<Texture>();
 		static bool RequestSent = false;
-		static int TextureCount = -1;
-		public static int Count;
+		public static int Count = -1;
 
 		public void Load() {
 			AddTexture("Data/Dirt.png", "Dirt");
@@ -43,37 +43,14 @@ namespace FantasyScape {
 			}
 		}
 
-		internal static bool ReceiveClient(List<NetIncomingMessage> Messages, NetClient Client) {
-			foreach (NetIncomingMessage Message in Messages) {
-				if (Message.MessageType == NetIncomingMessageType.Data) {
-					string Type = Message.ReadString();
-					if (Type == "NumTextures") {
-						TextureCount = Message.ReadInt32();
-					} else if (Type == "NetTexture") {
-						NetTexture.Receive(Message);
-					}
-					Message.Position = 0;
-				}
-			}
-
-
+		internal static bool Ready(NetClient Client) {
 			if (!RequestSent) {
-				RequestTextures(Client);
+				RequestMessage msg = new RequestMessage(RequestType.Textures);
+				msg.Send(Client, NetDeliveryMethod.ReliableUnordered);
 				RequestSent = true;
 			}
 
-			if (TextureList.Count == TextureCount) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		private static void RequestTextures(NetClient Client) {
-			NetOutgoingMessage nom = Client.CreateMessage();
-			nom.Write("Request");
-			nom.Write("Textures");
-			Client.SendMessage(nom, NetDeliveryMethod.ReliableUnordered);
+			return TextureList.Count == Count;
 		}
 
 		internal static List<Texture> GetAll() {

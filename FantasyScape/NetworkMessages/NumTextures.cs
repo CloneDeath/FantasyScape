@@ -7,7 +7,7 @@ using Lidgren.Network;
 namespace FantasyScape.NetworkMessages {
 	class NumTextures : Message {
 		protected override void WriteData(NetOutgoingMessage Message) {
-			Message.Write((Int32)Textures.Count);
+			Message.Write((Int32)Textures.GetAll().Count);
 		}
 
 		protected override void ReadData(NetIncomingMessage Message) {

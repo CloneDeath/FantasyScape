@@ -12,6 +12,8 @@ namespace FantasyScape.NetworkMessages {
 	public class RequestMessage : Message {
 		RequestType Type;
 
+		public RequestMessage() { }
+
 		public RequestMessage(RequestType type) {
 			this.Type = type;
 		}
@@ -34,8 +36,28 @@ namespace FantasyScape.NetworkMessages {
 				case RequestType.BlockTypes:
 					SendBlockTypes();
 					break;
+				case RequestType.BlockLayers:
+					SendBlockLayers();
+					break;
+				case RequestType.WorldSize:
+					SendWorldSize();
+					break;
 				default:
 					throw new NotImplementedException();
+			}
+		}
+
+		private void SendWorldSize() {
+			WorldSizeMessage wsm = new WorldSizeMessage();
+			wsm.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+		}
+
+		private void SendBlockLayers() {
+			for (int x = 0; x < Game.Instance.world.XSize; x++) {
+				for (int y = 0; y < Game.Instance.world.YSize; y++) {
+					BlockLayersMessage blm = new BlockLayersMessage(x, y);
+					blm.Send(Sender, NetDeliveryMethod.ReliableUnordered);
+				}
 			}
 		}
 
