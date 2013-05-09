@@ -10,7 +10,7 @@ namespace FantasyScape {
 	public class Player {
 		public double xpos, ypos, zpos;
 		double xrot, yrot;
-		double xspeed, yspeed, zspeed;
+		double /*xspeed, yspeed,*/ zspeed;
 		double Gravity = 0.05;
 	
 		World world;
@@ -40,8 +40,8 @@ namespace FantasyScape {
 			ypos = y;
 			world = w;
 		
-			xspeed = 0;
-			yspeed = 0;
+			//xspeed = 0;
+			//yspeed = 0;
 			zspeed = 0;
 		
 			for (int i = w.ZSize; i >= 0; i--){

@@ -24,7 +24,7 @@ namespace FantasyScape.Client {
 			GraphicsManager.Render += Draw;
 
 			/* Create Game World */
-			game = new Game(GameMode.Client);
+			game = new Game();
 			menu = new MenuManager();
 
 			/* Start Game */

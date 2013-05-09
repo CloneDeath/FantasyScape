@@ -6,12 +6,13 @@ using GLImp;
 using Lidgren.Network;
 
 namespace FantasyScape {
-	public class Textures {
+	public class Textures : Resource{
 		static List<NetTexture> TextureList = new List<NetTexture>();
 		static bool RequestSent = false;
 		static int TextureCount = -1;
+		public static int Count;
 
-		public static void ServerLoadTextures() {
+		public void Load() {
 			AddTexture("Data/Dirt.png", "Dirt");
 			AddTexture("Data/Grass.png", "Grass");
 			AddTexture("Data/Granite.png", "Granite");
@@ -68,10 +69,7 @@ namespace FantasyScape {
 
 
 			if (!RequestSent) {
-				NetOutgoingMessage nom = Client.CreateMessage();
-				nom.Write("Request");
-				nom.Write("Textures");
-				Client.SendMessage(nom, NetDeliveryMethod.ReliableUnordered);
+				RequestTextures(Client);
 				RequestSent = true;
 			}
 
@@ -80,6 +78,13 @@ namespace FantasyScape {
 			} else {
 				return false;
 			}
+		}
+
+		private static void RequestTextures(NetClient Client) {
+			NetOutgoingMessage nom = Client.CreateMessage();
+			nom.Write("Request");
+			nom.Write("Textures");
+			Client.SendMessage(nom, NetDeliveryMethod.ReliableUnordered);
 		}
 	}
 }

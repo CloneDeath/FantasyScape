@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lidgren.Network;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
-	public class BlockTypes {
+	public class BlockTypes : Resource {
 		static List<BlockType> Types = new List<BlockType>();
 
-		public static void LoadBlockTypes() {
+		public void Load() {
 			AddBlockType("Dirt", "Dirt", false);
 			AddBlockType("Granite", "Granite", false);
 			AddBlockType("Grass", "Grass", false);
@@ -44,14 +45,12 @@ namespace FantasyScape {
 		}
 
 		static bool SentRequest = false;
-		static int Count = -1;
+		public static int Count = -1;
 		internal static bool ReceiveClient(List<NetIncomingMessage> Messages, NetClient Client) {
 			if (!SentRequest) {
 				SentRequest = true;
-				NetOutgoingMessage nom = Client.CreateMessage();
-				nom.Write("Request");
-				nom.Write("BlockTypes");
-				Client.SendMessage(nom, NetDeliveryMethod.ReliableUnordered);
+				RequestMessage msg = new RequestMessage(RequestType.BlockTypes);
+				msg.Send(Client, Client.ServerConnection, NetDeliveryMethod.ReliableUnordered);
 			}
 
 			foreach (NetIncomingMessage Message in Messages) {

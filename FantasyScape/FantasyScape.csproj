@@ -75,7 +75,6 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockType.cs" />
     <Compile Include="Blocks\BlockTypes.cs" />
-    <Compile Include="GameMode.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MainCanvas.cs" />
@@ -83,6 +82,12 @@
     <Compile Include="Math\PerlinMap.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />
+    <Compile Include="NetworkMessages\BlockTypesNumber.cs" />
+    <Compile Include="NetworkMessages\Message.cs" />
+    <Compile Include="NetworkMessages\MessageHandler.cs" />
+    <Compile Include="NetworkMessages\NumTextures.cs" />
+    <Compile Include="NetworkMessages\RequestMessage.cs" />
+    <Compile Include="Resource.cs" />
     <Compile Include="TextureManagement\NetTexture.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

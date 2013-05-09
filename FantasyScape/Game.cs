@@ -13,8 +13,6 @@ namespace FantasyScape {
 		public World world;
 		Player player;
 
-		GameMode GameMode;
-
 		public enum GameState {
 			NotReady, Connecting, Playing
 		}
@@ -23,8 +21,7 @@ namespace FantasyScape {
 
 		NetClient Client;
 
-		public Game(GameMode mode) {
-			this.GameMode = mode;
+		public Game() {
 			world = new World();
 		}
 
@@ -62,10 +59,6 @@ namespace FantasyScape {
 				world.draw(player);
 				player.updateCamera();
 			}
-		}
-
-		public void MountTextures() {
-			Textures.ServerLoadTextures();
 		}
 
 		public void GenerateWorld() {
