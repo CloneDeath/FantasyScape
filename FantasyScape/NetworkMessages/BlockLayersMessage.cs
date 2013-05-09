@@ -19,8 +19,8 @@ namespace FantasyScape.NetworkMessages {
 		protected override void WriteData(NetOutgoingMessage Message) {
 			Message.Write((Int32)x);
 			Message.Write((Int32)y);
-			for (int z = 0; z < Game.Instance.world.ZSize; z++) {
-				Block b = Game.Instance.world.blockAt(x, y, z);
+			for (int z = 0; z < Game.World.ZSize; z++) {
+				Block b = Game.World.blockAt(x, y, z);
 				if (b != null) {
 					Message.Write(z);
 					b.Write(Message);
@@ -36,16 +36,16 @@ namespace FantasyScape.NetworkMessages {
 				Block b = new Block();
 				int z = Message.ReadInt32();
 				b.Read(Message);
-				Game.Instance.world.blocks[x, y, z] = b;
+				Game.World.blocks[x, y, z] = b;
 			}
 		}
 
 		protected override void ExecuteMessage() {
-			Game.Instance.world.LayerCount++;
+			Game.World.LayerCount++;
 
-			if (Game.Instance.world.LayerCount >= Game.Instance.world.XSize * Game.Instance.world.YSize) {
-				Game.Instance.world.Current = World.State.Done;
-				Game.Instance.world.refreshExposedBlocks();
+			if (Game.World.LayerCount >= Game.World.XSize * Game.World.YSize) {
+				Game.World.Current = World.State.Done;
+				Game.World.refreshExposedBlocks();
 			}
 		}
 	}

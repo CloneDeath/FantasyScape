@@ -58,7 +58,7 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, SideTex.ID);
 			GL.Begin(BeginMode.Quads);// Draw A Quad
 			//Back
-			if (!world.isSolid(x, y - 1, z)) {
+			if (!world.IsSolid(x, y - 1, z)) {
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
 				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
@@ -66,7 +66,7 @@ namespace FantasyScape {
 			}
 
 			//Front
-			if (!world.isSolid(x, y + 1, z)) {
+			if (!world.IsSolid(x, y + 1, z)) {
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
 				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
@@ -74,7 +74,7 @@ namespace FantasyScape {
 			}
 
 			//Left
-			if (!world.isSolid(x - 1, y, z)) {
+			if (!world.IsSolid(x - 1, y, z)) {
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
@@ -82,7 +82,7 @@ namespace FantasyScape {
 			}
 
 			//Right
-			if (!world.isSolid(x + 1, y, z)) {
+			if (!world.IsSolid(x + 1, y, z)) {
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
@@ -96,7 +96,7 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, BottomTex.ID);
 			GL.Begin(BeginMode.Quads);
 			//Bottom
-			if (!world.isSolid(x, y, z - 1)) {
+			if (!world.IsSolid(x, y, z - 1)) {
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
@@ -107,7 +107,7 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, TopTex.ID);
 			GL.Begin(BeginMode.Quads);
 			//Top
-			if (!world.isSolid(x, y, z + 1)) {
+			if (!world.IsSolid(x, y, z + 1)) {
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
@@ -146,7 +146,7 @@ namespace FantasyScape {
 		}
 
 		public bool moveDown(int x, int y, int z, World world) {
-			if (!world.isSolid(x, y, z)) {
+			if (!world.IsSolid(x, y, z)) {
 				if (world.blockAt(x, y, z) == null) {
 					Block b = new Block("Water");
 					world.addBlock(x, y, z, b);
@@ -175,7 +175,7 @@ namespace FantasyScape {
 		}
 
 		private bool moveTo(int x, int y, int z, World world) {
-			if (!world.isSolid(x, y, z)) {
+			if (!world.IsSolid(x, y, z)) {
 				if (world.blockAt(x, y, z) == null) {
 					Block b = new Block("Water");
 					world.addBlock(x, y, z, b);

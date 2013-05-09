@@ -13,8 +13,6 @@ namespace FantasyScape {
 		double /*xspeed, yspeed,*/ zspeed;
 		double Gravity = 0.05;
 	
-		World world;
-	
 		float Speed = 6.0f/30.0f; //6 meters per second
 		float PlayerHeight = 1.78f;
 	
@@ -25,7 +23,7 @@ namespace FantasyScape {
 			frustum.setCamInternals(angle, ratio, nearD, farD);
 		}
 	
-		public Player(float x, float y, World w){
+		public Player(float x, float y){
 			float Angle = 45;
 			float Ratio = (float)GraphicsManager.WindowWidth / (float)GraphicsManager.WindowHeight;
 			float nearD = 0.01f;
@@ -38,14 +36,13 @@ namespace FantasyScape {
 			zpos = 0;
 			xpos = x;
 			ypos = y;
-			world = w;
 		
 			//xspeed = 0;
 			//yspeed = 0;
 			zspeed = 0;
-		
-			for (int i = w.ZSize; i >= 0; i--){
-				if (w.isSolid(x, y, i)){
+
+			for (int i = Game.World.ZSize; i >= 0; i--) {
+				if (Game.World.IsSolid(x, y, i)) {
 					zpos = i+1;
 					break;
 				}
@@ -116,13 +113,13 @@ namespace FantasyScape {
 				newy -= Math.Sin(xrot-(Math.PI/2))*Speed;
 			}
 
-			if (!world.isSolid(newx, newy, zpos + 1.5f) && !world.isSolid(newx, newy, zpos + 0.5f)) {
+			if (!Game.World.IsSolid(newx, newy, zpos + 1.5f) && !Game.World.IsSolid(newx, newy, zpos + 0.5f)) {
 				xpos = newx;
 				ypos = newy;
 			} else {
-				if (!world.isSolid(newx, ypos, zpos + 1.5f) && !world.isSolid(newx, ypos, zpos + 0.5f)) {
+				if (!Game.World.IsSolid(newx, ypos, zpos + 1.5f) && !Game.World.IsSolid(newx, ypos, zpos + 0.5f)) {
 					xpos = newx;
-				} else if (!world.isSolid(xpos, newy, zpos + 1.5f) && !world.isSolid(xpos, newy, zpos + 0.5f)) {
+				} else if (!Game.World.IsSolid(xpos, newy, zpos + 1.5f) && !Game.World.IsSolid(xpos, newy, zpos + 0.5f)) {
 					ypos = newy;
 				} 
 			}
@@ -137,25 +134,25 @@ namespace FantasyScape {
 			}
 		
 			MouseManager.SetMousePositionWindows(320, 240);
-		
-			if (!world.isSolid(xpos, ypos, zpos + zspeed)){
+
+			if (!Game.World.IsSolid(xpos, ypos, zpos + zspeed)) {
 				zspeed -= Gravity;
 			}
 			if (zspeed < 0){
-				if (world.isSolid(xpos, ypos, zpos + zspeed)){
+				if (Game.World.IsSolid(xpos, ypos, zpos + zspeed)) {
 					zpos = (float)(Math.Floor(zpos+(zspeed)))+1.0f;
 					zspeed = 0;
 				}
 			} else if (zspeed > 0) {
-				if (world.isSolid(xpos, ypos, zpos + (zspeed) + PlayerHeight)) {
+				if (Game.World.IsSolid(xpos, ypos, zpos + (zspeed) + PlayerHeight)) {
 					zpos = (float)(Math.Floor(zpos+(zspeed)+PlayerHeight))-1.0f;
 					zspeed = 0;
 				}
 			}
 		
 			zpos += zspeed;
-		
-			if (KeyboardManager.IsDown(Key.Space) && world.isSolid(xpos, ypos, zpos - 1) && !world.isSolid(xpos, ypos, zpos + 2)){
+
+			if (KeyboardManager.IsDown(Key.Space) && Game.World.IsSolid(xpos, ypos, zpos - 1) && !Game.World.IsSolid(xpos, ypos, zpos + 2)) {
 				zspeed = 1;
 			}
 		
@@ -191,7 +188,7 @@ namespace FantasyScape {
 			for (int x = -CDist; x <= CDist; x++){
 				for (int y = -CDist; y <= CDist; y++){
 					for (int z = -CDist; z <= CDist; z++){
-						if (world.isSolid(xpos + x, ypos + y, zpos + z + PlayerHeight)) {
+						if (Game.World.IsSolid(xpos + x, ypos + y, zpos + z + PlayerHeight)) {
 							Vector3 B1 = new Vector3();
 							B1.X = (int)(xpos+x);
 							B1.Y = (int)(ypos+y);
@@ -218,7 +215,7 @@ namespace FantasyScape {
 		
 			if (foundOne){
 				//System.out.println("X:" + bestX + " Y:" + bestY + " Z:" + bestZ);
-				world.removeBlock(bestX, bestY, bestZ);
+				Game.World.removeBlock(bestX, bestY, bestZ);
 			}
 		}
 	
@@ -248,7 +245,7 @@ namespace FantasyScape {
 			for (int x = -CDist; x <= CDist; x++){
 				for (int y = -CDist; y <= CDist; y++){
 					for (int z = -CDist; z <= CDist; z++){
-						if (world.isSolid(xpos + x, ypos + y, zpos + z + PlayerHeight)) {
+						if (Game.World.IsSolid(xpos + x, ypos + y, zpos + z + PlayerHeight)) {
 							Vector3 B1 = new Vector3();
 							B1.X = (int)(xpos+x);
 							B1.Y = (int)(ypos+y);
@@ -264,8 +261,8 @@ namespace FantasyScape {
 									(int)(ypos+y),
 									(int)(zpos + z + PlayerHeight), 
 									clb);
-							if (clb != NONE && clb != INSIDE && 
-									world.blockAt(temp[0],temp[1], temp[2]) == null){
+							if (clb != NONE && clb != INSIDE &&
+									Game.World.blockAt(temp[0], temp[1], temp[2]) == null) {
 								foundOne = true;
 								float length = (float)Math.Sqrt(x*x + y*y + z*z);
 								if (length < bestDist){
@@ -287,8 +284,8 @@ namespace FantasyScape {
 				bestX = temp[0];
 				bestY = temp[1];
 				bestZ = temp[2];
-			
-				world.addBlock(bestX, bestY, bestZ);
+
+				Game.World.addBlock(bestX, bestY, bestZ);
 			
 				//System.out.println(BestSide);
 				//System.out.println("X:" + bestX + " Y:" + bestY + " Z:" + bestZ);

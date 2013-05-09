@@ -17,6 +17,7 @@ namespace FantasyScape {
 			AddTexture("Data/Grass.png", "Grass");
 			AddTexture("Data/Granite.png", "Granite");
 			AddTexture("Data/Water.png", "Water");
+			AddTexture("Data/Player.png", "Player");
 		}
 
 		private static void AddTexture(string filename, string name) {

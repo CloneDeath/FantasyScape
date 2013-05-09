@@ -7,9 +7,9 @@ using Lidgren.Network;
 namespace FantasyScape.NetworkMessages {
 	class WorldSizeMessage : Message {
 		protected override void WriteData(NetOutgoingMessage Message) {
-			Message.Write((Int32)Game.Instance.world.XSize);
-			Message.Write((Int32)Game.Instance.world.YSize);
-			Message.Write((Int32)Game.Instance.world.ZSize);
+			Message.Write((Int32)Game.World.XSize);
+			Message.Write((Int32)Game.World.YSize);
+			Message.Write((Int32)Game.World.ZSize);
 		}
 
 		int xsize;
@@ -22,12 +22,12 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		protected override void ExecuteMessage() {
-			Game.Instance.world.XSize = xsize;
-			Game.Instance.world.YSize = ysize;
-			Game.Instance.world.ZSize = zsize;
+			Game.World.XSize = xsize;
+			Game.World.YSize = ysize;
+			Game.World.ZSize = zsize;
 
-			Game.Instance.world.blocks = new Block[xsize, ysize, zsize];
-			Game.Instance.world.Current = World.State.SendingLayersRequest;
+			Game.World.blocks = new Block[xsize, ysize, zsize];
+			Game.World.Current = World.State.SendingLayersRequest;
 		}
 	}
 }

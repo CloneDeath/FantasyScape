@@ -7,19 +7,15 @@ using FantasyScape.NetworkMessages;
 
 namespace FantasyScape.Server {
 	class GameServer {
-		static Game game;
 		static NetServer Server;
 
 		public GameServer() {
-			//Create Game World
-			game = new Game();
-
 			/* Load Resources */
 			ResourceManager.Load();
 
 			/* Generate World */
 			Console.WriteLine("Generating World");
-			game.GenerateWorld();
+			Game.GenerateWorld();
 
 
 			/* Listen for Clients */

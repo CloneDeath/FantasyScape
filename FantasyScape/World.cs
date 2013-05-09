@@ -228,16 +228,16 @@ namespace FantasyScape {
 			//}
 
 
-			if (!isSolid(xat, yat + 1, zat) || !isSolid(xat + 1, yat, zat) ||
-					!isSolid(xat - 1, yat, zat) || !isSolid(xat, yat, zat + 1) ||
-					!isSolid(xat, yat, zat - 1) || !isSolid(xat, yat - 1, zat)) {
+			if (!IsSolid(xat, yat + 1, zat) || !IsSolid(xat + 1, yat, zat) ||
+					!IsSolid(xat - 1, yat, zat) || !IsSolid(xat, yat, zat + 1) ||
+					!IsSolid(xat, yat, zat - 1) || !IsSolid(xat, yat - 1, zat)) {
 				return true;
 			} else {
 				return false;
 			}
 		}
 
-		public bool isSolid(double x, double y, double z) {
+		public bool IsSolid(double x, double y, double z) {
 			int xat = (int)x;
 			int yat = (int)y;
 			int zat = (int)z;

@@ -51,8 +51,8 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		private void SendBlockLayers() {
-			for (int x = 0; x < Game.Instance.world.XSize; x++) {
-				for (int y = 0; y < Game.Instance.world.YSize; y++) {
+			for (int x = 0; x < Game.World.XSize; x++) {
+				for (int y = 0; y < Game.World.YSize; y++) {
 					BlockLayersMessage blm = new BlockLayersMessage(x, y);
 					blm.Reply();
 				}

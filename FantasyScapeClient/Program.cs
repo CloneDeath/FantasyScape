@@ -6,11 +6,14 @@ using GLImp;
 using System.Drawing;
 using FantasyScape;
 using OpenTK.Input;
+using Lidgren.Network;
+using FantasyScape.NetworkMessages;
+using System.Threading;
 
 namespace FantasyScape.Client {
 	class Program {
-		public static Game game;
 		static MenuManager menu;
+		static NetClient Client;
 
 		static void Main(string[] args){
 			/* Set up Graphics Manager */
@@ -24,7 +27,6 @@ namespace FantasyScape.Client {
 			GraphicsManager.Render += Draw;
 
 			/* Create Game World */
-			game = new Game();
 			menu = new MenuManager();
 
 			/* Start Game */
@@ -35,7 +37,15 @@ namespace FantasyScape.Client {
 		}
 
 		static void Update() {
-			game.Update();
+			if (Client != null) {
+				List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
+				Client.ReadMessages(Messages);
+				foreach (NetIncomingMessage msg in Messages) {
+					Message.Handle(msg);
+				}
+			}
+
+			Game.Update();
 
 			if (KeyboardManager.IsPressed(Key.Escape)) {
 				MainCanvas.Dispose();
@@ -53,11 +63,24 @@ namespace FantasyScape.Client {
 		}
 
 		static void Draw() {
-			game.Draw();
+			Game.Draw();
 		}
 
-		internal static void Connect(string IPAddress, int Port) {
-			game.Connect(IPAddress, Port);
+		public static void Connect(string IPAddress, int Port) {
+			Game.State = Game.GameState.Connecting;
+
+			NetPeerConfiguration config = new NetPeerConfiguration("FantasyScape");
+			Client = new NetClient(config);
+			Client.Start();
+			Client.Connect(IPAddress, Port);
+
+			while (Client.ConnectionStatus != NetConnectionStatus.Connected) {
+				Thread.Sleep(1000);
+				Client.ReadMessages(new List<NetIncomingMessage>());
+			}
+			Console.WriteLine("Connected!");
+
+			Message.RegisterClient(Client);
 		}
 	}
 }
