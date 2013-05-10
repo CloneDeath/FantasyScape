@@ -19,7 +19,10 @@ namespace FantasyScape.NetworkMessages {
 
 		protected override void ReadData(Lidgren.Network.NetIncomingMessage Message) {
 			p = Game.FindPlayer(Message.ReadInt32());
-			p.Read(Message);
+			//TODO: nrodine3, add the player instead. Possibly merge with PlayerAdd message...?
+			if (p != null) {
+				p.Read(Message);
+			}
 		}
 
 		protected override void ExecuteMessage() {
