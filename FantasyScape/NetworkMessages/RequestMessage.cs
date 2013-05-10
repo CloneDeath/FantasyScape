@@ -49,6 +49,11 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		private void SendPlayerData() {
+			foreach (Player p in Game.Players) {
+				PlayerAdd add = new PlayerAdd(p);
+				add.Reply();
+			}
+
 			PlayerAssignment passign = new PlayerAssignment();
 			passign.Reply();
 
