@@ -260,8 +260,8 @@ namespace FantasyScape {
 			}
 		
 			if (foundOne){
-				//System.out.println("X:" + bestX + " Y:" + bestY + " Z:" + bestZ);
 				Game.World.RemoveBlock(bestX, bestY, bestZ);
+				new BlockRemove(bestX, bestY, bestZ).Send();
 			}
 		}
 	
