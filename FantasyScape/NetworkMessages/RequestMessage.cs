@@ -54,7 +54,7 @@ namespace FantasyScape.NetworkMessages {
 				add.Reply();
 			}
 
-			PlayerAssignment passign = new PlayerAssignment();
+			PlayerAssignment passign = new PlayerAssignment(true);
 			passign.Reply();
 
 			PlayerAdd padd = new PlayerAdd(passign.player);

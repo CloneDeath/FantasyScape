@@ -14,7 +14,6 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		protected override void WriteData(Lidgren.Network.NetOutgoingMessage Message) {
-			player = Game.AddNewPlayer();
 			player.Write(Message);
 		}
 
