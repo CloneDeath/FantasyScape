@@ -85,9 +85,12 @@
     <Compile Include="NetworkMessages\BlockLayersMessage.cs" />
     <Compile Include="NetworkMessages\BlockTypeData.cs" />
     <Compile Include="NetworkMessages\BlockTypesNumber.cs" />
+    <Compile Include="NetworkMessages\PlayerAdd.cs" />
     <Compile Include="NetworkMessages\Message.cs" />
     <Compile Include="NetworkMessages\MessageHandler.cs" />
     <Compile Include="NetworkMessages\NumTextures.cs" />
+    <Compile Include="NetworkMessages\PlayerAssignment.cs" />
+    <Compile Include="NetworkMessages\PlayerUpdate.cs" />
     <Compile Include="NetworkMessages\RequestMessage.cs" />
     <Compile Include="NetworkMessages\WorldSizeMessage.cs" />
     <Compile Include="Resource.cs" />

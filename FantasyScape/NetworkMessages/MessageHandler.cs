@@ -19,7 +19,7 @@ namespace FantasyScape.NetworkMessages {
 			if (Match.GetConstructor(new Type[0]) == null) {
 				throw new Exception("Message '" + Match.Name + "' Does not have an empty constructor!");
 			}
-			Console.WriteLine("Received Message for '" + Match.Name + "'");
+			//Console.WriteLine("Received Message for '" + Match.Name + "'");
 			Message msg = (Message)Match.GetConstructor(new Type[0]).Invoke(new object[0]);
 			msg.Receive(Message);
 		}

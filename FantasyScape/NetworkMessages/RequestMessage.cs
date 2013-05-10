@@ -7,7 +7,7 @@ using GLImp;
 
 namespace FantasyScape.NetworkMessages {
 	public enum RequestType {
-		Textures, BlockTypes, WorldSize, BlockLayers
+		Textures, BlockTypes, WorldSize, BlockLayers, NewPlayer
 	}
 	public class RequestMessage : Message {
 		RequestType Type;
@@ -40,9 +40,20 @@ namespace FantasyScape.NetworkMessages {
 				case RequestType.WorldSize:
 					SendWorldSize();
 					break;
+				case RequestType.NewPlayer:
+					SendPlayerData();
+					break;
 				default:
 					throw new NotImplementedException();
 			}
+		}
+
+		private void SendPlayerData() {
+			PlayerAssignment passign = new PlayerAssignment();
+			passign.Reply();
+
+			PlayerAdd padd = new PlayerAdd(passign.player);
+			padd.Forward();
 		}
 
 		private void SendWorldSize() {

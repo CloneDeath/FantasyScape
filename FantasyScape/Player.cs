@@ -5,13 +5,15 @@ using System.Text;
 using OpenTK;
 using GLImp;
 using OpenTK.Input;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class Player {
 		public double xpos, ypos, zpos;
+		public int PlayerID;
 		double xrot, yrot;
 		double /*xspeed, yspeed,*/ zspeed;
-		double Gravity = 0.05;
+		const double Gravity = 0.05;
 	
 		float Speed = 6.0f/30.0f; //6 meters per second
 		float PlayerHeight = 1.78f;
@@ -52,6 +54,36 @@ namespace FantasyScape {
 			xrot = (float)Math.PI/2;
 			yrot = 0;
 		}
+
+		public Player() {
+			float Angle = 45;
+			float Ratio = (float)GraphicsManager.WindowWidth / (float)GraphicsManager.WindowHeight;
+			float nearD = 0.01f;
+			float farD = 50.0f;
+			Ratio = 0.1f;
+			//Angle = 1000;
+			Angle = Angle / Ratio;
+			setCamInternals(Angle, GraphicsManager.WindowWidth / GraphicsManager.WindowHeight, nearD, farD);
+
+			zpos = 0;
+			xpos = 0;
+			ypos = 0;
+
+			//xspeed = 0;
+			//yspeed = 0;
+			zspeed = 0;
+
+			for (int i = Game.World.ZSize; i >= 0; i--) {
+				if (Game.World.IsSolid(xpos, ypos, i)) {
+					zpos = i + 1;
+					break;
+				}
+			}
+
+
+			xrot = (float)Math.PI / 2;
+			yrot = 0;
+		}
 	
 		private float LookingAtX(float s){
 			return (float)((-Math.Cos(xrot) * Math.Cos(yrot) * s) + xpos);
@@ -90,6 +122,17 @@ namespace FantasyScape {
 				//frustum.drawNormals();
 			}
 
+		}
+
+		public void DrawWorld() {
+			double Width = 0.5;
+			double Height = 2.0;
+			GraphicsManager.DrawQuad(
+				new Vector3d(xpos - Width, ypos, zpos + Height),
+				new Vector3d(xpos + Width, ypos, zpos + Height),
+				new Vector3d(xpos + Width, ypos, zpos),
+				new Vector3d(xpos - Width, ypos, zpos), 
+			Textures.GetTexture("Player"));
 		}
 	
 		public void update(){
@@ -163,6 +206,9 @@ namespace FantasyScape {
 			if (MouseManager.IsPressed(MouseButton.Right)) {
 				AddBlock();
 			}
+
+			PlayerUpdate updatemsg = new PlayerUpdate(this);
+			updatemsg.Send();
 		}
 	
 		void RemoveBlock(){
@@ -427,6 +473,22 @@ namespace FantasyScape {
 	
 		public float distance(Vector3 a, Vector3 b){
 			return (float)Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2) + Math.Pow(a.Z - b.Z, 2));
+		}
+
+		internal void Write(Lidgren.Network.NetOutgoingMessage Message) {
+			Message.Write(xpos);
+			Message.Write(ypos);
+			Message.Write(zpos);
+
+			Message.Write((Int32)PlayerID);
+		}
+
+		internal void Read(Lidgren.Network.NetIncomingMessage Message) {
+			xpos = Message.ReadDouble();
+			ypos = Message.ReadDouble();
+			zpos = Message.ReadDouble();
+
+			PlayerID = Message.ReadInt32();
 		}
 	}
 }

@@ -64,8 +64,12 @@ namespace FantasyScape.NetworkMessages {
 			this.Send(client, client.ServerConnection, method);
 		}
 
-		private void Send(NetServer peer, NetDeliveryMethod method) {
-			foreach (NetConnection conn in peer.Connections) {
+		private void Send(NetServer server, NetDeliveryMethod method) {
+			this.Send(server, server.Connections, NetDeliveryMethod.ReliableUnordered);
+		}
+
+		private void Send(NetPeer peer, List<NetConnection> clients, NetDeliveryMethod method) {
+			foreach (NetConnection conn in clients) {
 				Send(peer, conn, method);
 			}
 		}
@@ -87,6 +91,22 @@ namespace FantasyScape.NetworkMessages {
 			LastReceivedSender = Message.SenderConnection;
 			ExecuteMessage();
 			LastReceivedSender = null;
+		}
+
+		/// <summary>
+		/// Sends the message to everyone EXCEPT the person who you would reply to.
+		/// 
+		/// Thus, this is a server only command. Sending it as a client does nothing.
+		/// </summary>
+		internal void Forward() {
+			if (ConnType == ConnectionType.Client) {
+				//Do nothing
+			} else {
+				List<NetConnection> Replyto = new List<NetConnection>(
+					Server.Connections.Where((c)=> {return c != LastReceivedSender;}
+				));
+				this.Send(Server, Replyto, NetDeliveryMethod.ReliableUnordered);
+			}
 		}
 
 		protected abstract void WriteData(NetOutgoingMessage Message);

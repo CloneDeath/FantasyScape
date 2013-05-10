@@ -12,7 +12,8 @@ using FantasyScape.NetworkMessages;
 namespace FantasyScape {
 	public class Game {
 		public static World World;
-		public static Player Player;
+		public static List<Player> Players;
+		public static Player Self = null;
 
 		public enum GameState {
 			NotReady, Connecting, Playing
@@ -22,11 +23,13 @@ namespace FantasyScape {
 
 		static Game() {
 			World = new World();
+			Players = new List<Player>();
 		}
 
+		static bool RequestedPlayer = false;
 		public static void Update() {
 			if (State == GameState.Playing) {
-				Player.update();
+				Self.update();
 				World.update();
 			}
 
@@ -36,9 +39,14 @@ namespace FantasyScape {
 				Ready &= Textures.Ready();
 				Ready &= BlockTypes.Ready();
 				Ready &= World.Ready();
+				Ready &= (Self != null);
+
+				if (!RequestedPlayer) {
+					RequestedPlayer = true;
+					new RequestMessage(RequestType.NewPlayer).Send();
+				}
 
 				if (Ready) {
-					Player = new Player(World.XSize / 2, World.ZSize / 2);
 					MouseManager.SetMousePositionWindows(320, 240);
 					State = GameState.Playing;
 				}
@@ -47,14 +55,43 @@ namespace FantasyScape {
 
 		public static void Draw() {
 			if (State == GameState.Playing) {
-				World.draw(Player);
-				Player.updateCamera();
+				World.draw(Self);
+				Self.updateCamera();
+
+				foreach (Player p in Players) {
+					if (p != Self || KeyboardManager.IsDown(Key.F2)) {
+						p.DrawWorld();
+					}
+				}
 			}
 		}
 
 		public static void GenerateWorld() {
 			World.GenerateMap();
-			Player = new Player(World.XSize / 2, World.ZSize / 2);
+		}
+
+		internal static Player AddNewPlayer() {
+			Player p = new Player(World.XSize / 2, World.YSize / 2);
+			p.PlayerID = Players.Count;
+			Players.Add(p);
+			return p;
+		}
+
+		internal static void AddPlayer(Player p) {
+			Players.Add(p);
+		}
+
+		internal static void SetSelf(Player p) {
+			Self = p;
+		}
+
+		public static Player FindPlayer(int PlayerID) {
+			foreach (Player p in Players) {
+				if (p.PlayerID == PlayerID) {
+					return p;
+				}
+			}
+			return null;
 		}
 	}
 }
