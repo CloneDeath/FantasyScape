@@ -111,7 +111,7 @@ namespace FantasyScape {
 			exposeBlock(x, y, z - 1);
 		}
 
-		public void removeBlock(int x, int y, int z) {
+		public void RemoveBlock(int x, int y, int z) {
 			if (blockAt(x, y, z) != null) {
 				int remi = exposedBlocks.IndexOf(blocks[x, y, z]);
 				if (remi != -1) {

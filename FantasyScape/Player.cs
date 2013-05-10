@@ -261,7 +261,7 @@ namespace FantasyScape {
 		
 			if (foundOne){
 				//System.out.println("X:" + bestX + " Y:" + bestY + " Z:" + bestZ);
-				Game.World.removeBlock(bestX, bestY, bestZ);
+				Game.World.RemoveBlock(bestX, bestY, bestZ);
 			}
 		}
 	

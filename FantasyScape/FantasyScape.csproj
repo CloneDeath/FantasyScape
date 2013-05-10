@@ -83,6 +83,7 @@
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />
     <Compile Include="NetworkMessages\BlockLayersMessage.cs" />
+    <Compile Include="NetworkMessages\BlockRemove.cs" />
     <Compile Include="NetworkMessages\BlockTypeData.cs" />
     <Compile Include="NetworkMessages\BlockTypesNumber.cs" />
     <Compile Include="NetworkMessages\PlayerAdd.cs" />

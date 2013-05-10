@@ -138,7 +138,7 @@ namespace FantasyScape {
 					world.removeUpdate(x, y, z);
 				}
 				if (level <= minLevel) {
-					world.removeBlock(x, y, z);
+					world.RemoveBlock(x, y, z);
 				}
 			} else {
 				world.removeUpdate(x, y, z);
@@ -161,7 +161,7 @@ namespace FantasyScape {
 							if (diff > level) {
 								b.level += level;
 								level = 0;
-								world.removeBlock(x, y, z + 1);
+								world.RemoveBlock(x, y, z + 1);
 							} else {
 								b.level += diff;
 								level -= diff;
