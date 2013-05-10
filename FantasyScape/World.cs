@@ -81,6 +81,7 @@ namespace FantasyScape {
 		public void GenerateMap() {
 			MapGenerator mg = new MapGenerator(XSize, YSize, ZSize, this);
 			blocks = mg.generateTerrain();
+			refreshExposedBlocks();
 		}
 
 		public void GenerateFlatMap(){
@@ -92,6 +93,7 @@ namespace FantasyScape {
 					}
 				}
 			}
+			refreshExposedBlocks();
 		}
 
 		public Block blockAt(int x, int y, int z) {
@@ -118,6 +120,7 @@ namespace FantasyScape {
 					exposedBlocks.RemoveAt(remi);
 					exposedLocations.RemoveAt(remi);
 				}
+
 				removeUpdate(x, y, z);
 
 				blocks[x, y, z] = null;
