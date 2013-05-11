@@ -29,12 +29,12 @@ namespace FantasyScape {
 			return blocks;
 		}
 
-		private int WaterLevel = 90;
+		private int WaterLevel = 95;
 
 		private void GenerateWater() {
 			for (int x = 0; x < XSize; x++) {
 				for (int y = 0; y < YSize; y++) {
-					for (int z = (int)Heightmap[x,y]; z <= WaterLevel; z++) {
+					for (int z = (int)Heightmap[x,y] + 1; z <= WaterLevel; z++) {
 						blocks[x,y,z] = new Block("Water");
 						if (z == WaterLevel) {
 							Block b = blocks[x,y,z];
