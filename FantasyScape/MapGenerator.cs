@@ -50,9 +50,11 @@ namespace FantasyScape {
 
 		private void GenerateBase() {
 			//Generate
+			const int variability = 15;
+			const int lowlevel = 100;
 			for (int y = 0; y < YSize; y++) {
 				for (int x = 0; x < XSize; x++) {
-					Heightmap[x, y] = ((float)pm.noise(3 * x / 256.0, 3 * y / 256.0, 100) * 50) + 100;
+					Heightmap[x, y] = ((float)pm.noise(3 * x / 256.0, 3 * y / 256.0, 100) * variability) + lowlevel;
 				}
 			}
 
