@@ -29,7 +29,7 @@ namespace FantasyScape {
 			return blocks;
 		}
 
-		private int WaterLevel = 85;
+		private int WaterLevel = 90;
 
 		private void GenerateWater() {
 			for (int x = 0; x < XSize; x++) {
@@ -50,7 +50,7 @@ namespace FantasyScape {
 
 		private void GenerateBase() {
 			//Generate
-			const int variability = 15;
+			const int variability = 20;
 			const int lowlevel = 100;
 			for (int y = 0; y < YSize; y++) {
 				for (int x = 0; x < XSize; x++) {
