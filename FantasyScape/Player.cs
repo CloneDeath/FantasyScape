@@ -127,11 +127,29 @@ namespace FantasyScape {
 		public void DrawWorld() {
 			double Width = 0.5;
 			double Height = 2.0;
+
+			//Face parallel to camera
+			//double Direction = Game.Self.xrot;
+
+			//Face towards player
+			Vector2d Diff = new Vector2d(this.xpos, this.ypos) - new Vector2d(Game.Self.xpos, Game.Self.ypos);
+			double Direction = Math.Atan2(Diff.Y, Diff.X);
+
+			Vector2d Left = new Vector2d(
+			    xpos - Math.Cos(Direction - (Math.PI / 2)) * Width,
+			    ypos + Math.Sin(Direction + (Math.PI / 2)) * Width
+			);
+
+			Vector2d Right = new Vector2d(
+			    xpos - Math.Cos(Direction + (Math.PI / 2)) * Width,
+			    ypos + Math.Sin(Direction - (Math.PI / 2)) * Width
+			);
+
 			GraphicsManager.DrawQuad(
-				new Vector3d(xpos - Width, ypos, zpos + Height),
-				new Vector3d(xpos + Width, ypos, zpos + Height),
-				new Vector3d(xpos + Width, ypos, zpos),
-				new Vector3d(xpos - Width, ypos, zpos), 
+				new Vector3d(Left.X, Left.Y, zpos + Height),
+				new Vector3d(Right.X, Right.Y, zpos + Height),
+				new Vector3d(Right.X, Right.Y, zpos),
+				new Vector3d(Left.X, Left.Y, zpos), 
 			Textures.GetTexture("Player"));
 		}
 	
