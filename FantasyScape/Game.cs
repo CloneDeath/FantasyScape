@@ -27,6 +27,7 @@ namespace FantasyScape {
 		}
 
 		static bool RequestedPlayer = false;
+		public static bool LockMouse = true;
 		public static void Update() {
 			if (State == GameState.Playing) {
 				Self.update();

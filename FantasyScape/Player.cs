@@ -166,17 +166,19 @@ namespace FantasyScape {
 					ypos = newy;
 				} 
 			}
+
+			if (Game.LockMouse) {
+				xrot += (MouseManager.GetMousePositionWindows().X - 320) / 150.0f;
+				yrot += (MouseManager.GetMousePositionWindows().Y - 240) / 150.0f;
 		
-			xrot += (MouseManager.GetMousePositionWindows().X - 320) / 150.0f;
-			yrot += (MouseManager.GetMousePositionWindows().Y - 240) / 150.0f;
-		
-			if (yrot >= Math.PI/2){
-				yrot = (float)Math.PI/2 - 0.001f;
-			} else if (yrot <= -Math.PI/2){
-				yrot = (float)-Math.PI/2 + 0.001f;
+				if (yrot >= Math.PI/2){
+					yrot = (float)Math.PI/2 - 0.001f;
+				} else if (yrot <= -Math.PI/2){
+					yrot = (float)-Math.PI/2 + 0.001f;
+				}
+
+				MouseManager.SetMousePositionWindows(320, 240);
 			}
-		
-			MouseManager.SetMousePositionWindows(320, 240);
 
 			if (!Game.World.IsSolid(xpos, ypos, zpos + zspeed)) {
 				zspeed -= Gravity;
@@ -331,7 +333,10 @@ namespace FantasyScape {
 				bestY = temp[1];
 				bestZ = temp[2];
 
-				Game.World.addBlock(bestX, bestY, bestZ);
+				Game.World.addBlock(bestX, bestY, bestZ, "Dirt");
+
+				BlockAdd msg = new BlockAdd(bestX, bestY, bestZ, "Dirt");
+				msg.Send();
 			
 				//System.out.println(BestSide);
 				//System.out.println("X:" + bestX + " Y:" + bestY + " Z:" + bestZ);

@@ -9,11 +9,14 @@ using OpenTK.Input;
 using Lidgren.Network;
 using FantasyScape.NetworkMessages;
 using System.Threading;
+using Gwen.Control;
 
 namespace FantasyScape.Client {
 	class Program {
 		static MenuManager menu;
 		static NetClient Client;
+
+		static WindowControl EscapeWindow;
 
 		static void Main(string[] args){
 			/* Set up Graphics Manager */
@@ -28,12 +31,37 @@ namespace FantasyScape.Client {
 
 			/* Create Game World */
 			menu = new MenuManager();
+			CreateEscapeWindow();
 
 			/* Start Game */
 			GraphicsManager.Start();
 
 			/* Hack: Clean up, this should be done automatically - GWEN, I'm looking at you >:| */
 			MainCanvas.Dispose();
+		}
+
+		private static void CreateEscapeWindow() {
+			EscapeWindow = new WindowControl(MainCanvas.GetCanvas());
+			EscapeWindow.SetPosition(10, 10);
+			EscapeWindow.SetSize(200, 200);
+
+			Button Close = new Button(EscapeWindow);
+			Close.SetPosition(10, 10);
+			Close.SetText("Continue");
+			Close.Clicked += delegate(Base sender) {
+				EscapeWindow.Hide();
+				Game.LockMouse = true;
+			};
+
+			Button Quit = new Button(EscapeWindow);
+			Quit.SetPosition(10, 40);
+			Quit.SetText("Quit");
+			Quit.Clicked += delegate(Base sender) {
+				MainCanvas.Dispose();
+				Environment.Exit(0);
+			};
+
+			EscapeWindow.Hide();
 		}
 
 		static void Update() {
@@ -48,8 +76,13 @@ namespace FantasyScape.Client {
 			Game.Update();
 
 			if (KeyboardManager.IsPressed(Key.Escape)) {
-				MainCanvas.Dispose();
-				Environment.Exit(0);
+				if (EscapeWindow.IsHidden) {
+					EscapeWindow.Show();
+					Game.LockMouse = false;
+				} else {
+					EscapeWindow.Hide();
+					Game.LockMouse = true;
+				}
 			}
 
 			//Toggle Full Screen
