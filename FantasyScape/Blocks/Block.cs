@@ -15,7 +15,7 @@ namespace FantasyScape {
 			}
 		}
 
-		byte level;
+		int level;
 
 		public Block() {
 			this.BlockTypeName = "";
@@ -133,7 +133,9 @@ namespace FantasyScape {
 
 		public virtual void postUpdate(int x, int y, int z, World world) {
 			if (BlockType.Liquid) {
-				if (!LiquidUpdated) {
+				if (LiquidUpdated) {
+					world.refreshUpdateBlocks(x, y, z);
+				} else {
 					//world.removeUpdate(x, y, z);
 				}
 				if (level <= 0) {
@@ -152,7 +154,7 @@ namespace FantasyScape {
 			return GiveTo(x, y, z, world, 1, false);
 		}
 
-		public bool GiveTo(int x, int y, int z, World world, byte MaxWater, bool Down) {
+		public bool GiveTo(int x, int y, int z, World world, int MaxWater, bool Down) {
 			if (MaxWater > level) {
 				MaxWater = level;
 			}
@@ -169,7 +171,7 @@ namespace FantasyScape {
 					if (b.BlockType.Name == "Water") {
 						if (b.level < 16) {
 							if (Down) {
-								byte diff = (byte)(16 - b.level);
+								int diff = 16 - b.level;
 								if (diff > MaxWater) {
 									diff = MaxWater;
 								}
@@ -177,14 +179,12 @@ namespace FantasyScape {
 								this.level -= diff;
 								return true;
 							} else {
-								byte diff = (byte)(this.level - b.level);
-								if (diff > MaxWater) {
-									diff = MaxWater;
+								int diff = this.level - b.level;
+								if (diff >= MaxWater + 1) {
+									b.level += MaxWater;
+									this.level -= MaxWater;
 								}
-								if (diff >= 1) {
-									b.level += diff;
-									this.level -= diff;
-								}
+								
 								return true;
 							}
 						}
@@ -197,12 +197,12 @@ namespace FantasyScape {
 
 		public void Write(NetOutgoingMessage nom) {
 			nom.Write(BlockTypeName);
-			nom.Write(level);
+			nom.Write((Int32)level);
 		}
 
 		public void Read(NetIncomingMessage nim) {
 			BlockTypeName = nim.ReadString();
-			level = nim.ReadByte();
+			level = nim.ReadInt32();
 		}
 	}
 }
