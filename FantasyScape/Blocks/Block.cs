@@ -15,45 +15,44 @@ namespace FantasyScape {
 			}
 		}
 
-		float level;
-		const float minLevel = 0.01f;
+		byte level;
 
 		public Block() {
 			this.BlockTypeName = "";
-			this.level = 1.0f;
+			this.level = 16;
 		}
 
 		public Block(string Type) {
 			this.BlockTypeName = Type;
-			level = 1.0f;
+			level = 16;
 		}
 
 		public bool isSolid() {
 			if (BlockType.Liquid) {
-				if (level >= 0.9) {
-					return true;
-				} else {
-					return false;
-				}
+				return this.level >= 16;
 			} else {
 				return true;
 			}
 		}
 
 		public virtual void draw(float x, float y, float z, World world) {
-			if (level < minLevel && BlockType.Liquid) {
+			if (level <= 0 && BlockType.Liquid) {
 				return;
 			}
 			draw(x, y, z, world, Textures.GetTexture(BlockType.TopTexture),
 				Textures.GetTexture(BlockType.SideTexture),
-				Textures.GetTexture(BlockType.BotTexture), level);
+				Textures.GetTexture(BlockType.BotTexture), level / 16.0f);
 		}
 
 		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex, double height) {
 			GL.PushMatrix();
 			GL.Translate(x, y, z);
 			GL.Scale(1.0f, 1.0f, height);
-			GL.Color3(1.0f, 1.0f, 1.0f);
+			if (BlockType.Liquid) {
+				GL.Color4(1.0f, 1.0f, 1.0f, 0.5f);
+			} else {
+				GL.Color3(1.0f, 1.0f, 1.0f);
+			}
 
 			GL.BindTexture(TextureTarget.Texture2D, SideTex.ID);
 			GL.Begin(BeginMode.Quads);// Draw A Quad
@@ -121,7 +120,7 @@ namespace FantasyScape {
 		public virtual void update(int x, int y, int z, World world) {
 			if (BlockType.Liquid) {
 				LiquidUpdated = moveDown(x, y, z - 1, world);
-				if (level > minLevel) {
+				if (level > 0) {
 					LiquidUpdated |= moveTo(x + 1, y, z, world);
 					LiquidUpdated |= moveTo(x - 1, y, z, world);
 					LiquidUpdated |= moveTo(x, y + 1, z, world);
@@ -135,9 +134,9 @@ namespace FantasyScape {
 		public virtual void postUpdate(int x, int y, int z, World world) {
 			if (BlockType.Liquid) {
 				if (!LiquidUpdated) {
-					world.removeUpdate(x, y, z);
+					//world.removeUpdate(x, y, z);
 				}
-				if (level <= minLevel) {
+				if (level <= 0) {
 					world.RemoveBlock(x, y, z);
 				}
 			} else {
@@ -146,62 +145,55 @@ namespace FantasyScape {
 		}
 
 		public bool moveDown(int x, int y, int z, World world) {
-			if (!world.IsSolid(x, y, z)) {
-				if (world.blockAt(x, y, z) == null) {
-					Block b = new Block("Water");
-					world.addBlock(x, y, z, b);
-					b.level = level;
-					level = 0;
-					return true;
-				} else {
-					Block b = world.blockAt(x, y, z);
-					if (b.BlockType.Name == "Water") {
-						if (b.level < 1.0f) {
-							float diff = (1.0f - b.level);
-							if (diff > level) {
-								b.level += level;
-								level = 0;
-								world.RemoveBlock(x, y, z + 1);
-							} else {
-								b.level += diff;
-								level -= diff;
-							}
-							return true;
-						}
-					}
-				}
-			}
-			return false;
+			return GiveTo(x, y, z, world, 16, true);
 		}
 
 		private bool moveTo(int x, int y, int z, World world) {
+			return GiveTo(x, y, z, world, 1, false);
+		}
+
+		public bool GiveTo(int x, int y, int z, World world, byte MaxWater, bool Down) {
+			if (MaxWater > level) {
+				MaxWater = level;
+			}
+
 			if (!world.IsSolid(x, y, z)) {
 				if (world.blockAt(x, y, z) == null) {
 					Block b = new Block("Water");
 					world.addBlock(x, y, z, b);
-					b.level = level / 4.0f;
-					level = level * 3.0f / 4.0f;
+					b.level = MaxWater;
+					level -= MaxWater;
 					return true;
 				} else {
 					Block b = world.blockAt(x, y, z);
 					if (b.BlockType.Name == "Water") {
-						if (b.level < level) {
-							float diff = (level - b.level) / 4.0f;
-							float cgive = level / 4.0f;
-							if (cgive > diff) {
+						if (b.level < 16) {
+							if (Down) {
+								byte diff = (byte)(16 - b.level);
+								if (diff > MaxWater) {
+									diff = MaxWater;
+								}
 								b.level += diff;
-								level -= diff;
+								this.level -= diff;
+								return true;
 							} else {
-								b.level += cgive;
-								level -= cgive;
+								byte diff = (byte)(this.level - b.level);
+								if (diff > MaxWater) {
+									diff = MaxWater;
+								}
+								if (diff >= 1) {
+									b.level += diff;
+									this.level -= diff;
+								}
+								return true;
 							}
-							return true;
 						}
 					}
 				}
 			}
 			return false;
 		}
+		
 
 		public void Write(NetOutgoingMessage nom) {
 			nom.Write(BlockTypeName);
@@ -210,7 +202,7 @@ namespace FantasyScape {
 
 		public void Read(NetIncomingMessage nim) {
 			BlockTypeName = nim.ReadString();
-			level = nim.ReadFloat();
+			level = nim.ReadByte();
 		}
 	}
 }

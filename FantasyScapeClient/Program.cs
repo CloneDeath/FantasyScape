@@ -21,6 +21,7 @@ namespace FantasyScape.Client {
 		static void Main(string[] args){
 			/* Set up Graphics Manager */
 			GraphicsManager.EnableMipmap = false;
+			GraphicsManager.UseExperimentalFullAlpha = true;
 			
 			GraphicsManager.SetTitle("FantasyScape");
 			GraphicsManager.SetResolution(640, 480);
