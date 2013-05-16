@@ -17,6 +17,7 @@ namespace FantasyScape.Client {
 		static NetClient Client;
 
 		static WindowControl EscapeWindow;
+		static WindowControl Editor;
 
 		static Camera2D Overlay;
 
@@ -38,6 +39,7 @@ namespace FantasyScape.Client {
 
 			/* Create Game World */
 			menu = new MenuManager();
+			CreateEditorWindow();
 			CreateEscapeWindow();
 
 			/* Start Game */
@@ -45,6 +47,21 @@ namespace FantasyScape.Client {
 
 			/* Hack: Clean up, this should be done automatically - GWEN, I'm looking at you >:| */
 			MainCanvas.Dispose();
+		}
+
+		private static void CreateEditorWindow() {
+			Editor = new WindowControl(MainCanvas.GetCanvas());
+			Editor.SetPosition(30, 30);
+			Editor.SetSize(200, 300);
+
+			Button Close = new Button(Editor);
+			Close.SetPosition(10, 10);
+			Close.SetText("Close");
+			Close.Clicked += delegate(Base sender) {
+				Editor.Hide();
+			};
+
+			Editor.Hide();
 		}
 
 		private static void CreateEscapeWindow() {
@@ -66,6 +83,13 @@ namespace FantasyScape.Client {
 			Quit.Clicked += delegate(Base sender) {
 				MainCanvas.Dispose();
 				Environment.Exit(0);
+			};
+			
+			Button Edit = new Button(EscapeWindow);
+			Edit.SetPosition(10, 70);
+			Edit.SetText("Open Editor");
+			Edit.Clicked += delegate(Base sender) {
+				Editor.Show();
 			};
 
 			EscapeWindow.Hide();
