@@ -57,5 +57,9 @@ namespace FantasyScape {
 		internal static List<Texture> GetAll() {
 			return TextureList;
 		}
+
+		public static bool Exists(string tex) {
+			return GetTexture(tex) != null;
+		}
 	}
 }

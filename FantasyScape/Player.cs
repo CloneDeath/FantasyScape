@@ -21,7 +21,7 @@ namespace FantasyScape {
 	
 		public Frustum frustum;
 
-		List<Block> Inventory = new List<Block>();
+		public List<Block> Inventory = new List<Block>();
 		int SelectedItem = 0;
 
 		void setCamInternals(double angle, double ratio, double nearD, double farD) {

@@ -45,12 +45,16 @@ namespace FantasyScape {
 			return Count == Types.Count;
 		}
 
-		internal static void AddBlockType(BlockType b) {
+		public static void AddBlockType(BlockType b) {
 			Types.Add(b);
 		}
 
 		internal static List<BlockType> GetAll() {
 			return Types;
+		}
+
+		public static bool Exists(string type) {
+			return GetBlockType(type) != null;
 		}
 	}
 }

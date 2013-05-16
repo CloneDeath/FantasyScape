@@ -14,12 +14,12 @@ using Gwen.Control;
 namespace FantasyScape.Client {
 	class Program {
 		static MenuManager menu;
+		static EscapeMenuManager escapemenu;
+		
 		static NetClient Client;
 
-		static WindowControl EscapeWindow;
-		static WindowControl Editor;
-
 		static Camera2D Overlay;
+		
 
 		static void Main(string[] args){
 			/* Set up Graphics Manager */
@@ -39,8 +39,7 @@ namespace FantasyScape.Client {
 
 			/* Create Game World */
 			menu = new MenuManager();
-			CreateEditorWindow();
-			CreateEscapeWindow();
+			escapemenu = new EscapeMenuManager();
 
 			/* Start Game */
 			GraphicsManager.Start();
@@ -49,51 +48,7 @@ namespace FantasyScape.Client {
 			MainCanvas.Dispose();
 		}
 
-		private static void CreateEditorWindow() {
-			Editor = new WindowControl(MainCanvas.GetCanvas());
-			Editor.SetPosition(30, 30);
-			Editor.SetSize(200, 300);
-
-			Button Close = new Button(Editor);
-			Close.SetPosition(10, 10);
-			Close.SetText("Close");
-			Close.Clicked += delegate(Base sender) {
-				Editor.Hide();
-			};
-
-			Editor.Hide();
-		}
-
-		private static void CreateEscapeWindow() {
-			EscapeWindow = new WindowControl(MainCanvas.GetCanvas());
-			EscapeWindow.SetPosition(10, 10);
-			EscapeWindow.SetSize(200, 200);
-
-			Button Close = new Button(EscapeWindow);
-			Close.SetPosition(10, 10);
-			Close.SetText("Continue");
-			Close.Clicked += delegate(Base sender) {
-				EscapeWindow.Hide();
-				Game.LockMouse = true;
-			};
-
-			Button Quit = new Button(EscapeWindow);
-			Quit.SetPosition(10, 40);
-			Quit.SetText("Quit");
-			Quit.Clicked += delegate(Base sender) {
-				MainCanvas.Dispose();
-				Environment.Exit(0);
-			};
-			
-			Button Edit = new Button(EscapeWindow);
-			Edit.SetPosition(10, 70);
-			Edit.SetText("Open Editor");
-			Edit.Clicked += delegate(Base sender) {
-				Editor.Show();
-			};
-
-			EscapeWindow.Hide();
-		}
+		
 
 		static void Update() {
 			if (Client != null) {
@@ -107,12 +62,11 @@ namespace FantasyScape.Client {
 			Game.Update();
 
 			if (KeyboardManager.IsPressed(Key.Escape)) {
-				if (EscapeWindow.IsHidden) {
-					EscapeWindow.Show();
-					Game.LockMouse = false;
-				} else {
-					EscapeWindow.Hide();
+				escapemenu.Hidden = !escapemenu.Hidden;
+				if (escapemenu.Hidden) {
 					Game.LockMouse = true;
+				} else {
+					Game.LockMouse = false;
 				}
 			}
 
