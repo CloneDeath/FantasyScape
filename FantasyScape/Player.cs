@@ -6,6 +6,7 @@ using OpenTK;
 using GLImp;
 using OpenTK.Input;
 using FantasyScape.NetworkMessages;
+using System.Drawing;
 
 namespace FantasyScape {
 	public class Player {
@@ -88,7 +89,9 @@ namespace FantasyScape {
 			xrot = (float)Math.PI / 2;
 			yrot = 0;
 
-			Inventory.Add(new Block("Dirt"));
+			foreach (BlockType type in BlockTypes.GetAll()) {
+				Inventory.Add(new Block(type.Name));
+			}
 		}
 	
 		private float LookingAtX(float s){
@@ -518,6 +521,14 @@ namespace FantasyScape {
 			zpos = Message.ReadDouble();
 
 			PlayerID = Message.ReadInt32();
+		}
+
+		internal void Draw2D() {
+			GraphicsManager.DrawRectangle(5, 5, 30, (Inventory.Count * 25) + 10, Color.Black); 
+			for (int i = 0; i < Inventory.Count; i++){
+				Block block = Inventory[i];
+				GraphicsManager.DrawRectangle(10, 10 + (i * 25), 20, 20, Textures.GetTexture(block.BlockType.SideTexture));
+			}
 		}
 	}
 }

@@ -18,6 +18,8 @@ namespace FantasyScape.Client {
 
 		static WindowControl EscapeWindow;
 
+		static Camera2D Overlay;
+
 		static void Main(string[] args){
 			/* Set up Graphics Manager */
 			GraphicsManager.EnableMipmap = false;
@@ -29,6 +31,10 @@ namespace FantasyScape.Client {
 
 			GraphicsManager.Update += Update;
 			GraphicsManager.Render += Draw;
+
+			Overlay = new Camera2D();
+			Overlay.Layer = -1; //Draw behind everything
+			Overlay.OnRender += Draw2D;
 
 			/* Create Game World */
 			menu = new MenuManager();
@@ -98,6 +104,10 @@ namespace FantasyScape.Client {
 
 		static void Draw() {
 			Game.Draw();
+		}
+
+		static void Draw2D() {
+			Game.Draw2D();
 		}
 
 		public static void Connect(string IPAddress, int Port) {

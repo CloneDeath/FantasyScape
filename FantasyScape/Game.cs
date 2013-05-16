@@ -94,5 +94,11 @@ namespace FantasyScape {
 			}
 			return null;
 		}
+
+		public static void Draw2D() {
+			if (State == GameState.Playing) {
+				Self.Draw2D();
+			}
+		}
 	}
 }
