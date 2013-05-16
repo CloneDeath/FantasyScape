@@ -20,11 +20,14 @@ namespace FantasyScape {
 	
 		public Frustum frustum;
 
+		List<Block> Inventory = new List<Block>();
+
 		void setCamInternals(double angle, double ratio, double nearD, double farD) {
 			frustum = new Frustum();
 			frustum.setCamInternals(angle, ratio, nearD, farD);
 		}
 	
+		//Server
 		public Player(float x, float y){
 			float Angle = 45;
 			float Ratio = (float)GraphicsManager.WindowWidth / (float)GraphicsManager.WindowHeight;
@@ -55,6 +58,7 @@ namespace FantasyScape {
 			yrot = 0;
 		}
 
+		//Client
 		public Player() {
 			float Angle = 45;
 			float Ratio = (float)GraphicsManager.WindowWidth / (float)GraphicsManager.WindowHeight;
@@ -83,6 +87,8 @@ namespace FantasyScape {
 
 			xrot = (float)Math.PI / 2;
 			yrot = 0;
+
+			Inventory.Add(new Block("Dirt"));
 		}
 	
 		private float LookingAtX(float s){
