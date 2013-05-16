@@ -22,6 +22,7 @@ namespace FantasyScape {
 		public Frustum frustum;
 
 		List<Block> Inventory = new List<Block>();
+		int SelectedItem = 0;
 
 		void setCamInternals(double angle, double ratio, double nearD, double farD) {
 			frustum = new Frustum();
@@ -236,6 +237,20 @@ namespace FantasyScape {
 				AddBlock();
 			}
 
+			if (MouseManager.GetMouseWheel() > 0) {
+				SelectedItem -= 1;
+			} else if (MouseManager.GetMouseWheel() < 0) {
+				SelectedItem += 1;
+			}
+
+			while (SelectedItem < 0) {
+				SelectedItem += Inventory.Count;
+			}
+
+			while (SelectedItem >= Inventory.Count) {
+				SelectedItem -= Inventory.Count;
+			}
+
 			PlayerUpdate updatemsg = new PlayerUpdate(this);
 			updatemsg.Send();
 		}
@@ -360,9 +375,10 @@ namespace FantasyScape {
 				bestY = temp[1];
 				bestZ = temp[2];
 
-				Game.World.addBlock(bestX, bestY, bestZ, "Dirt");
+				string BlockName = Inventory[SelectedItem].BlockTypeName;
 
-				BlockAdd msg = new BlockAdd(bestX, bestY, bestZ, "Dirt");
+				Game.World.addBlock(bestX, bestY, bestZ, BlockName);
+				BlockAdd msg = new BlockAdd(bestX, bestY, bestZ, BlockName);
 				msg.Send();
 			
 				//System.out.println(BestSide);
@@ -524,7 +540,8 @@ namespace FantasyScape {
 		}
 
 		internal void Draw2D() {
-			GraphicsManager.DrawRectangle(5, 5, 30, (Inventory.Count * 25) + 10, Color.Black); 
+			GraphicsManager.DrawRectangle(5, 5, 30, (Inventory.Count * 25) + 5, Color.Black);
+			GraphicsManager.DrawRectangle(6, 6 + (SelectedItem * 25), 28, 28, Color.Yellow);
 			for (int i = 0; i < Inventory.Count; i++){
 				Block block = Inventory[i];
 				GraphicsManager.DrawRectangle(10, 10 + (i * 25), 20, 20, Textures.GetTexture(block.BlockType.SideTexture));
