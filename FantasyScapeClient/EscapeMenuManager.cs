@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Gwen.Control;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape.Client {
 	class EscapeMenuManager {
@@ -24,6 +25,7 @@ namespace FantasyScape.Client {
 				if (_Hidden) {
 					EscapeWindow.Hide();
 					Editor.Hide();
+					NewBlockWindow.Hide();
 				} else {
 					EscapeWindow.Show();
 				}
@@ -40,35 +42,41 @@ namespace FantasyScape.Client {
 			NameLabel.SetText("Name:");
 			NameLabel.SetPosition(10, 10);
 			TextBox Name = new TextBox(NewBlockWindow);
-			Name.SetPosition(90, 10);
+			Name.SetPosition(105, 10);
 			Name.SetText("NewBlock");
 
 			Label TopTexLabel = new Label(NewBlockWindow);
 			TopTexLabel.SetText("Top Texture:");
 			TopTexLabel.SetPosition(10, 40);
-			TextBox TopTex = new TextBox(NewBlockWindow);
-			TopTex.SetPosition(90, 40);
-			TopTex.SetText("Grass");
+			ComboBox TopTex = new ComboBox(NewBlockWindow);
+			TopTex.SetPosition(105, 40);
+			foreach (BlockType bt in BlockTypes.GetAll()) {
+				TopTex.AddItem(bt.Name, "", bt.Name);
+			}
 
 			Label SideTexLabel = new Label(NewBlockWindow);
 			SideTexLabel.SetText("Side Texture:");
 			SideTexLabel.SetPosition(10, 70);
-			TextBox SideTex = new TextBox(NewBlockWindow);
-			SideTex.SetPosition(90, 70);
-			SideTex.SetText("Dirt");
+			ComboBox SideTex = new ComboBox(NewBlockWindow);
+			SideTex.SetPosition(105, 70);
+			foreach (BlockType bt in BlockTypes.GetAll()) {
+				SideTex.AddItem(bt.Name, "", bt.Name);
+			}
 
 			Label BotTexLabel = new Label(NewBlockWindow);
 			BotTexLabel.SetText("Bottom Texture:");
 			BotTexLabel.SetPosition(10, 100);
-			TextBox BotTex = new TextBox(NewBlockWindow);
-			BotTex.SetPosition(90, 100);
-			BotTex.SetText("Granite");
+			ComboBox BotTex = new ComboBox(NewBlockWindow);
+			BotTex.SetPosition(105, 100);
+			foreach (BlockType bt in BlockTypes.GetAll()){
+				BotTex.AddItem(bt.Name, "", bt.Name);
+			}			
 
 			Label LiquidLabel = new Label(NewBlockWindow);
 			LiquidLabel.SetText("Liquid:");
 			LiquidLabel.SetPosition(10, 130);
 			CheckBox Liquid = new CheckBox(NewBlockWindow);
-			Liquid.SetPosition(90, 130);
+			Liquid.SetPosition(105, 130);
 
 			Button Create = new Button(NewBlockWindow);
 			Create.SetText("Create Block");
@@ -79,29 +87,17 @@ namespace FantasyScape.Client {
 					return;
 				}
 
-				if (!Textures.Exists(TopTex.Text)) {
-					TopTexLabel.Text = "*Top Texture:";
-					return;
-				}
-
-				if (!Textures.Exists(SideTex.Text)) {
-					SideTexLabel.Text = "*Side Texture:";
-					return;
-				}
-
-				if (!Textures.Exists(BotTex.Text)) {
-					BotTexLabel.Text = "*Bottom Texture:";
-					return;
-				}
-
 				BlockType b = new BlockType();
 				b.Name = Name.Text;
-				b.TopTexture = TopTex.Text;
-				b.SideTexture = SideTex.Text;
-				b.BotTexture = BotTex.Text;
+				b.TopTexture = (string)TopTex.SelectedItem.UserData;
+				b.SideTexture = (string)SideTex.SelectedItem.UserData;
+				b.BotTexture = (string)BotTex.SelectedItem.UserData;
 				b.Liquid = Liquid.IsChecked;
 
 				BlockTypes.AddBlockType(b);
+
+				BlockTypeData btd = new BlockTypeData(b);
+				btd.Send();
 
 				Game.Self.Inventory.Add(new Block(b.Name));
 
@@ -120,6 +116,8 @@ namespace FantasyScape.Client {
 			NewBlock.SetPosition(10, 10);
 			NewBlock.SetText("New Block");
 			NewBlock.Clicked += delegate(Base sender) {
+				NewBlockWindow.Hide();
+				CreateNewBlockWindow();
 				NewBlockWindow.Show();
 			};
 

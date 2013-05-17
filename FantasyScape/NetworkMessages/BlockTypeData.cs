@@ -5,7 +5,7 @@ using System.Text;
 using Lidgren.Network;
 
 namespace FantasyScape.NetworkMessages {
-	class BlockTypeData : Message {
+	public class BlockTypeData : Message {
 		BlockType block = null;
 
 		public BlockTypeData() { }
@@ -32,6 +32,9 @@ namespace FantasyScape.NetworkMessages {
 
 		protected override void ExecuteMessage() {
 			BlockTypes.AddBlockType(block);
+
+			BlockTypeData btd = new BlockTypeData(block);
+			btd.Forward();
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace FantasyScape {
 			Types.Add(b);
 		}
 
-		internal static BlockType GetBlockType(string BlockTypeName) {
+		public static BlockType GetBlockType(string BlockTypeName) {
 			foreach (BlockType b in Types) {
 				if (b.Name == BlockTypeName) {
 					return b;
@@ -49,7 +49,7 @@ namespace FantasyScape {
 			Types.Add(b);
 		}
 
-		internal static List<BlockType> GetAll() {
+		public static List<BlockType> GetAll() {
 			return Types;
 		}
 
