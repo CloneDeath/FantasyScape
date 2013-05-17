@@ -31,8 +31,8 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		protected override void ExecuteMessage() {
-			BlockTypes.AddBlockType(block);
-
+			BlockTypes.Add(block);
+			
 			BlockTypeData btd = new BlockTypeData(block);
 			btd.Forward();
 		}

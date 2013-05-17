@@ -45,8 +45,16 @@ namespace FantasyScape {
 			return Count == Types.Count;
 		}
 
-		public static void AddBlockType(BlockType b) {
-			Types.Add(b);
+		public static void Add(BlockType block) {
+			BlockType old = GetBlockType(block.Name);
+			if (old != null) {
+				old.Liquid = block.Liquid;
+				old.TopTexture = block.TopTexture;
+				old.SideTexture = block.SideTexture;
+				old.BotTexture = block.BotTexture;
+			} else {
+				Types.Add(block);
+			}
 		}
 
 		public static List<BlockType> GetAll() {

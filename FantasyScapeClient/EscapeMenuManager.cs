@@ -82,10 +82,10 @@ namespace FantasyScape.Client {
 			Create.SetText("Create Block");
 			Create.SetPosition(100, 170);
 			Create.Clicked += delegate(Base Sender) {
-				if (BlockTypes.Exists(Name.Text)) {
-					NameLabel.Text = "*Name:";
-					return;
-				}
+				//if (BlockTypes.Exists(Name.Text)) {
+				//    NameLabel.Text = "*Name:";
+				//    return;
+				//}
 
 				BlockType b = new BlockType();
 				b.Name = Name.Text;
@@ -94,7 +94,7 @@ namespace FantasyScape.Client {
 				b.BotTexture = (string)BotTex.SelectedItem.UserData;
 				b.Liquid = Liquid.IsChecked;
 
-				BlockTypes.AddBlockType(b);
+				BlockTypes.Add(b);
 
 				BlockTypeData btd = new BlockTypeData(b);
 				btd.Send();
