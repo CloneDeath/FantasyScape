@@ -5,6 +5,7 @@ using System.Text;
 using GLImp;
 using OpenTK.Graphics.OpenGL;
 using Lidgren.Network;
+using OpenTK;
 
 namespace FantasyScape {
 	public class Block {
@@ -49,7 +50,7 @@ namespace FantasyScape {
 			GL.Translate(x, y, z);
 			GL.Scale(1.0f, 1.0f, height);
 			if (BlockType.Liquid) {
-				GL.Color4(1.0f, 1.0f, 1.0f, 0.5f);
+				GL.Color4(1.0f, 1.0f, 1.0f, 0.25f);
 			} else {
 				GL.Color3(1.0f, 1.0f, 1.0f);
 			}
@@ -117,14 +118,19 @@ namespace FantasyScape {
 		}
 
 		bool LiquidUpdated = false;
+		static List<Vector2> Directions = new List<Vector2>(
+			new Vector2[]{new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1)}
+		);
+					
 		public virtual void update(int x, int y, int z, World world) {
 			if (BlockType.Liquid) {
 				LiquidUpdated = moveDown(x, y, z - 1, world);
 				if (level > 0) {
-					LiquidUpdated |= moveTo(x + 1, y, z, world);
-					LiquidUpdated |= moveTo(x - 1, y, z, world);
-					LiquidUpdated |= moveTo(x, y + 1, z, world);
-					LiquidUpdated |= moveTo(x, y - 1, z, world);
+					List<Vector2> Copy = Directions.GetRange(0, Directions.Count);
+					Copy.Shuffle();
+					foreach (Vector2 dir in Copy) {
+						LiquidUpdated |= moveTo(x + (int)dir.X, y + (int)dir.Y, z, world);
+					}
 				}
 			} else {
 				world.removeUpdate(x, y, z);
@@ -136,7 +142,7 @@ namespace FantasyScape {
 				if (LiquidUpdated) {
 					world.refreshUpdateBlocks(x, y, z);
 				} else {
-					//world.removeUpdate(x, y, z);
+					world.removeUpdate(x, y, z);
 				}
 				if (level <= 0) {
 					world.RemoveBlock(x, y, z);
@@ -147,28 +153,30 @@ namespace FantasyScape {
 		}
 
 		public bool moveDown(int x, int y, int z, World world) {
-			return GiveTo(x, y, z, world, 16, true);
+			return GiveTo(x, y, z, world, 16, 0, true);
 		}
 
 		private bool moveTo(int x, int y, int z, World world) {
-			return GiveTo(x, y, z, world, 1, false);
+			return GiveTo(x, y, z, world, 1, 2, false);
 		}
 
-		public bool GiveTo(int x, int y, int z, World world, int MaxWater, bool Down) {
+		public bool GiveTo(int x, int y, int z, World world, int MaxWater, int MinWaterDiff, bool Down) {
 			if (MaxWater > level) {
 				MaxWater = level;
 			}
 
 			if (!world.IsSolid(x, y, z)) {
 				if (world.blockAt(x, y, z) == null) {
-					Block b = new Block("Water");
-					world.addBlock(x, y, z, b);
-					b.level = MaxWater;
-					level -= MaxWater;
-					return true;
+					if (this.level >= MinWaterDiff) {
+						Block b = new Block(this.BlockTypeName);
+						world.addBlock(x, y, z, b);
+						b.level = MaxWater;
+						level -= MaxWater;
+						return true;
+					}
 				} else {
 					Block b = world.blockAt(x, y, z);
-					if (b.BlockType.Name == "Water") {
+					if (b.BlockType.Name == this.BlockTypeName) {
 						if (b.level < 16) {
 							if (Down) {
 								int diff = 16 - b.level;
@@ -180,7 +188,7 @@ namespace FantasyScape {
 								return true;
 							} else {
 								int diff = this.level - b.level;
-								if (diff >= MaxWater + 1) {
+								if (diff >= MinWaterDiff) {
 									b.level += MaxWater;
 									this.level -= MaxWater;
 								}

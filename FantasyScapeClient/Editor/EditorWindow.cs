@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Gwen.Control;
 using FantasyScape.Client.Editor.BlockTypesEditor;
+using FantasyScape.Client.Editor.TextureEditor;
 
 namespace FantasyScape.Client.Editor {
 	class EditorWindow : WindowControl {
@@ -25,8 +26,15 @@ namespace FantasyScape.Client.Editor {
 				new DeleteBlockWindow();
 			};
 
+			Button NewTex = new Button(this);
+			NewTex.SetPosition(10, 70);
+			NewTex.SetText("New Texture");
+			NewTex.Clicked += delegate(Base sender) {
+				new NewTextureWindow();
+			};
+
 			Button Close = new Button(this);
-			Close.SetPosition(10, 70);
+			Close.SetPosition(10, 100);
 			Close.SetText("Close");
 			Close.Clicked += delegate(Base sender) {
 				MainCanvas.GetCanvas().RemoveChild(this, true);

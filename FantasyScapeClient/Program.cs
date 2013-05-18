@@ -27,7 +27,7 @@ namespace FantasyScape.Client {
 			GraphicsManager.UseExperimentalFullAlpha = true;
 			
 			GraphicsManager.SetTitle("FantasyScape");
-			GraphicsManager.SetResolution(640, 480);
+			GraphicsManager.SetWindowState(OpenTK.WindowState.Maximized);
 			GraphicsManager.SetBackground(Color.FromArgb(200, 200, 255));
 
 			GraphicsManager.Update += Update;

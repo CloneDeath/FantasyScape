@@ -69,6 +69,7 @@
     <Compile Include="Editor\BlockTypesEditor\DeleteBlockWindow.cs" />
     <Compile Include="Editor\BlockTypesEditor\NewBlockWindow.cs" />
     <Compile Include="Editor\EditorWindow.cs" />
+    <Compile Include="Editor\TextureEditor\NewTextureWindow.cs" />
     <Compile Include="EscapeMenuManager.cs" />
     <Compile Include="MainCanvas.cs" />
     <Compile Include="MenuManager.cs" />

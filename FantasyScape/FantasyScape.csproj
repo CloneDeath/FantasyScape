@@ -75,6 +75,7 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockType.cs" />
     <Compile Include="Blocks\BlockTypes.cs" />
+    <Compile Include="ListRandomizer.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MainCanvas.cs" />
