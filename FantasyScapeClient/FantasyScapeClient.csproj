@@ -66,7 +66,11 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editor\BlockTypesEditor\DeleteBlockWindow.cs" />
+    <Compile Include="Editor\BlockTypesEditor\NewBlockWindow.cs" />
+    <Compile Include="Editor\EditorWindow.cs" />
     <Compile Include="EscapeMenuManager.cs" />
+    <Compile Include="MainCanvas.cs" />
     <Compile Include="MenuManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

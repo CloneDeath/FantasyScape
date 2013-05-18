@@ -86,6 +86,7 @@
     <Compile Include="NetworkMessages\BlockLayersMessage.cs" />
     <Compile Include="NetworkMessages\BlockRemove.cs" />
     <Compile Include="NetworkMessages\BlockTypeData.cs" />
+    <Compile Include="NetworkMessages\BlockTypeRemove.cs" />
     <Compile Include="NetworkMessages\BlockTypesNumber.cs" />
     <Compile Include="NetworkMessages\PlayerAdd.cs" />
     <Compile Include="NetworkMessages\Message.cs" />

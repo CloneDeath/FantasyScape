@@ -64,5 +64,18 @@ namespace FantasyScape {
 		public static bool Exists(string type) {
 			return GetBlockType(type) != null;
 		}
+
+		public static void Remove(string block) {
+			int found = -1;
+			for (int i = 0; i < Types.Count; i++) {
+				if (Types[i].Name == block) {
+					found = i;
+				}
+			}
+
+			if (found != -1) {
+				Types.RemoveAt(found);
+			}
+		}
 	}
 }
