@@ -12,7 +12,10 @@ namespace FantasyScape {
 		public void Load() {
 			AddBlockType("Dirt", "Dirt", false);
 			AddBlockType("Granite", "Granite", false);
-			AddBlockType("Grass", "Grass", false);
+
+			AddBlockType("Grass", "Dirt", false);
+			GetBlockType("Grass").TopTexture = "Grass";
+			
 			AddBlockType("Water", "Water", true);
 		}
 

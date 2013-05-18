@@ -8,6 +8,7 @@ using OpenTK.Input;
 using Lidgren.Network;
 using System.Threading;
 using FantasyScape.NetworkMessages;
+using System.Diagnostics;
 
 namespace FantasyScape {
 	public class Game {
@@ -28,10 +29,15 @@ namespace FantasyScape {
 
 		static bool RequestedPlayer = false;
 		public static bool LockMouse = true;
+		static Stopwatch Stopwatch = new Stopwatch();
 		public static void Update() {
 			if (State == GameState.Playing) {
 				Self.Update();
-				World.update();
+
+				//if (Stopwatch.Elapsed.Milliseconds > 100) {
+					//Stopwatch.Restart();
+					World.update();
+				//}
 			}
 
 			if (State == GameState.Connecting) {
@@ -50,8 +56,13 @@ namespace FantasyScape {
 				if (Ready) {
 					MouseManager.SetMousePositionWindows(320, 240);
 					State = GameState.Playing;
+					Stopwatch.StartNew();
 				}
 			}
+		}
+
+		public static float GetProgress() {
+			return (float)Game.World.LayerCount / ((float)Game.World.XSize * (float)Game.World.YSize);
 		}
 
 		public static void Draw() {

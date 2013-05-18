@@ -61,6 +61,8 @@ namespace FantasyScape.Client {
 
 			Game.Update();
 
+			menu.Connecting.Update();
+
 			if (KeyboardManager.IsPressed(Key.Escape)) {
 				escapemenu.Hidden = !escapemenu.Hidden;
 				if (escapemenu.Hidden) {

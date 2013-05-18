@@ -12,12 +12,17 @@ namespace FantasyScape.Client {
 
 		public MenuMode Mode = MenuMode.MainMenu;
 
+		public ConnectingWindow Connecting;
+
 		public MenuManager() {
 			MainMenu = ConstructMainMenu();
 			MainMenu.Show();
 
 			FindGame = ConstructFindGame();
 			FindGame.Hide();
+
+			Connecting = new ConnectingWindow();
+			Connecting.Hide();
 		}
 
 		WindowControl ConstructMainMenu() {
@@ -70,6 +75,7 @@ namespace FantasyScape.Client {
 			FindGame.IsClosable = false;
 
 			Label EnterIP = new Label(FindGame);
+			EnterIP.AutoSizeToContents = true;
 			EnterIP.SetText("Enter an IP:");
 			EnterIP.SetPosition(10, 10);
 
@@ -91,6 +97,8 @@ namespace FantasyScape.Client {
 				Program.Connect(IPAddress.Text, Int32.Parse(Port.Text));
 				MainMenu.Hide();
 				FindGame.Hide();
+
+				Connecting.Show();
 			};
 
 			Button Back = new Button(FindGame);

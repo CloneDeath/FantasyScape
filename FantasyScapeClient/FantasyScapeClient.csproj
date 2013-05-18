@@ -66,6 +66,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectingWindow.cs" />
     <Compile Include="Editor\BlockTypesEditor\DeleteBlockWindow.cs" />
     <Compile Include="Editor\BlockTypesEditor\NewBlockWindow.cs" />
     <Compile Include="Editor\EditorWindow.cs" />
