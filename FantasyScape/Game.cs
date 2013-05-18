@@ -30,7 +30,7 @@ namespace FantasyScape {
 		public static bool LockMouse = true;
 		public static void Update() {
 			if (State == GameState.Playing) {
-				Self.update();
+				Self.Update();
 				World.update();
 			}
 
@@ -56,7 +56,7 @@ namespace FantasyScape {
 
 		public static void Draw() {
 			if (State == GameState.Playing) {
-				World.draw(Self);
+				World.Draw(Self);
 				Self.updateCamera();
 
 				foreach (Player p in Players) {

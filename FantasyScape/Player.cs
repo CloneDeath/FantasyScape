@@ -16,13 +16,15 @@ namespace FantasyScape {
 		double /*xspeed, yspeed,*/ zspeed;
 		const double Gravity = 0.05;
 	
-		float Speed = 6.0f/30.0f; //6 meters per second
-		float PlayerHeight = 1.78f;
+		float Speed = 0.2f;
+		float PlayerHeight = 1.70f;
 	
 		public Frustum frustum;
 
 		public List<Block> Inventory = new List<Block>();
 		int SelectedItem = 0;
+
+		public double Width, Height;
 
 		void setCamInternals(double angle, double ratio, double nearD, double farD) {
 			frustum = new Frustum();
@@ -58,6 +60,9 @@ namespace FantasyScape {
 		
 			xrot = (float)Math.PI/2;
 			yrot = 0;
+
+			Width = 0.7;
+			Height = 1.75;
 		}
 
 		//Client
@@ -93,6 +98,9 @@ namespace FantasyScape {
 			foreach (BlockType type in BlockTypes.GetAll()) {
 				Inventory.Add(new Block(type.Name));
 			}
+
+			Width = 0.7;
+			Height = 1.75;
 		}
 	
 		private float LookingAtX(float s){
@@ -135,9 +143,6 @@ namespace FantasyScape {
 		}
 
 		public void DrawWorld() {
-			double Width = 0.5;
-			double Height = 2.0;
-
 			//Face parallel to camera
 			//double Direction = Game.Self.xrot;
 
@@ -146,13 +151,13 @@ namespace FantasyScape {
 			double Direction = Math.Atan2(Diff.Y, Diff.X);
 
 			Vector2d Left = new Vector2d(
-			    xpos - Math.Cos(Direction - (Math.PI / 2)) * Width,
-			    ypos + Math.Sin(Direction + (Math.PI / 2)) * Width
+			    xpos - Math.Cos(Direction - (Math.PI / 2)) * (Width/2),
+			    ypos + Math.Sin(Direction + (Math.PI / 2)) * (Width/2)
 			);
 
 			Vector2d Right = new Vector2d(
-			    xpos - Math.Cos(Direction + (Math.PI / 2)) * Width,
-			    ypos + Math.Sin(Direction - (Math.PI / 2)) * Width
+			    xpos - Math.Cos(Direction + (Math.PI / 2)) * (Width/2),
+			    ypos + Math.Sin(Direction - (Math.PI / 2)) * (Width/2)
 			);
 
 			GraphicsManager.DrawQuad(
@@ -163,61 +168,89 @@ namespace FantasyScape {
 			Textures.GetTexture("Player"));
 		}
 	
-		public void update(){
-			double newx = xpos;
-			double newy = ypos;
-		
-			if (KeyboardManager.IsDown(Key.W)){
-				newx -= Math.Cos(xrot)*Speed;
-				newy += Math.Sin(xrot)*Speed;
-			}
-			if (KeyboardManager.IsDown(Key.S)) {
-				newx += Math.Cos(xrot)*Speed;
-				newy -= Math.Sin(xrot)*Speed;
-			}
-			if (KeyboardManager.IsDown(Key.A)) {
-				newx += Math.Cos(xrot+(Math.PI/2))*Speed;
-				newy -= Math.Sin(xrot+(Math.PI/2))*Speed;
-			}
-			if (KeyboardManager.IsDown(Key.D)) {
-				newx += Math.Cos(xrot-(Math.PI/2))*Speed;
-				newy -= Math.Sin(xrot-(Math.PI/2))*Speed;
-			}
-
-			if (!Game.World.IsSolid(newx, newy, zpos + 1.5f) && !Game.World.IsSolid(newx, newy, zpos + 0.5f)) {
-				xpos = newx;
-				ypos = newy;
-			} else {
-				if (!Game.World.IsSolid(newx, ypos, zpos + 1.5f) && !Game.World.IsSolid(newx, ypos, zpos + 0.5f)) {
-					xpos = newx;
-				} else if (!Game.World.IsSolid(xpos, newy, zpos + 1.5f) && !Game.World.IsSolid(xpos, newy, zpos + 0.5f)) {
-					ypos = newy;
-				} 
-			}
-
+		public void Update(){
 			if (Game.LockMouse) {
 				xrot += (MouseManager.GetMousePositionWindows().X - 320) / 150.0f;
 				yrot += (MouseManager.GetMousePositionWindows().Y - 240) / 150.0f;
-		
-				if (yrot >= Math.PI/2){
-					yrot = (float)Math.PI/2 - 0.001f;
-				} else if (yrot <= -Math.PI/2){
-					yrot = (float)-Math.PI/2 + 0.001f;
+
+				if (yrot >= Math.PI / 2) {
+					yrot = (float)Math.PI / 2 - 0.001f;
+				} else if (yrot <= -Math.PI / 2) {
+					yrot = (float)-Math.PI / 2 + 0.001f;
 				}
 
 				MouseManager.SetMousePositionWindows(320, 240);
+
+				double newx = xpos;
+				double newy = ypos;
+
+				if (KeyboardManager.IsDown(Key.W)) {
+					newx -= Math.Cos(xrot) * Speed;
+					newy += Math.Sin(xrot) * Speed;
+				}
+				if (KeyboardManager.IsDown(Key.S)) {
+					newx += Math.Cos(xrot) * Speed;
+					newy -= Math.Sin(xrot) * Speed;
+				}
+				if (KeyboardManager.IsDown(Key.A)) {
+					newx += Math.Cos(xrot + (Math.PI / 2)) * Speed;
+					newy -= Math.Sin(xrot + (Math.PI / 2)) * Speed;
+				}
+				if (KeyboardManager.IsDown(Key.D)) {
+					newx += Math.Cos(xrot - (Math.PI / 2)) * Speed;
+					newy -= Math.Sin(xrot - (Math.PI / 2)) * Speed;
+				}
+
+				if (PlaceFree(newx, newy, zpos)) {
+					xpos = newx;
+					ypos = newy;
+				} else {
+					if (PlaceFree(newx, ypos, zpos)) {
+						xpos = newx;
+					} else if (PlaceFree(xpos, newy, zpos)) {
+						ypos = newy;
+					}
+				}
+
+				if (KeyboardManager.IsDown(Key.Space) && Game.World.IsSolid(xpos, ypos, zpos - 1) && !Game.World.IsSolid(xpos, ypos, zpos + 2)) {
+					zspeed = 1;
+				}
+
+
+				if (MouseManager.IsPressed(MouseButton.Left)) {
+					RemoveBlock();
+				}
+
+				if (MouseManager.IsPressed(MouseButton.Right)) {
+					AddBlock();
+				}
+
+				if (MouseManager.GetMouseWheel() > 0) {
+					SelectedItem -= 1;
+				} else if (MouseManager.GetMouseWheel() < 0) {
+					SelectedItem += 1;
+				}
+
+				while (SelectedItem < 0) {
+					SelectedItem += Inventory.Count;
+				}
+
+				while (SelectedItem >= Inventory.Count) {
+					SelectedItem -= Inventory.Count;
+				}
 			}
+
 
 			if (!Game.World.IsSolid(xpos, ypos, zpos + zspeed)) {
 				zspeed -= Gravity;
 			}
 			if (zspeed < 0){
-				if (Game.World.IsSolid(xpos, ypos, zpos + zspeed)) {
+				if (!PlaceFree(xpos, ypos, zpos + zspeed)) {
 					zpos = (float)(Math.Floor(zpos+(zspeed)))+1.0f;
 					zspeed = 0;
 				}
 			} else if (zspeed > 0) {
-				if (Game.World.IsSolid(xpos, ypos, zpos + (zspeed) + PlayerHeight)) {
+				if (!PlaceFree(xpos, ypos, zpos + zspeed)) {
 					zpos = (float)(Math.Floor(zpos+(zspeed)+PlayerHeight))-1.0f;
 					zspeed = 0;
 				}
@@ -225,34 +258,41 @@ namespace FantasyScape {
 		
 			zpos += zspeed;
 
-			if (KeyboardManager.IsDown(Key.Space) && Game.World.IsSolid(xpos, ypos, zpos - 1) && !Game.World.IsSolid(xpos, ypos, zpos + 2)) {
-				zspeed = 1;
-			}
-		
-			if (MouseManager.IsPressed(MouseButton.Left)){
-				RemoveBlock();
-			}
-
-			if (MouseManager.IsPressed(MouseButton.Right)) {
-				AddBlock();
-			}
-
-			if (MouseManager.GetMouseWheel() > 0) {
-				SelectedItem -= 1;
-			} else if (MouseManager.GetMouseWheel() < 0) {
-				SelectedItem += 1;
-			}
-
-			while (SelectedItem < 0) {
-				SelectedItem += Inventory.Count;
-			}
-
-			while (SelectedItem >= Inventory.Count) {
-				SelectedItem -= Inventory.Count;
-			}
-
 			PlayerUpdate updatemsg = new PlayerUpdate(this);
 			updatemsg.Send();
+		}
+
+		private bool PlaceFree(double newx, double newy, double newz) {
+			List<double> XChecks = new List<double>();
+			List<double> YChecks = new List<double>();
+			List<double> ZChecks = new List<double>();
+
+			double w = Width / 2;
+
+			for (double x = newx - w; x < newx + w; x += 0.9) {
+				XChecks.Add(x);
+			}
+			for (double y = newy - w; y < newy + w; y += 0.9) {
+				YChecks.Add(y);
+			}
+			for (double z = newz; z < newz + Height; z += 0.9) {
+				ZChecks.Add(z);
+			}
+			XChecks.Add(newx + w);
+			YChecks.Add(newy + w);
+			ZChecks.Add(newz + Height);
+
+			foreach (double X in XChecks) {
+				foreach (double Y in YChecks) {
+					foreach (double Z in ZChecks) {
+						if (Game.World.IsSolid(X, Y, Z)) {
+							return false;
+						}
+					}
+				}
+			}
+
+			return true;
 		}
 	
 		void RemoveBlock(){

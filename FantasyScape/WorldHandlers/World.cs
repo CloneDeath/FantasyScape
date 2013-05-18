@@ -197,7 +197,7 @@ namespace FantasyScape {
 			}
 		}
 
-		public void draw(Player p) {
+		public void Draw(Player p) {
 			int ViewDistance = 100;
 			for (int i = 0; i < exposedBlocks.Count(); i++) {
 				int[] loc = exposedLocations[i];

@@ -102,8 +102,10 @@
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Textures.cs" />
-    <Compile Include="World.cs" />
+    <Compile Include="WorldHandlers\Chunk.cs" />
+    <Compile Include="WorldHandlers\World.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /E /C /Y "$(ProjectDir)Data\*.*" "$(TargetDir)Data\"</PostBuildEvent>
