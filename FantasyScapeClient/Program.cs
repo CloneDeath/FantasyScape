@@ -43,7 +43,7 @@ namespace FantasyScape.Client {
 			menu = new MenuManager();
 			escapemenu = new EscapeMenuManager();
 			DevMenu = new DevelopmentMenu();
-			DevMenu.Hide();
+			DevMenu.Hidden = true;
 
 			/* Start Game */
 			GraphicsManager.Start();

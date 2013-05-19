@@ -25,6 +25,10 @@ namespace FantasyScape.Client.Editor {
 					AddBlock.Text = "Add";
 					AddBlock.Dock = Gwen.Pos.Right;
 					AddBlock.SetSize(40, 30);
+					AddBlock.Clicked += delegate(Base sender) {
+						new NewBlockName(this);
+						this.Disable();
+					};
 
 					Button RefreshBlocks = new Button(AboveSpace);
 					RefreshBlocks.Text = "Refresh";
@@ -60,6 +64,7 @@ namespace FantasyScape.Client.Editor {
 		}
 
 		private void RemoveSelectedBlock() {
+			if (BlockTypesList.SelectedRow == null) return;
 			BlockType selected = BlockTypes.GetBlockType((string)BlockTypesList.SelectedRow.UserData);
 
 			if (selected != null) {

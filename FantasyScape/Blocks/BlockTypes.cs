@@ -7,6 +7,14 @@ using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class BlockTypes : Resource {
+		static BlockType ErrorBlock = new BlockType();
+
+		static BlockTypes() {
+			ErrorBlock.Texture = "";
+			ErrorBlock.Liquid = false;
+			ErrorBlock.Name = "";
+		}
+
 		static List<BlockType> Types = new List<BlockType>();
 
 		public void Load() {
@@ -33,7 +41,7 @@ namespace FantasyScape {
 					return b;
 				}
 			}
-			return null;
+			return ErrorBlock;
 		}
 
 		static bool SentRequest = false;
@@ -50,7 +58,7 @@ namespace FantasyScape {
 
 		public static void Add(BlockType block) {
 			BlockType old = GetBlockType(block.Name);
-			if (old != null) {
+			if (old != ErrorBlock) {
 				old.Liquid = block.Liquid;
 				old.TopTexture = block.TopTexture;
 				old.SideTexture = block.SideTexture;
@@ -65,7 +73,7 @@ namespace FantasyScape {
 		}
 
 		public static bool Exists(string type) {
-			return GetBlockType(type) != null;
+			return GetBlockType(type) != ErrorBlock;
 		}
 
 		public static void Remove(string block) {

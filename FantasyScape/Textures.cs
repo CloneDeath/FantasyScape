@@ -8,6 +8,7 @@ using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class Textures : Resource{
+		static Texture ErrorTexture = new Texture(@"Data\Error.png");
 		static List<Texture> TextureList = new List<Texture>();
 		static bool RequestSent = false;
 		public static int Count = -1;
@@ -33,11 +34,11 @@ namespace FantasyScape {
 					return t;
 				}
 			}
-			return null;
+			return ErrorTexture;
 		}
 
 		public static void AddTexture(Texture nettex) {
-			if (GetTexture(nettex.Name) == null) {
+			if (!Exists(nettex.Name)) {
 				TextureList.Add(nettex);
 			} else {
 				Console.WriteLine("Received Duplicate Texture Name: " + nettex.Name);
@@ -59,7 +60,7 @@ namespace FantasyScape {
 		}
 
 		public static bool Exists(string tex) {
-			return GetTexture(tex) != null;
+			return GetTexture(tex) != ErrorTexture;
 		}
 	}
 }
