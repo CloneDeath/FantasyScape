@@ -68,8 +68,6 @@
   <ItemGroup>
     <Compile Include="ConnectingWindow.cs" />
     <Compile Include="Editor\DevelopmentMenu.cs" />
-    <Compile Include="Editor\BlockTypes\DeleteBlockWindow.cs" />
-    <Compile Include="Editor\BlockTypes\NewBlockWindow.cs" />
     <Compile Include="Editor\BlockTypesEditor.cs" />
     <Compile Include="Editor\NewBlockName.cs" />
     <Compile Include="Editor\Textures\TextureEditor.cs" />

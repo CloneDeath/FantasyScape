@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Gwen.Control;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape.Client.Editor {
 	class NewBlockName : WindowControl {
-		public NewBlockName(Base parent) : base(parent.Parent){
-			this.SetSize(200, 100);
+		public NewBlockName(BlockTypesEditor parent) : base(parent.Parent){
+			this.SetSize(210, 100);
 
 			TextBox Entry = new TextBox(this);
 			Entry.SetPosition(10, 10);
@@ -19,7 +20,9 @@ namespace FantasyScape.Client.Editor {
 			OK.SetPosition(130, 45);
 			OK.Text = "OK";
 			OK.Clicked += delegate(Base sender) {
-				//Todo, call some function to get ready to add shit
+				CreateNewBlock(Entry.Text);
+				parent.RefreshBlockTypesList();
+				parent.Select(Entry.Text);
 				this.Close();
 			};
 
@@ -30,6 +33,22 @@ namespace FantasyScape.Client.Editor {
 			Cancel.Clicked += delegate(Base sender) {
 				this.Close();
 			};
+		}
+
+		private void CreateNewBlock(string Name) {
+			BlockType b = new BlockType();
+			b.Name = Name;
+			b.TopTexture = "Dirt";
+			b.SideTexture = "Dirt";
+			b.BotTexture = "Dirt";
+			b.Liquid = false;
+
+			BlockTypes.Add(b);
+
+			BlockTypeData btd = new BlockTypeData(b);
+			btd.Send();
+
+			Game.Self.Inventory.Add(new Block(b.Name));
 		}
 	}
 }

@@ -55,7 +55,7 @@ namespace FantasyScape {
 			return TextureList.Count == Count;
 		}
 
-		internal static List<Texture> GetAll() {
+		public static List<Texture> GetAll() {
 			return TextureList;
 		}
 
