@@ -67,10 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectingWindow.cs" />
-    <Compile Include="Editor\BlockTypesEditor\DeleteBlockWindow.cs" />
-    <Compile Include="Editor\BlockTypesEditor\NewBlockWindow.cs" />
-    <Compile Include="Editor\EditorWindow.cs" />
-    <Compile Include="Editor\TextureEditor\NewTextureWindow.cs" />
+    <Compile Include="Editor\DevelopmentMenu.cs" />
+    <Compile Include="Editor\BlockTypes\DeleteBlockWindow.cs" />
+    <Compile Include="Editor\BlockTypes\NewBlockWindow.cs" />
+    <Compile Include="Editor\BlockTypesEditor.cs" />
+    <Compile Include="Editor\Textures\TextureEditor.cs" />
+    <Compile Include="Editor\TopBar.cs" />
     <Compile Include="EscapeMenuManager.cs" />
     <Compile Include="MainCanvas.cs" />
     <Compile Include="MenuManager.cs" />

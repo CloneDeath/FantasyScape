@@ -25,11 +25,11 @@ namespace FantasyScape.Client {
 			Connecting.Hide();
 		}
 
-		WindowControl ConstructMainMenu() {
-			WindowControl MainMenu = new WindowControl(MainCanvas.GetCanvas());
+		Base ConstructMainMenu() {
+			Base MainMenu = new Base(MainCanvas.GetCanvas());
 			MainMenu.SetSize(300, 300);
-			MainMenu.ClampMovement = true;
-			MainMenu.IsClosable = false;
+			MainMenu.Dock = Gwen.Pos.Center;
+			
 
 			Button SinglePlayer = new Button(MainMenu);
 			SinglePlayer.SetText("Single Player");
@@ -61,18 +61,13 @@ namespace FantasyScape.Client {
 				Environment.Exit(0);
 			};
 
-			MainMenu.SetPosition(10, 10);
-
 			return MainMenu;
 		}
-		WindowControl MainMenu;
+		Base MainMenu;
 
-		WindowControl ConstructFindGame() {
-			WindowControl FindGame = new WindowControl(MainCanvas.GetCanvas());
-			FindGame.SetPosition(10, 10);
+		Base ConstructFindGame() {
+			Base FindGame = new Base(MainCanvas.GetCanvas());
 			FindGame.SetSize(300, 300);
-			FindGame.ClampMovement = true;
-			FindGame.IsClosable = false;
 
 			Label EnterIP = new Label(FindGame);
 			EnterIP.AutoSizeToContents = true;
@@ -113,6 +108,6 @@ namespace FantasyScape.Client {
 
 			return FindGame;
 		}
-		WindowControl FindGame;
+		Base FindGame;
 	}
 }

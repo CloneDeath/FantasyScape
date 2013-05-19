@@ -10,11 +10,13 @@ using Lidgren.Network;
 using FantasyScape.NetworkMessages;
 using System.Threading;
 using Gwen.Control;
+using FantasyScape.Client.Editor;
 
 namespace FantasyScape.Client {
 	class Program {
 		static MenuManager menu;
 		static EscapeMenuManager escapemenu;
+		static DevelopmentMenu DevMenu;
 		
 		static NetClient Client;
 
@@ -27,19 +29,21 @@ namespace FantasyScape.Client {
 			GraphicsManager.UseExperimentalFullAlpha = true;
 			
 			GraphicsManager.SetTitle("FantasyScape");
-			GraphicsManager.SetWindowState(OpenTK.WindowState.Maximized);
+			GraphicsManager.SetWindowState(OpenTK.WindowState.Fullscreen);
 			GraphicsManager.SetBackground(Color.FromArgb(200, 200, 255));
 
 			GraphicsManager.Update += Update;
 			GraphicsManager.Render += Draw;
 
 			Overlay = new Camera2D();
-			Overlay.Layer = -1; //Draw behind everything
+			Overlay.Layer = 1; //Draw behind everything
 			Overlay.OnRender += Draw2D;
 
 			/* Create Game World */
 			menu = new MenuManager();
 			escapemenu = new EscapeMenuManager();
+			DevMenu = new DevelopmentMenu();
+			DevMenu.Hide();
 
 			/* Start Game */
 			GraphicsManager.Start();
@@ -65,11 +69,16 @@ namespace FantasyScape.Client {
 
 			if (KeyboardManager.IsPressed(Key.Escape)) {
 				escapemenu.Hidden = !escapemenu.Hidden;
-				if (escapemenu.Hidden) {
-					Game.LockMouse = true;
-				} else {
-					Game.LockMouse = false;
-				}
+			}
+
+			if (KeyboardManager.IsPressed(Key.Tilde)) {
+				DevMenu.Hidden = !DevMenu.Hidden;
+			}
+
+			if (escapemenu.Hidden && DevMenu.Hidden) {
+				Game.LockMouse = true;
+			} else {
+				Game.LockMouse = false;
 			}
 
 			//Toggle Full Screen
@@ -88,6 +97,10 @@ namespace FantasyScape.Client {
 
 		static void Draw2D() {
 			Game.Draw2D();
+
+			if (!escapemenu.Hidden || !DevMenu.Hidden) {
+				GraphicsManager.DrawRectangle(0, 0, GraphicsManager.WindowWidth, GraphicsManager.WindowHeight, Color.FromArgb(0, 0, 0, 250));
+			}
 		}
 
 		public static void Connect(string IPAddress, int Port) {

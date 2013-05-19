@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Gwen.Control;
 using FantasyScape.NetworkMessages;
-using FantasyScape.Client.Editor.BlockTypesEditor;
 using FantasyScape.Client.Editor;
 
 namespace FantasyScape.Client {
@@ -17,7 +16,7 @@ namespace FantasyScape.Client {
 			set {
 				_Hidden = value;
 				if (_Hidden) {
-					MainCanvas.GetCanvas().DeleteAllChildren();
+					MainCanvas.GetCanvas().RemoveChild(EscapeWindow, true);
 				} else {
 					CreateEscapeWindow();
 				}
@@ -38,15 +37,8 @@ namespace FantasyScape.Client {
 				Game.LockMouse = true;
 			};
 
-			Button Edit = new Button(EscapeWindow);
-			Edit.SetPosition(10, 40);
-			Edit.SetText("Open Editor");
-			Edit.Clicked += delegate(Base sender) {
-				new EditorWindow();
-			};
-
 			Button Quit = new Button(EscapeWindow);
-			Quit.SetPosition(10, 70);
+			Quit.SetPosition(10, 40);
 			Quit.SetText("Quit");
 			Quit.Clicked += delegate(Base sender) {
 				MainCanvas.Dispose();

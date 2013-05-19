@@ -5,7 +5,7 @@ using System.Text;
 using Gwen.Control;
 using FantasyScape.NetworkMessages;
 
-namespace FantasyScape.Client.Editor.BlockTypesEditor {
+namespace FantasyScape.Client.Editor {
 	class DeleteBlockWindow : WindowControl {
 		public DeleteBlockWindow() : base(MainCanvas.GetCanvas()) {
 			this.SetSize(200, 200);

@@ -6,7 +6,7 @@ using Gwen.Control;
 using FantasyScape;
 using FantasyScape.NetworkMessages;
 
-namespace FantasyScape.Client.Editor.BlockTypesEditor {
+namespace FantasyScape.Client.Editor {
 	class NewBlockWindow : WindowControl {
 		public NewBlockWindow() : base(MainCanvas.GetCanvas()) {
 			this.SetPosition(40, 40);

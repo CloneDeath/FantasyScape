@@ -5,9 +5,9 @@ using System.Text;
 using Gwen.Control;
 using System.Drawing;
 
-namespace FantasyScape.Client.Editor.TextureEditor {
-	class NewTextureWindow : WindowControl {
-		public NewTextureWindow() : base(MainCanvas.GetCanvas()){
+namespace FantasyScape.Client.Editor {
+	class TextureEditor : WindowControl {
+		public TextureEditor(Base parent) : base(parent) {
 			this.SetPosition(10, 10);
 			this.SetSize(400, 400);
 		}
