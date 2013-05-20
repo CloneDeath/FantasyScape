@@ -170,8 +170,8 @@ namespace FantasyScape {
 	
 		public void Update(){
 			if (Game.LockMouse) {
-				xrot += (MouseManager.GetMousePositionWindows().X - 320) / 150.0f;
-				yrot += (MouseManager.GetMousePositionWindows().Y - 240) / 150.0f;
+				xrot += (MouseManager.GetMousePositionWindows().X - (GraphicsManager.WindowWidth / 2)) / 150.0f;
+				yrot += (MouseManager.GetMousePositionWindows().Y - (GraphicsManager.WindowHeight / 2)) / 150.0f;
 
 				if (yrot >= Math.PI / 2) {
 					yrot = (float)Math.PI / 2 - 0.001f;
@@ -179,7 +179,7 @@ namespace FantasyScape {
 					yrot = (float)-Math.PI / 2 + 0.001f;
 				}
 
-				MouseManager.SetMousePositionWindows(320, 240);
+				Game.CenterMouse();
 
 				double newx = xpos;
 				double newy = ypos;

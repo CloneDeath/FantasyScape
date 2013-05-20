@@ -74,7 +74,7 @@ namespace FantasyScape.Client.Editor {
 				lblName.Text = "Name:";
 
 				TypeName = new Label(RHS);
-				TypeName.Disable();
+				TypeName.AutoSizeToContents = true;
 				TypeName.SetPosition(105, 10);
 				TypeName.Text = "---";
 
@@ -163,27 +163,18 @@ namespace FantasyScape.Client.Editor {
 		internal void Select(string BlockType) {
 			//Make the item is selected in the list
 			if ((string)BlockTypesList.SelectedRow.UserData != BlockType) {
-				BlockTypesList.SelectRow(FindItemIn(BlockTypesList, BlockType));
+				BlockTypesList.SelectByUserData(BlockType);
 			}
 
 			//Update RHS info
 			EnableSubmit = false;
 			BlockType bt = BlockTypes.GetBlockType(BlockType);
 			TypeName.Text = bt.Name;
-			TopTex.SelectedItem = (MenuItem)FindItemIn(TopTex, bt.TopTexture);
-			SideTex.SelectedItem = (MenuItem)FindItemIn(SideTex, bt.SideTexture);
-			BotTex.SelectedItem = (MenuItem)FindItemIn(BotTex, bt.BotTexture);
+			TopTex.SelectByUserData(bt.TopTexture);
+			SideTex.SelectByUserData(bt.SideTexture);
+			BotTex.SelectByUserData(bt.BotTexture);
 			Liquid.IsChecked = bt.Liquid;
 			EnableSubmit = true;
-		}
-
-		private Base FindItemIn(Base Container, string Subitem) {
-			foreach (Base item in Container.Children) {
-				if ((string)item.UserData == Subitem) {
-					return item;
-				}
-			}
-			return null;
 		}
 	}
 }

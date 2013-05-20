@@ -20,7 +20,13 @@ namespace FantasyScape {
 			NotReady, Connecting, Playing
 		}
 
+		public static bool LockMouse = false;
+
 		public static GameState State = GameState.NotReady;
+
+		public static void CenterMouse() {
+			MouseManager.SetMousePositionWindows(GraphicsManager.WindowWidth / 2, GraphicsManager.WindowHeight / 2);
+		}
 
 		static Game() {
 			World = new World();
@@ -28,7 +34,6 @@ namespace FantasyScape {
 		}
 
 		static bool RequestedPlayer = false;
-		public static bool LockMouse = true;
 		static Stopwatch Stopwatch = new Stopwatch();
 		public static void Update() {
 			if (State == GameState.Playing) {
@@ -54,7 +59,7 @@ namespace FantasyScape {
 				}
 
 				if (Ready) {
-					MouseManager.SetMousePositionWindows(320, 240);
+					Game.CenterMouse();
 					State = GameState.Playing;
 					Stopwatch.StartNew();
 				}

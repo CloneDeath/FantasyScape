@@ -21,6 +21,7 @@ namespace FantasyScape.Client {
 		static NetClient Client;
 
 		static Camera2D Overlay;
+		private static OpenTK.Vector2d OldPos;
 		
 
 		static void Main(string[] args){
@@ -75,11 +76,21 @@ namespace FantasyScape.Client {
 				DevMenu.Hidden = !DevMenu.Hidden;
 			}
 
+			bool LockMouse = Game.LockMouse;
 			if (escapemenu.Hidden && DevMenu.Hidden) {
-				Game.LockMouse = true;
+				LockMouse = true;
 			} else {
-				Game.LockMouse = false;
+				LockMouse = false;
 			}
+			if (LockMouse != Game.LockMouse) {
+				if (LockMouse) {
+					OldPos = MouseManager.GetMousePositionWindows();
+					Game.CenterMouse();
+				} else {
+					MouseManager.SetMousePositionWindows((int)OldPos.X, (int)OldPos.Y);
+				}
+			}
+			Game.LockMouse = LockMouse;
 
 			//Toggle Full Screen
 			if (KeyboardManager.IsPressed(Key.F11)) {
