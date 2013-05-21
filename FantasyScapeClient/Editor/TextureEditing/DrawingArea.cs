@@ -24,7 +24,7 @@ namespace FantasyScape.Client.Editor {
         /// <param name="parent">Parent control.</param>
 		public DrawingArea(Base parent) : base(parent)
         {
-			DrawingColor = Color.Black;
+			SetColor(Color.Black);
 			Canvas = new PixelData(16, 16);
             SetSize(128, 128);
             MouseInputEnabled = true;
@@ -146,6 +146,15 @@ namespace FantasyScape.Client.Editor {
 
 		private void SetColorAt(int x, int y, Color c) {
 			Canvas[(x * Canvas.Width) / Width, (y * Canvas.Height) / Height] = c;
+		}
+
+		internal void SetColor(Color color) {
+			DrawingColor = color;
+		}
+
+		internal void LoadTexture(GLImp.Texture Tex) {
+			Canvas.Load(Tex);
+			this.Invalidate();
 		}
 	}
 }

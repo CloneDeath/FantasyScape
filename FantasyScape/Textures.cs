@@ -22,10 +22,10 @@ namespace FantasyScape {
 		}
 
 		private static void AddTexture(string filename, string name) {
-			Texture Dirt = new Texture(filename);
-			Dirt.Name = name;
+			Texture tex = new Texture(filename);
+			tex.Name = name;
 
-			TextureList.Add(Dirt);
+			TextureList.Add(tex);
 		}
 
 		public static Texture GetTexture(string name) {
@@ -41,7 +41,8 @@ namespace FantasyScape {
 			if (!Exists(nettex.Name)) {
 				TextureList.Add(nettex);
 			} else {
-				Console.WriteLine("Received Duplicate Texture Name: " + nettex.Name);
+				Texture oldtex = GetTexture(nettex.Name);
+				oldtex.Image = nettex.Image;
 			}
 		}
 
@@ -61,6 +62,19 @@ namespace FantasyScape {
 
 		public static bool Exists(string tex) {
 			return GetTexture(tex) != ErrorTexture;
+		}
+
+		public static void Remove(string tex) {
+			int found = -1;
+			for (int i = 0; i < TextureList.Count; i++) {
+				if (TextureList[i].Name == tex) {
+					found = i;
+				}
+			}
+
+			if (found != -1) {
+				TextureList.RemoveAt(found);
+			}
 		}
 	}
 }

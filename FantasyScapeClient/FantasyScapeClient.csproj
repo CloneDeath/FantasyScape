@@ -71,6 +71,7 @@
     <Compile Include="Editor\BlockTypesEditor.cs" />
     <Compile Include="Editor\TextureEditing\DrawingArea.cs" />
     <Compile Include="Editor\NewBlockName.cs" />
+    <Compile Include="Editor\TextureEditing\NewTextureName.cs" />
     <Compile Include="Editor\TextureEditing\PixelData.cs" />
     <Compile Include="Editor\TextureEditing\TextureEditor.cs" />
     <Compile Include="Editor\TopBar.cs" />

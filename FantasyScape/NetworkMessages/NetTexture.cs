@@ -32,6 +32,9 @@ namespace FantasyScape.NetworkMessages {
 
 		protected override void ExecuteMessage() {
 			Textures.AddTexture(texture);
+
+			NetTexture fwd = new NetTexture(texture);
+			fwd.Forward();
 		}
 
 		internal byte[] GetBytes(Texture texture) {
