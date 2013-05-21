@@ -69,8 +69,10 @@
     <Compile Include="ConnectingWindow.cs" />
     <Compile Include="Editor\DevelopmentMenu.cs" />
     <Compile Include="Editor\BlockTypesEditor.cs" />
+    <Compile Include="Editor\TextureEditing\DrawingArea.cs" />
     <Compile Include="Editor\NewBlockName.cs" />
-    <Compile Include="Editor\Textures\TextureEditor.cs" />
+    <Compile Include="Editor\TextureEditing\PixelData.cs" />
+    <Compile Include="Editor\TextureEditing\TextureEditor.cs" />
     <Compile Include="Editor\TopBar.cs" />
     <Compile Include="EscapeMenuManager.cs" />
     <Compile Include="MainCanvas.cs" />

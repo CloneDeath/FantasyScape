@@ -10,6 +10,10 @@ namespace FantasyScape.Client.Editor {
 		public TextureEditor(Base parent) : base(parent) {
 			this.SetPosition(10, 10);
 			this.SetSize(400, 400);
+
+			DrawingArea da = new DrawingArea(this);
+			da.SetPosition(10, 10);
+			da.SetSize(300, 300);
 		}
 
 		private void Save() {
