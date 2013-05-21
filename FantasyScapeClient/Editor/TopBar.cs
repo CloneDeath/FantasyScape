@@ -21,6 +21,12 @@ namespace FantasyScape.Client.Editor {
 					WindowControl win = new TextureEditor(this.Parent);
 					win.SetPosition(0, 22);
 				};
+
+				MenuItem CodeEdit = Edit.Menu.AddItem("Code Editor");
+				CodeEdit.Clicked += delegate(Base sender) {
+					CodeEditor win = new CodeEditor(this.Parent);
+					win.SetPosition(0, 22);
+				};
 			}
 		}
 	}

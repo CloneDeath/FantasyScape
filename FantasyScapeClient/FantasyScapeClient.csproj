@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectingWindow.cs" />
+    <Compile Include="Editor\CodeEditor.cs" />
     <Compile Include="Editor\DevelopmentMenu.cs" />
     <Compile Include="Editor\BlockTypesEditor.cs" />
     <Compile Include="Editor\TextureEditing\DrawingArea.cs" />
