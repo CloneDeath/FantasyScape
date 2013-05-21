@@ -162,7 +162,7 @@ namespace FantasyScape.Client.Editor {
 
 		internal void Select(string BlockType) {
 			//Make the item is selected in the list
-			if ((string)BlockTypesList.SelectedRow.UserData != BlockType) {
+			if (BlockTypesList.SelectedRow == null || (string)BlockTypesList.SelectedRow.UserData != BlockType) {
 				BlockTypesList.SelectByUserData(BlockType);
 			}
 

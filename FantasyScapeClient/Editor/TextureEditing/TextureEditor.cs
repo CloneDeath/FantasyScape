@@ -99,7 +99,7 @@ namespace FantasyScape.Client.Editor {
 
 		internal void Select(string tex) {
 			//Make the item is selected in the list
-			if ((string)TexturesList.SelectedRow.UserData != tex) {
+			if (TexturesList.SelectedRow == null || (string)TexturesList.SelectedRow.UserData != tex) {
 				TexturesList.SelectByUserData(tex);
 			}
 
