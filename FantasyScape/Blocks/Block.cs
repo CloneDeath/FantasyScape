@@ -16,33 +16,33 @@ namespace FantasyScape {
 			}
 		}
 
-		int level;
+		public int Level;
 
 		public Block() {
 			this.BlockTypeName = "";
-			this.level = 16;
+			this.Level = 16;
 		}
 
 		public Block(string Type) {
 			this.BlockTypeName = Type;
-			level = 16;
+			Level = 16;
 		}
 
 		public bool isSolid() {
 			if (BlockType.Liquid) {
-				return this.level >= 16;
+				return this.Level >= 16;
 			} else {
 				return true;
 			}
 		}
 
 		public virtual void draw(float x, float y, float z, World world) {
-			if (level <= 0 && BlockType.Liquid) {
+			if (Level <= 0 && BlockType.Liquid) {
 				return;
 			}
 			draw(x, y, z, world, Textures.GetTexture(BlockType.TopTexture),
 				Textures.GetTexture(BlockType.SideTexture),
-				Textures.GetTexture(BlockType.BotTexture), level / 16.0f);
+				Textures.GetTexture(BlockType.BotTexture), Level / 16.0f);
 		}
 
 		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex, double height) {
@@ -125,7 +125,7 @@ namespace FantasyScape {
 		public virtual void update(int x, int y, int z, World world) {
 			if (BlockType.Liquid) {
 				LiquidUpdated = moveDown(x, y, z - 1, world);
-				if (level > 0) {
+				if (Level > 0) {
 					List<Vector2> Copy = Directions.GetRange(0, Directions.Count);
 					Copy.Shuffle();
 					foreach (Vector2 dir in Copy) {
@@ -144,7 +144,7 @@ namespace FantasyScape {
 				} else {
 					world.removeUpdate(x, y, z);
 				}
-				if (level <= 0) {
+				if (Level <= 0) {
 					world.RemoveBlock(x, y, z);
 				}
 			} else {
@@ -161,36 +161,36 @@ namespace FantasyScape {
 		}
 
 		public bool GiveTo(int x, int y, int z, World world, int MaxWater, int MinWaterDiff, bool Down) {
-			if (MaxWater > level) {
-				MaxWater = level;
+			if (MaxWater > Level) {
+				MaxWater = Level;
 			}
 
 			if (!world.IsSolid(x, y, z)) {
 				if (world.blockAt(x, y, z) == null) {
-					if (this.level >= MinWaterDiff) {
+					if (this.Level >= MinWaterDiff) {
 						Block b = new Block(this.BlockTypeName);
 						world.addBlock(x, y, z, b);
-						b.level = MaxWater;
-						level -= MaxWater;
+						b.Level = MaxWater;
+						Level -= MaxWater;
 						return true;
 					}
 				} else {
 					Block b = world.blockAt(x, y, z);
 					if (b.BlockType.Name == this.BlockTypeName) {
-						if (b.level < 16) {
+						if (b.Level < 16) {
 							if (Down) {
-								int diff = 16 - b.level;
+								int diff = 16 - b.Level;
 								if (diff > MaxWater) {
 									diff = MaxWater;
 								}
-								b.level += diff;
-								this.level -= diff;
+								b.Level += diff;
+								this.Level -= diff;
 								return true;
 							} else {
-								int diff = this.level - b.level;
+								int diff = this.Level - b.Level;
 								if (diff >= MinWaterDiff) {
-									b.level += MaxWater;
-									this.level -= MaxWater;
+									b.Level += MaxWater;
+									this.Level -= MaxWater;
 								}
 								
 								return true;
@@ -205,12 +205,12 @@ namespace FantasyScape {
 
 		public void Write(NetOutgoingMessage nom) {
 			nom.Write(BlockTypeName);
-			nom.Write((Int32)level);
+			nom.Write((Int32)Level);
 		}
 
 		public void Read(NetIncomingMessage nim) {
 			BlockTypeName = nim.ReadString();
-			level = nim.ReadInt32();
+			Level = nim.ReadInt32();
 		}
 	}
 }

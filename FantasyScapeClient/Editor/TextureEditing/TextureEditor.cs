@@ -11,10 +11,12 @@ namespace FantasyScape.Client.Editor {
 	class TextureEditor : WindowControl {
 		ListBox TexturesList;
 		DrawingArea Canvas;
+		ToolBox ToolSelect;
+		HSVColorPicker colorpicker;
 
 		public TextureEditor(Base parent) : base(parent) {
 			this.SetPosition(10, 10);
-			this.SetSize(800, 400);
+			this.SetSize(815, 400);
 
 			VerticalSplitter Splitter = new VerticalSplitter(this);
 			Splitter.Dock = Gwen.Pos.Fill;
@@ -66,16 +68,28 @@ namespace FantasyScape.Client.Editor {
 				Canvas.SetPosition(10, 10);
 				Canvas.SetSize(300, 300);
 
-				HSVColorPicker colorpicker = new HSVColorPicker(RHS);
+				colorpicker = new HSVColorPicker(RHS);
 				colorpicker.SetPosition(320, 10);
 				colorpicker.ColorChanged += delegate(Base sender) {
 					Canvas.SetColor(colorpicker.SelectedColor);
 				};
+
+				ToolSelect = new ToolBox(RHS);
+				ToolSelect.Text = "Current Tool";
+				ToolSelect.SetPosition(320, 150);
+				ToolSelect.SetSize(200, 200);
+
+				Canvas.OnDraw += DrawEventHandler;
 			}
 
 			Splitter.SetPanel(0, LHS);
 			Splitter.SetPanel(1, RHS);
 			Splitter.SetHValue(.3f);
+		}
+
+		private void DrawEventHandler(int X, int Y, PixelData Data, ref Color CurrentColor) {
+			ToolSelect.UseTool(X, Y, Data, ref CurrentColor);
+			colorpicker.SetColor(CurrentColor);
 		}
 
 		private void RemoveSelectedTexture() {

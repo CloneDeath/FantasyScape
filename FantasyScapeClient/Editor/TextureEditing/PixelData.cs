@@ -47,14 +47,17 @@ namespace FantasyScape.Client.Editor {
 				}
 			}
 
-			Texture tex = Textures.GetTexture(Name);
-			tex.Image = bmp;
+			if (Textures.Exists(Name)) {
+				Texture tex = Textures.GetTexture(Name);
+				tex.Image = bmp;
 
-			NetTexture nt = new NetTexture(tex);
-			nt.Send();
+				NetTexture nt = new NetTexture(tex);
+				nt.Send();
+			}
 		}
 
 		internal void Load(Texture Tex) {
+			this.Name = Tex.Name;
 			this.Width = Tex.Width;
 			this.Height = Tex.Height;
 			Data = new Color[Width, Height];
@@ -64,8 +67,6 @@ namespace FantasyScape.Client.Editor {
 					this[x, y] = Tex.Image.GetPixel(x, y);
 				}
 			}
-
-			this.Name = Tex.Name;
 		}
 	}
 }

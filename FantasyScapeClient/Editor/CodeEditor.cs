@@ -7,8 +7,7 @@ using Gwen.Control;
 namespace FantasyScape.Client.Editor {
 	class CodeEditor : WindowControl {
 		public CodeEditor(Base parent) : base(parent) {
-			TextBox CodeArea = new TextBox(this);
-			CodeArea.Multiline = true;
+			TextBoxMultiline CodeArea = new TextBoxMultiline(this);
 			CodeArea.SetSize(300, 300);
 			
 			this.SizeToChildren();

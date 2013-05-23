@@ -18,6 +18,9 @@ namespace FantasyScape.Client.Editor {
 
 		private PixelData Canvas;
 
+		public delegate void OnDrawEvent(int X, int Y, PixelData Data, ref Color CurrentColor);
+		public OnDrawEvent OnDraw;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ColorLerpBox"/> class.
         /// </summary>
@@ -64,7 +67,10 @@ namespace FantasyScape.Client.Editor {
                 if (m_CursorPos.Y > Height)
                     m_CursorPos.Y = Height;
 
-				SetColorAt(m_CursorPos.X, m_CursorPos.Y, DrawingColor);
+				if (OnDraw != null) {
+					OnDraw((m_CursorPos.X * Canvas.Width) / Width, (m_CursorPos.Y * Canvas.Height) / Height, Canvas, ref DrawingColor);
+				}
+				//SetColorAt(m_CursorPos.X, m_CursorPos.Y, DrawingColor);
 				Invalidate();
             }
         }

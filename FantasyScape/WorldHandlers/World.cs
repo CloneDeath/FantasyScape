@@ -131,15 +131,25 @@ namespace FantasyScape {
 			}
 		}
 
+		internal bool CanPlaceBlock(int X, int Y, int Z, Block b) {
+			if (blockAt(X, Y, Z) == null) return true;
+			if (blockAt(X, Y, Z).BlockType == b.BlockType && b.BlockType.Liquid) return true;
+			return false;
+		}
+
 		public void addBlock(int x, int y, int z, Block b) {
-			if (blockAt(x, y, z) == null) {
+			if (CanPlaceBlock(x, y, z, b)){
 				int remi = exposedBlocks.IndexOf(blocks[x, y, z]);
 				if (remi == -1) {
 					exposedBlocks.Add(b);
 					exposedLocations.Add(new int[] { x, y, z });
 				}
 
-				blocks[x, y, z] = b;
+				if (blockAt(x, y, z) == null) {
+					blocks[x, y, z] = b;
+				} else {
+					blocks[x, y, z].Level += b.Level;
+				}
 				checkExposure(x + 1, y, z);
 				checkExposure(x - 1, y, z);
 				checkExposure(x, y + 1, z);
@@ -288,7 +298,5 @@ namespace FantasyScape {
 
 			return Current == State.Done;
 		}
-
-		
 	}
 }

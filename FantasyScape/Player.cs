@@ -348,7 +348,10 @@ namespace FantasyScape {
 				new BlockRemove(bestX, bestY, bestZ).Send();
 			}
 		}
-	
+
+		bool CanPlaceBlock(int X, int Y, int Z) {
+			return Game.World.CanPlaceBlock(X, Y, Z, Inventory[SelectedItem]);
+		}
 	
 		void AddBlock(){
 
@@ -392,7 +395,7 @@ namespace FantasyScape {
 									(int)(zpos + z + PlayerHeight), 
 									clb);
 							if (clb != NONE && clb != INSIDE &&
-									Game.World.blockAt(temp[0], temp[1], temp[2]) == null) {
+									CanPlaceBlock(temp[0], temp[1], temp[2])) {
 								foundOne = true;
 								float length = (float)Math.Sqrt(x*x + y*y + z*z);
 								if (length < bestDist){
