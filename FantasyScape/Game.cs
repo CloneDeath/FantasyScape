@@ -34,15 +34,9 @@ namespace FantasyScape {
 		}
 
 		static bool RequestedPlayer = false;
-		static Stopwatch Stopwatch = new Stopwatch();
-		public static void Update() {
+		public static void UpdateClient() {
 			if (State == GameState.Playing) {
 				Self.Update();
-
-				//if (Stopwatch.Elapsed.Milliseconds > 100) {
-					//Stopwatch.Restart();
-					World.update();
-				//}
 			}
 
 			if (State == GameState.Connecting) {
@@ -64,6 +58,10 @@ namespace FantasyScape {
 					Stopwatch.StartNew();
 				}
 			}
+		}
+
+		public static void UpdateServer() {
+			World.update();
 		}
 
 		public static float GetProgress() {

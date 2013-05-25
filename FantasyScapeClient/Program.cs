@@ -64,7 +64,7 @@ namespace FantasyScape.Client {
 				}
 			}
 
-			Game.Update();
+			Game.UpdateClient();
 
 			menu.Connecting.Update();
 

@@ -350,7 +350,7 @@ namespace FantasyScape {
 		}
 
 		bool CanPlaceBlock(int X, int Y, int Z) {
-			return Game.World.CanPlaceBlock(X, Y, Z, Inventory[SelectedItem]);
+			return Inventory[SelectedItem].CanCombine(Game.World.blockAt(X, Y, Z));
 		}
 	
 		void AddBlock(){
@@ -420,12 +420,11 @@ namespace FantasyScape {
 
 				string BlockName = Inventory[SelectedItem].BlockTypeName;
 
-				Game.World.addBlock(bestX, bestY, bestZ, BlockName);
-				BlockAdd msg = new BlockAdd(bestX, bestY, bestZ, BlockName);
+				Block b = new Block(BlockName);
+
+				Game.World.AddBlock(bestX, bestY, bestZ, b);
+				BlockAdd msg = new BlockAdd(bestX, bestY, bestZ, b);
 				msg.Send();
-			
-				//System.out.println(BestSide);
-				//System.out.println("X:" + bestX + " Y:" + bestY + " Z:" + bestZ);
 			}
 		}
 	

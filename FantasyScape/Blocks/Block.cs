@@ -6,6 +6,7 @@ using GLImp;
 using OpenTK.Graphics.OpenGL;
 using Lidgren.Network;
 using OpenTK;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class Block {
@@ -141,11 +142,13 @@ namespace FantasyScape {
 			if (BlockType.Liquid) {
 				if (LiquidUpdated) {
 					world.refreshUpdateBlocks(x, y, z);
+					new BlockAdd(x, y, z, this).Send();
 				} else {
 					world.removeUpdate(x, y, z);
 				}
 				if (Level <= 0) {
 					world.RemoveBlock(x, y, z);
+					new BlockRemove(x, y, z).Send();
 				}
 			} else {
 				world.removeUpdate(x, y, z);
@@ -169,7 +172,7 @@ namespace FantasyScape {
 				if (world.blockAt(x, y, z) == null) {
 					if (this.Level >= MinWaterDiff) {
 						Block b = new Block(this.BlockTypeName);
-						world.addBlock(x, y, z, b);
+						world.AddBlock(x, y, z, b);
 						b.Level = MaxWater;
 						Level -= MaxWater;
 						return true;
@@ -191,9 +194,10 @@ namespace FantasyScape {
 								if (diff >= MinWaterDiff) {
 									b.Level += MaxWater;
 									this.Level -= MaxWater;
+									return true;
 								}
 								
-								return true;
+								return false;
 							}
 						}
 					}
@@ -211,6 +215,17 @@ namespace FantasyScape {
 		public void Read(NetIncomingMessage nim) {
 			BlockTypeName = nim.ReadString();
 			Level = nim.ReadInt32();
+		}
+
+		internal void TryCombine(Block block) {
+			if (CanCombine(block) && block != null) {
+				this.Level += block.Level;
+			}
+		}
+
+		internal bool CanCombine(Block block) {
+			if (block == null) return true;
+			return this.BlockType == block.BlockType && this.BlockType.Liquid;
 		}
 	}
 }

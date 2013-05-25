@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Lidgren.Network;
 using FantasyScape.NetworkMessages;
+using System.Threading;
 
 namespace FantasyScape.Server {
 	class GameServer {
@@ -32,10 +33,16 @@ namespace FantasyScape.Server {
 		internal static void Run() {
 			/* Respond to Requests */
 			while (true) {
-				NetIncomingMessage Message = Server.WaitMessage(1000);
-				if (Message != null) {
-					HandleMessages(Message);
-				}
+				Game.UpdateServer();
+				ReadMessages();
+			}
+		}
+
+		private static void ReadMessages() {
+			List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
+			Server.ReadMessages(Messages);
+			foreach (NetIncomingMessage Message in Messages) {
+				HandleMessages(Message);
 			}
 		}
 
