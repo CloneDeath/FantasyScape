@@ -74,8 +74,12 @@ namespace FantasyScape.NetworkMessages {
 			}
 		}
 
+		protected virtual int InitialMessageSize() {
+			return 16;
+		}
+
 		private void Send(NetPeer peer, NetConnection destination, NetDeliveryMethod method) {
-			NetOutgoingMessage nom = peer.CreateMessage();
+			NetOutgoingMessage nom = peer.CreateMessage(InitialMessageSize());
 			nom.Write(this.GetType().Name);
 			this.WriteData(nom);
 			peer.SendMessage(nom, destination, method);

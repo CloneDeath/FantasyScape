@@ -53,14 +53,18 @@ namespace FantasyScape.Client {
 			MainCanvas.Dispose();
 		}
 
-		
 
+		static List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
 		static void Update() {
 			if (Client != null) {
-				List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
 				Client.ReadMessages(Messages);
-				foreach (NetIncomingMessage msg in Messages) {
-					Message.Handle(msg);
+				for (int i = 0; i < 10; i++) {
+					if (Messages.Count != 0) {
+						Message.Handle(Messages[0]);
+						Messages.RemoveAt(0);
+					} else {
+						break;
+					}
 				}
 			}
 
