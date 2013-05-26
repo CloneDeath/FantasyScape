@@ -56,16 +56,17 @@ namespace FantasyScape {
 					Game.CenterMouse();
 					State = GameState.Playing;
 					Stopwatch.StartNew();
+					World.RefreshExposedBlocks();
 				}
 			}
 		}
 
 		public static void UpdateServer() {
-			World.update();
+			World.Update();
 		}
 
 		public static float GetProgress() {
-			return (float)Game.World.LayerCount / ((float)Game.World.XSize * (float)Game.World.YSize);
+			return (float)Game.World.ChunkCount / ((float)World.XSize * (float)World.YSize * (float)World.ZSize);
 		}
 
 		public static void Draw() {
@@ -81,8 +82,15 @@ namespace FantasyScape {
 			}
 		}
 
+		public static void Draw2D() {
+			if (State == GameState.Playing) {
+				Self.Draw2D();
+			}
+		}
+
 		public static void GenerateWorld() {
-			World.GenerateMap();
+			MapGenerator mg = new MapGenerator(World);
+			mg.GenerateTerrain();
 		}
 
 		internal static Player AddNewPlayer() {
@@ -107,12 +115,6 @@ namespace FantasyScape {
 				}
 			}
 			return null;
-		}
-
-		public static void Draw2D() {
-			if (State == GameState.Playing) {
-				Self.Draw2D();
-			}
 		}
 	}
 }

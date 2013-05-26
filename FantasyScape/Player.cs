@@ -50,7 +50,7 @@ namespace FantasyScape {
 			//yspeed = 0;
 			zspeed = 0;
 
-			for (int i = Game.World.ZSize; i >= 0; i--) {
+			for (int i = World.ZSize; i >= 0; i--) {
 				if (Game.World.IsSolid(x, y, i)) {
 					zpos = i+1;
 					break;
@@ -84,7 +84,7 @@ namespace FantasyScape {
 			//yspeed = 0;
 			zspeed = 0;
 
-			for (int i = Game.World.ZSize; i >= 0; i--) {
+			for (int i = World.ZSize; i >= 0; i--) {
 				if (Game.World.IsSolid(xpos, ypos, i)) {
 					zpos = i + 1;
 					break;
@@ -350,7 +350,7 @@ namespace FantasyScape {
 		}
 
 		bool CanPlaceBlock(int X, int Y, int Z) {
-			return Inventory[SelectedItem].CanCombine(Game.World.blockAt(X, Y, Z));
+			return Inventory[SelectedItem].CanCombine(Game.World[X, Y, Z]);
 		}
 	
 		void AddBlock(){

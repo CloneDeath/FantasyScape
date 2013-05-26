@@ -8,207 +8,167 @@ using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class World {
-		public Block[,,] blocks;
-		public int XSize = 256;
-		public int YSize = 256;
-		public int ZSize = 256;
-		List<Block> exposedBlocks;
-		List<int[]> exposedLocations;
+		public const int XSize = 16;
+		public const int YSize = 16;
+		public const int ZSize = 16;
 
-		public List<Block> updateBlocks;
-		public List<int[]> updateLocations;
-
+		public Chunk[, ,] Chunks = new Chunk[XSize, YSize, ZSize];
 
 		public World() {
-			updateBlocks = new List<Block>();
-			updateLocations = new List<int[]>();		
-		}
-
-		public void refreshUpdateBlocks(int x, int y, int z) {
-			addUpdate(x, y, z);
-			addUpdate(x + 1, y, z);
-			addUpdate(x - 1, y, z);
-			addUpdate(x, y + 1, z);
-			addUpdate(x, y - 1, z);
-			addUpdate(x, y, z + 1);
-			addUpdate(x, y, z - 1);
-		}
-
-		public void addUpdate(int x, int y, int z) {
-			Block b = blockAt(x, y, z);
-			if (b != null && !updateBlocks.Contains(b)) {
-				updateBlocks.Add(b);
-				updateLocations.Add(new int[] { x, y, z });
-			}
-		}
-
-		public void removeUpdate(int x, int y, int z) {
-			Block b = blockAt(x, y, z);
-			if (b != null && updateBlocks.Contains(b)) {
-				int rval = updateBlocks.IndexOf(b);
-				updateBlocks.RemoveAt(rval);
-				updateLocations.RemoveAt(rval);
-			}
-		}
-
-		public void update(){
-			List<Block> tblocks = new List<Block>();
-			foreach (Block b in updateBlocks){
-				tblocks.Add(b);
-			}
-
-			List<int[]> tlocs = new List<int[]>();
-			foreach (int[] i in updateLocations){
-				tlocs.Add(i);
-			}
-			for (int i = 0; i < tblocks.Count(); i++){
-				int[] loc = tlocs[i];
-				tblocks[i].update(loc[0], loc[1], loc[2], this);
-			}
-		
-			for (int i = 0; i < tblocks.Count(); i++){
-				int[] loc = tlocs[i];
-				tblocks[i].postUpdate(loc[0], loc[1], loc[2], this);
-			}
-		}
-
-		public void GenerateMap() {
-			MapGenerator mg = new MapGenerator(XSize, YSize, ZSize, this);
-			blocks = mg.generateTerrain();
-			refreshExposedBlocks();
-		}
-
-		public void GenerateFlatMap(){
-			blocks = new Block[XSize,YSize,ZSize];
-			for (int x = 0; x < XSize; x++){
-				for (int y = 0; y < YSize/2; y++){
-					for (int z = 0; z < ZSize; z++){
-						blocks[x, y, z] = new Block("Dirt");
-					}
-				}
-			}
-			refreshExposedBlocks();
-		}
-
-		public Block blockAt(int x, int y, int z) {
-			if (x < 0 || x >= XSize || y < 0 || y >= YSize || z < 0 || z >= ZSize) {
-				return null;
-			}
-
-			return blocks[x, y, z];
-		}
-
-		public void ExposeBlocksAt(int x, int y, int z) {
-			exposeBlock(x + 1, y, z);
-			exposeBlock(x - 1, y, z);
-			exposeBlock(x, y + 1, z);
-			exposeBlock(x, y - 1, z);
-			exposeBlock(x, y, z + 1);
-			exposeBlock(x, y, z - 1);
-		}
-
-		public void RemoveBlock(int x, int y, int z) {
-			if (blockAt(x, y, z) != null) {
-				int remi = exposedBlocks.IndexOf(blocks[x, y, z]);
-				if (remi != -1) {
-					exposedBlocks.RemoveAt(remi);
-					exposedLocations.RemoveAt(remi);
-				}
-
-				removeUpdate(x, y, z);
-
-				blocks[x, y, z] = null;
-
-				ExposeBlocksAt(x, y, z);
-
-				refreshUpdateBlocks(x, y, z);
-			}
-		}
-
-		public void SetBlock(int x, int y, int z, Block b) {
-			int remi = exposedBlocks.IndexOf(blocks[x, y, z]);
-			if (remi == -1) {
-				exposedBlocks.Add(b);
-				exposedLocations.Add(new int[] { x, y, z });
-			}
-
-			blocks[x, y, z] = b;
-
-			checkExposure(x + 1, y, z);
-			checkExposure(x - 1, y, z);
-			checkExposure(x, y + 1, z);
-			checkExposure(x, y - 1, z);
-			checkExposure(x, y, z + 1);
-			checkExposure(x, y, z - 1);
-
-			refreshUpdateBlocks(x, y, z);
-		}
-
-		public void AddBlock(int x, int y, int z, Block b) {
-			if (b.CanCombine(blockAt(x, y, z))){
-				b.TryCombine(blockAt(x,y,z));
-				SetBlock(x, y, z, b);
-			}
-		}
-
-		public void checkExposure(int x, int y, int z) {
-			if (blockAt(x, y, z) != null) {
-				if (isExposed(x, y, z)) {
-					if (!exposedBlocks.Contains(blocks[x, y, z])) {
-						exposedBlocks.Add(blocks[x, y, z]);
-						exposedLocations.Add(new int[] { x, y, z });
-					}
-				} else {
-					int remi = exposedBlocks.IndexOf(blocks[x, y, z]);
-					if (remi != -1) {
-						exposedBlocks.RemoveAt(remi);
-						exposedLocations.RemoveAt(remi);
-					}
-				}
-			}
-		}
-
-		public void exposeBlock(int x, int y, int z) {
-			if (blockAt(x, y, z) != null) {
-				if (!exposedBlocks.Contains(blocks[x, y, z])) {
-					exposedBlocks.Add(blocks[x, y, z]);
-					exposedLocations.Add(new int[] { x, y, z });
-				}
-			}
-		}
-
-		public void refreshExposedBlocks() {
-			exposedBlocks = new List<Block>();
-			exposedLocations = new List<int[]>();
 			for (int x = 0; x < XSize; x++) {
 				for (int y = 0; y < YSize; y++) {
 					for (int z = 0; z < ZSize; z++) {
-						if (isExposed(x, y, z)) {
-							exposedBlocks.Add(blocks[x, y, z]);
-							exposedLocations.Add(new int[] { x, y, z });
-						}
+						Chunks[x, y, z] = new Chunk();
 					}
 				}
 			}
 		}
 
-		public void Draw(Player p) {
-			int ViewDistance = 100;
-			for (int i = 0; i < exposedBlocks.Count(); i++) {
-				int[] loc = exposedLocations[i];
-				if (Math.Abs(p.xpos - loc[0]) < ViewDistance &&
-						Math.Abs(p.ypos - loc[1]) < ViewDistance &&
-						Math.Abs(p.zpos - loc[2]) < ViewDistance) {
-					Vector3 box = new Vector3(loc[0] + 0.5f, loc[1] + 0.5f, loc[2] + 0.5f);
-					if (p.frustum.pointInFrustum(box) != Frustum.OUTSIDE) {
-						exposedBlocks[i].draw(loc[0], loc[1], loc[2], this);
-						//Console.WriteLine("x:"+loc[0]+" y:"+loc[1]+" z:"+loc[2]);
+		#region BlockAccessors
+		private void GlobalToLocal(Vector3i GlobalCoords, out Vector3i ChunkCoords, out Vector3i BlockCoords) {
+			ChunkCoords = new Vector3i(
+				GlobalCoords.X / Chunk.Size,
+				GlobalCoords.Y / Chunk.Size,
+				GlobalCoords.Z / Chunk.Size);
+
+			BlockCoords = new Vector3i(
+				GlobalCoords.X % Chunk.Size,
+				GlobalCoords.Y % Chunk.Size,
+				GlobalCoords.Z % Chunk.Size);
+		}
+
+		public Block this[int x, int y, int z] {
+			get {
+				if (OutsideBounds(x, y, z)) {
+					return null;
+				}
+
+				Vector3i chunk;
+				Vector3i sub;
+				GlobalToLocal(new Vector3i(x, y, z), out chunk, out sub);
+
+				return Chunks[chunk.X, chunk.Y, chunk.Z][sub.X, sub.Y, sub.Z];
+			}
+
+			set {
+				if (OutsideBounds(x, y, z)) {
+					return;
+				}
+
+				Vector3i chunk;
+				Vector3i sub;
+				GlobalToLocal(new Vector3i(x, y, z), out chunk, out sub);
+
+				Chunks[chunk.X, chunk.Y, chunk.Z][sub.X, sub.Y, sub.Z] = value;
+			}
+		}
+
+		private static bool OutsideBounds(int x, int y, int z) {
+			return x < 0 || x >= XSize * Chunk.Size || y < 0 || y >= YSize * Chunk.Size || z < 0 || z >= ZSize * Chunk.Size;
+		}
+		#endregion
+
+		#region Client World Initialization
+		public int ChunkCount = 0;
+		bool SentRequest = false;
+		internal bool Ready() {
+			if (!SentRequest) {
+				SentRequest = true;
+				RequestMessage msg = new RequestMessage(RequestType.Chunks);
+				msg.Send();
+			}
+
+			return ChunkCount == XSize * YSize * ZSize;
+		}
+		#endregion
+
+		#region Block Update Wrappers
+		public void Update() {
+			for (int x = 0; x < XSize; x++) {
+				for (int y = 0; y < YSize; y++) {
+					for (int z = 0; z < ZSize; z++) {
+						Chunks[x, y, z].Update(x, y, z, this);
+					}
+				}
+			}
+			
+		}
+
+		public void RefreshUpdateBlocks(int x, int y, int z) {
+			AddUpdate(x, y, z);
+			AddUpdate(x + 1, y, z);
+			AddUpdate(x - 1, y, z);
+			AddUpdate(x, y + 1, z);
+			AddUpdate(x, y - 1, z);
+			AddUpdate(x, y, z + 1);
+			AddUpdate(x, y, z - 1);
+		}
+
+		public void AddUpdate(int x, int y, int z) {
+			Vector3i ChunkCoords;
+			Vector3i BlockCoords;
+			GlobalToLocal(new Vector3i(x, y, z), out ChunkCoords, out BlockCoords);
+
+			Chunks[ChunkCoords.X, ChunkCoords.Y, ChunkCoords.Z].AddUpdate(BlockCoords.X, BlockCoords.Y, BlockCoords.Z);
+		}
+
+		public void RemoveUpdate(int x, int y, int z) {
+			Vector3i ChunkCoords;
+			Vector3i BlockCoords;
+			GlobalToLocal(new Vector3i(x, y, z), out ChunkCoords, out BlockCoords);
+
+			Chunks[ChunkCoords.X, ChunkCoords.Y, ChunkCoords.Z].RemoveUpdate(BlockCoords.X, BlockCoords.Y, BlockCoords.Z);
+		}
+
+		#endregion
+
+		#region Block Exposure Wrappers
+		public void RefreshExposedBlocks() {
+			for (int x = 0; x < XSize; x++) {
+				for (int y = 0; y < YSize; y++) {
+					for (int z = 0; z < ZSize; z++) {
+						Chunks[x, y, z].RefreshExposedBlocks(x, y, z, this);
 					}
 				}
 			}
 		}
 
-		public bool isExposed(float x, float y, float z) {
+		public void ExposeBlocksAt(int x, int y, int z) {
+			ExposeBlock(x + 1, y, z);
+			ExposeBlock(x - 1, y, z);
+			ExposeBlock(x, y + 1, z);
+			ExposeBlock(x, y - 1, z);
+			ExposeBlock(x, y, z + 1);
+			ExposeBlock(x, y, z - 1);
+		}
+
+		public void ExposeBlock(int x, int y, int z) {
+			Vector3i ChunkCoords;
+			Vector3i BlockCoords;
+			GlobalToLocal(new Vector3i(x, y, z), out ChunkCoords, out BlockCoords);
+
+			Chunks[ChunkCoords.X, ChunkCoords.Y, ChunkCoords.Z].ExposeBlock(BlockCoords.X, BlockCoords.Y, BlockCoords.Z);
+		}
+
+		public void UnexposeBlock(int x, int y, int z) {
+			Vector3i ChunkCoords;
+			Vector3i BlockCoords;
+			GlobalToLocal(new Vector3i(x, y, z), out ChunkCoords, out BlockCoords);
+
+			Chunks[ChunkCoords.X, ChunkCoords.Y, ChunkCoords.Z].UnexposeBlock(BlockCoords.X, BlockCoords.Y, BlockCoords.Z);
+		}
+
+		public void CheckExposure(int x, int y, int z) {
+			if (this[x, y, z] != null) {
+				if (IsExposed(x, y, z)) {
+					ExposeBlock(x, y, z);
+				} else {
+					UnexposeBlock(x, y, z);
+				}
+			}
+		}
+
+		public bool IsExposed(float x, float y, float z) {
 			int xat = (int)x;
 			int yat = (int)y;
 			int zat = (int)z;
@@ -217,21 +177,62 @@ namespace FantasyScape {
 				return false;
 			}
 
-			if (blocks[xat, yat, zat] == null) {
+			if (this[xat, yat, zat] == null) {
 				return false;
 			}
 
-			//if (xat == XSize-1 || xat == 0 || zat == ZSize-1 || zat == 0 || yat == 0 || yat == YSize-1){
-			//return false;
-			//}
-
-
 			if (!IsSolid(xat, yat + 1, zat) || !IsSolid(xat + 1, yat, zat) ||
-					!IsSolid(xat - 1, yat, zat) || !IsSolid(xat, yat, zat + 1) ||
-					!IsSolid(xat, yat, zat - 1) || !IsSolid(xat, yat - 1, zat)) {
+				!IsSolid(xat - 1, yat, zat) || !IsSolid(xat, yat, zat + 1) ||
+				!IsSolid(xat, yat, zat - 1) || !IsSolid(xat, yat - 1, zat)) {
 				return true;
 			} else {
 				return false;
+			}
+		}
+
+		#endregion
+
+		#region Block Addition/Removal
+		public void AddBlock(int x, int y, int z, Block b) {
+			if (b.CanCombine(this[x, y, z])) {
+				b.TryCombine(this[x, y, z]);
+				SetBlock(x, y, z, b);
+			}
+		}
+
+		public void RemoveBlock(int x, int y, int z) {
+			if (this[x, y, z] != null) {
+				UnexposeBlock(x, y, z);
+				RemoveUpdate(x, y, z);
+				this[x, y, z] = null;
+				ExposeBlocksAt(x, y, z);
+				RefreshUpdateBlocks(x, y, z);
+			}
+		}
+
+		public void SetBlock(int x, int y, int z, Block b) {
+			ExposeBlock(x, y, z);
+			this[x, y, z] = b;
+
+			CheckExposure(x + 1, y, z);
+			CheckExposure(x - 1, y, z);
+			CheckExposure(x, y + 1, z);
+			CheckExposure(x, y - 1, z);
+			CheckExposure(x, y, z + 1);
+			CheckExposure(x, y, z - 1);
+
+			RefreshUpdateBlocks(x, y, z);
+		}
+		#endregion
+
+		public void Draw(Player p) {
+			//int ViewDistance = 100;
+			for (int x = 0; x < XSize; x++) {
+				for (int y = 0; y < YSize; y++) {
+					for (int z = 0; z < ZSize; z++) {
+						Chunks[x, y, z].Draw(x, y, z, this, p);
+					}
+				}
 			}
 		}
 
@@ -249,39 +250,12 @@ namespace FantasyScape {
 			}
 
 
-			if (blocks[xat, yat, zat] == null)
+			if (this[xat, yat, zat] == null)
 				return false;
 			else {
-				return blocks[xat, yat, zat].isSolid();
+				return this[xat, yat, zat].isSolid();
 			}
 
-		}
-
-		public int LayerCount = 0;
-
-		public enum State {
-			SendingWorldSize, ReceivingWorldSize,
-			SendingLayersRequest, ReceivingLayers,
-			Done
-		}
-
-		public State Current = State.SendingWorldSize;
-		internal bool Ready() {
-			if (Current == State.SendingWorldSize){
-				Current = State.ReceivingWorldSize;
-
-				RequestMessage msg = new RequestMessage(RequestType.WorldSize);
-				msg.Send();
-			}
-
-			if (Current == State.SendingLayersRequest) {
-				Current = State.ReceivingLayers;
-
-				RequestMessage msg = new RequestMessage(RequestType.BlockLayers);
-				msg.Send();
-			}
-
-			return Current == State.Done;
 		}
 	}
 }

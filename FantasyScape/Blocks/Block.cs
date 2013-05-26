@@ -134,24 +134,24 @@ namespace FantasyScape {
 					}
 				}
 			} else {
-				world.removeUpdate(x, y, z);
+				world.RemoveUpdate(x, y, z);
 			}
 		}
 
 		public virtual void postUpdate(int x, int y, int z, World world) {
 			if (BlockType.Liquid) {
 				if (LiquidUpdated) {
-					world.refreshUpdateBlocks(x, y, z);
+					world.RefreshUpdateBlocks(x, y, z);
 					new BlockAdd(x, y, z, this).Send();
 				} else {
-					world.removeUpdate(x, y, z);
+					world.RemoveUpdate(x, y, z);
 				}
 				if (Level <= 0) {
 					world.RemoveBlock(x, y, z);
 					new BlockRemove(x, y, z).Send();
 				}
 			} else {
-				world.removeUpdate(x, y, z);
+				world.RemoveUpdate(x, y, z);
 			}
 		}
 
@@ -169,7 +169,7 @@ namespace FantasyScape {
 			}
 
 			if (!world.IsSolid(x, y, z)) {
-				if (world.blockAt(x, y, z) == null) {
+				if (world[x, y, z] == null) {
 					if (this.Level >= MinWaterDiff) {
 						Block b = new Block(this.BlockTypeName);
 						world.AddBlock(x, y, z, b);
@@ -178,7 +178,7 @@ namespace FantasyScape {
 						return true;
 					}
 				} else {
-					Block b = world.blockAt(x, y, z);
+					Block b = world[x, y, z];
 					if (b.BlockType.Name == this.BlockTypeName) {
 						if (b.Level < 16) {
 							if (Down) {

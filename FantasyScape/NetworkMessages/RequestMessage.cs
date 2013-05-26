@@ -7,7 +7,7 @@ using GLImp;
 
 namespace FantasyScape.NetworkMessages {
 	public enum RequestType {
-		Textures, BlockTypes, WorldSize, BlockLayers, NewPlayer
+		Textures, BlockTypes, Chunks, NewPlayer,
 	}
 	public class RequestMessage : Message {
 		RequestType Type;
@@ -34,11 +34,8 @@ namespace FantasyScape.NetworkMessages {
 				case RequestType.BlockTypes:
 					SendBlockTypes();
 					break;
-				case RequestType.BlockLayers:
-					SendBlockLayers();
-					break;
-				case RequestType.WorldSize:
-					SendWorldSize();
+				case RequestType.Chunks:
+					SendChunks();
 					break;
 				case RequestType.NewPlayer:
 					SendPlayerData();
@@ -61,16 +58,12 @@ namespace FantasyScape.NetworkMessages {
 			padd.Forward();
 		}
 
-		private void SendWorldSize() {
-			WorldSizeMessage wsm = new WorldSizeMessage();
-			wsm.Reply();
-		}
-
-		private void SendBlockLayers() {
-			for (int x = 0; x < Game.World.XSize; x++) {
-				for (int y = 0; y < Game.World.YSize; y++) {
-					BlockLayersMessage blm = new BlockLayersMessage(x, y);
-					blm.Reply();
+		private void SendChunks() {
+			for (int x = 0; x < World.XSize; x++) {
+				for (int y = 0; y < World.YSize; y++) {
+					for (int z = 0; z < World.ZSize; z++) {
+						new ChunkAdd(x, y, z, Game.World.Chunks[x,y,z]).Reply();
+					}
 				}
 			}
 		}

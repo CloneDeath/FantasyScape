@@ -83,8 +83,9 @@
     <Compile Include="Math\PerlinMap.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />
+    <Compile Include="Math\Vector3i.cs" />
     <Compile Include="NetworkMessages\BlockAdd.cs" />
-    <Compile Include="NetworkMessages\BlockLayersMessage.cs" />
+    <Compile Include="NetworkMessages\Chunks\ChunkAdd.cs" />
     <Compile Include="NetworkMessages\BlockRemove.cs" />
     <Compile Include="NetworkMessages\BlockTypeData.cs" />
     <Compile Include="NetworkMessages\BlockTypeRemove.cs" />
@@ -97,7 +98,6 @@
     <Compile Include="NetworkMessages\PlayerAssignment.cs" />
     <Compile Include="NetworkMessages\PlayerUpdate.cs" />
     <Compile Include="NetworkMessages\RequestMessage.cs" />
-    <Compile Include="NetworkMessages\WorldSizeMessage.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="NetworkMessages\NetTexture.cs" />
     <Compile Include="Player.cs" />

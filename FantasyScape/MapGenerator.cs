@@ -6,42 +6,32 @@ using System.Text;
 namespace FantasyScape {
 	class MapGenerator {
 		PerlinMap pm;
-		int XSize, YSize, ZSize;
-
-		Block[,,] blocks;
+		int XSize { get { return World.XSize * Chunk.Size; } }
+		int YSize { get { return World.YSize * Chunk.Size; } }
+		int ZSize { get { return World.ZSize * Chunk.Size; } }
 		float[,] Heightmap;
-		World world;
+		World World;
 
-		public MapGenerator(int x, int y, int z, World w){
+		public MapGenerator(World World) {
 			pm = new PerlinMap();
-			XSize = x;
-			YSize = y;
-			ZSize = z;
-			blocks = new Block[XSize,YSize,ZSize];
+			this.World = World;
 			Heightmap = new float[XSize,ZSize];
-			world = w;
 		}
 
-		public Block[,,] generateTerrain() {
+		public void GenerateTerrain() {
 			GenerateBase();
 			GenerateWater();
-
-			return blocks;
 		}
 
-		private int WaterLevel = 90;
+		private const int WaterLevel = 90;
 
 		private void GenerateWater() {
 			for (int x = 0; x < XSize; x++) {
 				for (int y = 0; y < YSize; y++) {
 					for (int z = (int)Heightmap[x,y] + 1; z <= WaterLevel; z++) {
-						blocks[x,y,z] = new Block("Water");
+						World[x,y,z] = new Block("Water");
 						if (z == WaterLevel) {
-							Block b = blocks[x,y,z];
-							if (!world.updateBlocks.Contains(b)) {
-								world.updateBlocks.Add(b);
-								world.updateLocations.Add(new int[] { x, y, z });
-							}
+							World.AddUpdate(x, y, z);
 						}
 					}
 				}
@@ -63,18 +53,18 @@ namespace FantasyScape {
 			//Create Terrain
 			for (int x = 0; x < XSize; x++) {
 				for (int y = 0; y < YSize; y++) {
-					blocks[x, y, 0] = new Block("Dirt");
+					World[x, y, 0] = new Block("Dirt");
 					for (int z = 1; z < ZSize; z++) {
 						if (z < (int)Heightmap[x, y]) {
 							if (z > (int)Heightmap[x, y] - (5 + ran.Next(3))) {
-								blocks[x, y, z] = new Block("Dirt");
+								World[x, y, z] = new Block("Dirt");
 							} else {
-								blocks[x, y, z] = new Block("Granite");
+								World[x, y, z] = new Block("Granite");
 							}
 						}
 
 						if (z == (int)Heightmap[x, y]) {
-							blocks[x, y, z] = new Block("Grass");
+							World[x, y, z] = new Block("Grass");
 						}
 					}
 				}
