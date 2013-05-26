@@ -20,6 +20,8 @@ namespace FantasyScape {
 			NotReady, Connecting, Playing
 		}
 
+		public static bool Render = false;
+
 		public static bool LockMouse = false;
 
 		public static GameState State = GameState.NotReady;
@@ -70,6 +72,7 @@ namespace FantasyScape {
 		}
 
 		public static void Draw() {
+			Game.Render = true;
 			if (State == GameState.Playing) {
 				World.Draw(Self);
 				Self.updateCamera();

@@ -210,9 +210,9 @@ namespace FantasyScape {
 		}
 
 		public void SetBlock(int x, int y, int z, Block b) {
-			ExposeBlock(x, y, z);
 			this[x, y, z] = b;
 
+			CheckExposure(x, y, z);
 			CheckExposure(x + 1, y, z);
 			CheckExposure(x - 1, y, z);
 			CheckExposure(x, y + 1, z);

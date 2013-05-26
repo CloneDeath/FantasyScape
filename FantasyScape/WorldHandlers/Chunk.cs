@@ -123,7 +123,7 @@ namespace FantasyScape {
 		#endregion
 
 		internal void ExposeBlock(int x, int y, int z) {
-			if (this[x, y, z] != null) {
+			if (this[x, y, z] != null && Game.Render) {
 				if (!exposedBlocks.Contains(this[x, y, z])) {
 					exposedBlocks.Add(this[x, y, z]);
 					exposedLocations.Add(new Vector3i(x, y, z));
@@ -133,28 +133,32 @@ namespace FantasyScape {
 		}
 
 		internal void RefreshExposedBlocks(int X, int Y, int Z, World world) {
-			exposedBlocks = new List<Block>();
-			exposedLocations = new List<Vector3i>();
+			if (Game.Render) {
+				exposedBlocks = new List<Block>();
+				exposedLocations = new List<Vector3i>();
 
-			for (int x = 0; x < Size; x++) {
-				for (int y = 0; y < Size; y++) {
-					for (int z = 0; z < Size; z++) {
-						if (world.IsExposed(x + (X * Size), y + (Y * Size), z + (Z * Size))) {
-							exposedBlocks.Add(this[x, y, z]);
-							exposedLocations.Add(new Vector3i(x, y, z));
+				for (int x = 0; x < Size; x++) {
+					for (int y = 0; y < Size; y++) {
+						for (int z = 0; z < Size; z++) {
+							if (world.IsExposed(x + (X * Size), y + (Y * Size), z + (Z * Size))) {
+								exposedBlocks.Add(this[x, y, z]);
+								exposedLocations.Add(new Vector3i(x, y, z));
+							}
 						}
 					}
 				}
+				Dirty = true;
 			}
-			Dirty = true;
 		}
 
 		internal void UnexposeBlock(int x, int y, int z) {
-			int remi = exposedBlocks.IndexOf(this[x, y, z]);
-			if (remi != -1) {
-				exposedBlocks.RemoveAt(remi);
-				exposedLocations.RemoveAt(remi);
-				Dirty = true;
+			if (Game.Render) {
+				int remi = exposedBlocks.IndexOf(this[x, y, z]);
+				if (remi != -1) {
+					exposedBlocks.RemoveAt(remi);
+					exposedLocations.RemoveAt(remi);
+					Dirty = true;
+				}
 			}
 		}
 
@@ -183,7 +187,7 @@ namespace FantasyScape {
 		}
 
 		public void Draw(int x, int y, int z, World w, Player p) {
-			if (ChunkInFrustum(x, y, z, p)) {
+			if (Game.Render && ChunkInFrustum(x, y, z, p)) {
 				if (Dirty) {
 					Dirty = false;
 					int XOffset = x * Size;
