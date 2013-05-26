@@ -146,21 +146,40 @@ namespace FantasyScape {
 			}
 		}
 
+		public bool ChunkInFrustum(int x, int y, int z, Player p) {
+			int XOffset = x * Size;
+			int YOffset = y * Size;
+			int ZOffset = z * Size;
+
+			if (p.xpos >= XOffset && p.xpos <= XOffset + Size && p.ypos >= YOffset && p.ypos <= YOffset + Size
+				&& p.zpos >= ZOffset && p.zpos <= ZOffset + Size) {
+					return true;
+			}
+
+			for (int i = 0; i <= 1; i++) {
+				for (int j = 0; j <= 1; j++) {
+					for (int k = 0; k <= 1; k++) {
+						Vector3 box = new Vector3(XOffset + (Size * i), YOffset + (Size * j), ZOffset + (Size * k));
+						if (p.frustum.pointInFrustum(box) != Frustum.OUTSIDE) {
+							return true;
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
 		public void Draw(int x, int y, int z, World w, Player p) {
 			int XOffset = x * Size;
 			int YOffset = y * Size;
 			int ZOffset = z * Size;
 
-			for (int i = 0; i < exposedBlocks.Count(); i++) {
-				Vector3i loc = exposedLocations[i];
-				//if (Math.Abs(p.xpos - loc.X) < ViewDistance &&
-				//    Math.Abs(p.ypos - loc[1]) < ViewDistance &&
-				//    Math.Abs(p.zpos - loc[2]) < ViewDistance) {
-					Vector3 box = new Vector3(loc.X + 0.5f + XOffset, loc.Y + 0.5f + YOffset, loc.Z + 0.5f + ZOffset);
-					if (p.frustum.pointInFrustum(box) != Frustum.OUTSIDE) {
-						exposedBlocks[i].draw(loc.X + XOffset, loc.Y + YOffset, loc.Z + ZOffset, w);
-					}
-				//}
+			if (ChunkInFrustum(x, y, z, p)) {
+				for (int i = 0; i < exposedBlocks.Count(); i++) {
+					Vector3i loc = exposedLocations[i];
+					exposedBlocks[i].draw(loc.X + XOffset, loc.Y + YOffset, loc.Z + ZOffset, w);
+				}
 			}
 		}
 	}
