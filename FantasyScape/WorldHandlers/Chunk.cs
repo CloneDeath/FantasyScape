@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK;
+using GLImp;
 
 namespace FantasyScape {
 	public class Chunk {
@@ -14,11 +15,15 @@ namespace FantasyScape {
 
 		public List<Block> updateBlocks;
 		public List<Vector3i> updateLocations;
-		
+
+		bool Dirty = true;
+		int DisplayList;
 		public Chunk() {
 			Array.Clear(Blocks, 0, Size * Size * Size);
 			updateBlocks = new List<Block>();
 			updateLocations = new List<Vector3i>();
+			Dirty = true;
+			DisplayList = GraphicsManager.GenList(1);
 		}
 
 		#region Block Access
@@ -36,6 +41,7 @@ namespace FantasyScape {
 					return;
 				} else {
 					Blocks[x, y, z] = value;
+					Dirty = true;
 				}
 			}
 		}
@@ -44,6 +50,7 @@ namespace FantasyScape {
 		#region Update
 		public void Update(int x, int y, int z, World parent) {
 			if (updateBlocks.Count != 0) {
+				Dirty = true;
 				Block[] TempBlocks = new Block[updateBlocks.Count];
 				updateBlocks.CopyTo(TempBlocks);
 
@@ -67,6 +74,7 @@ namespace FantasyScape {
 			if (b != null && !updateBlocks.Contains(b)) {
 				updateBlocks.Add(b);
 				updateLocations.Add(new Vector3i(x, y, z));
+				Dirty = true;
 			}
 		}
 
@@ -76,6 +84,7 @@ namespace FantasyScape {
 				int rval = updateBlocks.IndexOf(b);
 				updateBlocks.RemoveAt(rval);
 				updateLocations.RemoveAt(rval);
+				Dirty = true;
 			}
 		}
 		#endregion
@@ -117,7 +126,8 @@ namespace FantasyScape {
 			if (this[x, y, z] != null) {
 				if (!exposedBlocks.Contains(this[x, y, z])) {
 					exposedBlocks.Add(this[x, y, z]);
-					exposedLocations.Add(new Vector3i( x, y, z ));
+					exposedLocations.Add(new Vector3i(x, y, z));
+					Dirty = true;
 				}
 			}
 		}
@@ -136,6 +146,7 @@ namespace FantasyScape {
 					}
 				}
 			}
+			Dirty = true;
 		}
 
 		internal void UnexposeBlock(int x, int y, int z) {
@@ -143,6 +154,7 @@ namespace FantasyScape {
 			if (remi != -1) {
 				exposedBlocks.RemoveAt(remi);
 				exposedLocations.RemoveAt(remi);
+				Dirty = true;
 			}
 		}
 
@@ -153,7 +165,7 @@ namespace FantasyScape {
 
 			if (p.xpos >= XOffset && p.xpos <= XOffset + Size && p.ypos >= YOffset && p.ypos <= YOffset + Size
 				&& p.zpos >= ZOffset && p.zpos <= ZOffset + Size) {
-					return true;
+				return true;
 			}
 
 			for (int i = 0; i <= 1; i++) {
@@ -171,15 +183,22 @@ namespace FantasyScape {
 		}
 
 		public void Draw(int x, int y, int z, World w, Player p) {
-			int XOffset = x * Size;
-			int YOffset = y * Size;
-			int ZOffset = z * Size;
-
 			if (ChunkInFrustum(x, y, z, p)) {
-				for (int i = 0; i < exposedBlocks.Count(); i++) {
-					Vector3i loc = exposedLocations[i];
-					exposedBlocks[i].draw(loc.X + XOffset, loc.Y + YOffset, loc.Z + ZOffset, w);
+				if (Dirty) {
+					Dirty = false;
+					int XOffset = x * Size;
+					int YOffset = y * Size;
+					int ZOffset = z * Size;
+
+					GraphicsManager.BeginList(DisplayList);
+					for (int i = 0; i < exposedBlocks.Count(); i++) {
+						Vector3i loc = exposedLocations[i];
+						exposedBlocks[i].draw(loc.X + XOffset, loc.Y + YOffset, loc.Z + ZOffset, w);
+					}
+					GraphicsManager.EndList();
 				}
+
+				GraphicsManager.CallList(DisplayList);
 			}
 		}
 	}
