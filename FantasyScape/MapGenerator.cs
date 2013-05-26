@@ -23,21 +23,6 @@ namespace FantasyScape {
 			GenerateWater();
 		}
 
-		private const int WaterLevel = 90;
-
-		private void GenerateWater() {
-			for (int x = 0; x < XSize; x++) {
-				for (int y = 0; y < YSize; y++) {
-					for (int z = (int)Heightmap[x,y] + 1; z <= WaterLevel; z++) {
-						World[x,y,z] = new Block("Water");
-						if (z == WaterLevel) {
-							World.AddUpdate(x, y, z);
-						}
-					}
-				}
-			}
-		}
-
 		private void GenerateBase() {
 			//Generate
 			const int variability = 25;
@@ -65,6 +50,20 @@ namespace FantasyScape {
 
 						if (z == (int)Heightmap[x, y]) {
 							World[x, y, z] = new Block("Grass");
+						}
+					}
+				}
+			}
+		}
+
+		private const int WaterLevel = 90;
+		private void GenerateWater() {
+			for (int x = 0; x < XSize; x++) {
+				for (int y = 0; y < YSize; y++) {
+					for (int z = (int)Heightmap[x, y] + 1; z <= WaterLevel; z++) {
+						World[x, y, z] = new Block("Water");
+						if (z == WaterLevel) {
+							World.AddUpdate(x, y, z);
 						}
 					}
 				}

@@ -91,7 +91,6 @@ namespace FantasyScape {
 					}
 				}
 			}
-			
 		}
 
 		public void RefreshUpdateBlocks(int x, int y, int z) {
@@ -173,7 +172,7 @@ namespace FantasyScape {
 			int yat = (int)y;
 			int zat = (int)z;
 
-			if (xat >= XSize || xat < 0 || zat >= ZSize || zat < 0 || yat < 0 || yat >= YSize) {
+			if (xat >= XSize * Chunk.Size || xat < 0 || zat >= ZSize * Chunk.Size || zat < 0 || yat < 0 || yat >= YSize * Chunk.Size) {
 				return false;
 			}
 
@@ -241,11 +240,11 @@ namespace FantasyScape {
 			int yat = (int)y;
 			int zat = (int)z;
 
-			if (xat >= XSize || xat < 0 || yat >= YSize || yat < 0 || zat < 0) {
+			if (xat >= XSize * Chunk.Size || xat < 0 || yat >= YSize * Chunk.Size || yat < 0 || zat < 0) {
 				return true;
 			}
 
-			if (zat >= ZSize) {
+			if (zat >= ZSize * Chunk.Size) {
 				return false;
 			}
 

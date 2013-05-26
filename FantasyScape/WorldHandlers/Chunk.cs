@@ -43,20 +43,22 @@ namespace FantasyScape {
 
 		#region Update
 		public void Update(int x, int y, int z, World parent) {
-			Block[] TempBlocks = new Block[updateBlocks.Count];
-			updateBlocks.CopyTo(TempBlocks);
+			if (updateBlocks.Count != 0) {
+				Block[] TempBlocks = new Block[updateBlocks.Count];
+				updateBlocks.CopyTo(TempBlocks);
 
-			Vector3i[] TempLocs = new Vector3i[updateLocations.Count];
-			updateLocations.CopyTo(TempLocs);
+				Vector3i[] TempLocs = new Vector3i[updateLocations.Count];
+				updateLocations.CopyTo(TempLocs);
 
-			for (int i = 0; i < TempBlocks.Count(); i++) {
-				Vector3i loc = TempLocs[i];
-				TempBlocks[i].update((x * Size) + loc.X, (y * Size) + loc.Y, (z * Size) + loc.Z, parent);
-			}
+				for (int i = 0; i < TempBlocks.Count(); i++) {
+					Vector3i loc = TempLocs[i];
+					TempBlocks[i].update((x * Size) + loc.X, (y * Size) + loc.Y, (z * Size) + loc.Z, parent);
+				}
 
-			for (int i = 0; i < TempBlocks.Count(); i++) {
-				Vector3i loc = TempLocs[i];
-				TempBlocks[i].postUpdate((x * Size) + loc.X, (y * Size) + loc.Y, (z * Size) + loc.Z, parent);
+				for (int i = 0; i < TempBlocks.Count(); i++) {
+					Vector3i loc = TempLocs[i];
+					TempBlocks[i].postUpdate((x * Size) + loc.X, (y * Size) + loc.Y, (z * Size) + loc.Z, parent);
+				}
 			}
 		}
 

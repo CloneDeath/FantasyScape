@@ -94,7 +94,7 @@ namespace FantasyScape {
 		}
 
 		internal static Player AddNewPlayer() {
-			Player p = new Player(World.XSize / 2, World.YSize / 2);
+			Player p = new Player((World.XSize * Chunk.Size) / 2, (World.YSize * Chunk.Size) / 2);
 			p.PlayerID = Players.Count;
 			Players.Add(p);
 			return p;

@@ -50,7 +50,7 @@ namespace FantasyScape {
 			//yspeed = 0;
 			zspeed = 0;
 
-			for (int i = World.ZSize; i >= 0; i--) {
+			for (int i = World.ZSize * Chunk.Size; i >= 0; i--) {
 				if (Game.World.IsSolid(x, y, i)) {
 					zpos = i+1;
 					break;
