@@ -18,6 +18,7 @@ namespace FantasyScape {
 
 		bool Dirty = true;
 		int DisplayList;
+		public static bool DirtyAll = false;
 		public Chunk() {
 			Array.Clear(Blocks, 0, Size * Size * Size);
 			updateBlocks = new List<Block>();
@@ -187,6 +188,10 @@ namespace FantasyScape {
 		}
 
 		public void Draw(int x, int y, int z, World w, Player p) {
+			if (DirtyAll) {
+				Dirty = true;
+			}
+
 			if (Game.Render && ChunkInFrustum(x, y, z, p)) {
 				if (Dirty) {
 					Dirty = false;

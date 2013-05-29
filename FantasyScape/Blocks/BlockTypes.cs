@@ -66,6 +66,7 @@ namespace FantasyScape {
 			} else {
 				Types.Add(block);
 			}
+			Chunk.DirtyAll = true;
 		}
 
 		public static List<BlockType> GetAll() {
@@ -87,6 +88,7 @@ namespace FantasyScape {
 			if (found != -1) {
 				Types.RemoveAt(found);
 			}
+			Chunk.DirtyAll = true;
 		}
 	}
 }

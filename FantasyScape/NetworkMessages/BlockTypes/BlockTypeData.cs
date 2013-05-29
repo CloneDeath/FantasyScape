@@ -11,6 +11,7 @@ namespace FantasyScape.NetworkMessages {
 		public BlockTypeData() { }
 		public BlockTypeData(BlockType ToSend) {
 			this.block = ToSend;
+			Chunk.DirtyAll = true;
 		}
 
 		protected override void WriteData(NetOutgoingMessage Message) {

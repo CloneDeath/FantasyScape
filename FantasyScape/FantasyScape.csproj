@@ -87,9 +87,9 @@
     <Compile Include="NetworkMessages\BlockAdd.cs" />
     <Compile Include="NetworkMessages\Chunks\ChunkAdd.cs" />
     <Compile Include="NetworkMessages\BlockRemove.cs" />
-    <Compile Include="NetworkMessages\BlockTypeData.cs" />
-    <Compile Include="NetworkMessages\BlockTypeRemove.cs" />
-    <Compile Include="NetworkMessages\BlockTypesNumber.cs" />
+    <Compile Include="NetworkMessages\BlockTypes\BlockTypeData.cs" />
+    <Compile Include="NetworkMessages\BlockTypes\BlockTypeRemove.cs" />
+    <Compile Include="NetworkMessages\BlockTypes\BlockTypesNumber.cs" />
     <Compile Include="NetworkMessages\TextureRemove.cs" />
     <Compile Include="NetworkMessages\PlayerAdd.cs" />
     <Compile Include="NetworkMessages\Message.cs" />

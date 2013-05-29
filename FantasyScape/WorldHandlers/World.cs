@@ -233,6 +233,7 @@ namespace FantasyScape {
 					}
 				}
 			}
+			Chunk.DirtyAll = false;
 		}
 
 		public bool IsSolid(double x, double y, double z) {

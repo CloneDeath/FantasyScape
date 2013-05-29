@@ -9,6 +9,7 @@ namespace FantasyScape.NetworkMessages {
 		string block;
 		public BlockTypeRemove(string b) {
 			block = b;
+			Chunk.DirtyAll = true;
 		}
 
 		public BlockTypeRemove() { }
