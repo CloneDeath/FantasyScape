@@ -125,11 +125,14 @@ namespace FantasyScape {
 
 		internal void ExposeBlock(int x, int y, int z) {
 			if (this[x, y, z] != null && Game.Render) {
-				if (!exposedBlocks.Contains(this[x, y, z])) {
+				if (!exposedLocations.Contains(new Vector3i(x, y, z))) {
 					exposedBlocks.Add(this[x, y, z]);
 					exposedLocations.Add(new Vector3i(x, y, z));
-					Dirty = true;
+				} else {
+					int index = exposedLocations.IndexOf(new Vector3i(x, y, z));
+					exposedBlocks[index] = this[x, y, z];
 				}
+				Dirty = true;
 			}
 		}
 
@@ -154,12 +157,12 @@ namespace FantasyScape {
 
 		internal void UnexposeBlock(int x, int y, int z) {
 			if (Game.Render) {
-				int remi = exposedBlocks.IndexOf(this[x, y, z]);
+				int remi = exposedLocations.IndexOf(new Vector3i(x, y, z));
 				if (remi != -1) {
 					exposedBlocks.RemoveAt(remi);
 					exposedLocations.RemoveAt(remi);
-					Dirty = true;
 				}
+				Dirty = true;
 			}
 		}
 

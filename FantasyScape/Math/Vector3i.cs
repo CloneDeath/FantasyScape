@@ -18,5 +18,14 @@ namespace FantasyScape {
 			this.Y = Y;
 			this.Z = Z;
 		}
+
+		public override bool Equals(object obj) {
+			Vector3i other = obj as Vector3i;
+			if (other == null) {
+				return false;
+			} else {
+				return (this.X == other.X) && (this.Y == other.Y) && (this.Z == other.Z);
+			}
+		}
 	}
 }

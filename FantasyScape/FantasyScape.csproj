@@ -99,9 +99,9 @@
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />
     <Compile Include="Math\Vector3i.cs" />
-    <Compile Include="NetworkMessages\BlockAdd.cs" />
+    <Compile Include="NetworkMessages\Blocks\BlockAdd.cs" />
     <Compile Include="NetworkMessages\Chunks\ChunkAdd.cs" />
-    <Compile Include="NetworkMessages\BlockRemove.cs" />
+    <Compile Include="NetworkMessages\Blocks\BlockRemove.cs" />
     <Compile Include="NetworkMessages\BlockTypes\BlockTypeData.cs" />
     <Compile Include="NetworkMessages\BlockTypes\BlockTypeRemove.cs" />
     <Compile Include="NetworkMessages\BlockTypes\BlockTypesNumber.cs" />

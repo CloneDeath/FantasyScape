@@ -172,9 +172,10 @@ namespace FantasyScape {
 				if (world[x, y, z] == null) {
 					if (this.Level >= MinWaterDiff) {
 						Block b = new Block(this.BlockTypeName);
-						world.AddBlock(x, y, z, b);
 						b.Level = MaxWater;
 						Level -= MaxWater;
+						world.AddBlock(x, y, z, b);
+						new BlockAdd(x, y, z, b).Send();
 						return true;
 					}
 				} else {
@@ -188,12 +189,14 @@ namespace FantasyScape {
 								}
 								b.Level += diff;
 								this.Level -= diff;
+								new BlockAdd(x, y, z, b).Send();
 								return true;
 							} else {
 								int diff = this.Level - b.Level;
 								if (diff >= MinWaterDiff) {
 									b.Level += MaxWater;
 									this.Level -= MaxWater;
+									new BlockAdd(x, y, z, b).Send();
 									return true;
 								}
 								

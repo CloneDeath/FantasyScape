@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using Lidgren.Network;
 using FantasyScape.NetworkMessages;
-using System.Threading;
 
 namespace FantasyScape.Server {
 	class GameServer {
 		static NetServer Server;
+		static Stopwatch UpdateTimer;
+		static double UpdateRate = 30.0;
 
 		public GameServer() {
 			/* Load Resources */
@@ -26,23 +28,39 @@ namespace FantasyScape.Server {
 			Server = new NetServer(Configuration);
 			Server.Start();
 			Message.RegisterServer(Server);
+
+			UpdateTimer = new Stopwatch();
+			UpdateTimer.Start();
 			
 			Console.WriteLine("Ready!");
 		}
 
 		internal static void Run() {
-			/* Respond to Requests */
+			/* Respond to Requests and Update World */
 			while (true) {
-				Game.UpdateServer();
-				ReadMessages();
+				if (UpdateTimer.Elapsed.TotalSeconds >= 1 / UpdateRate) {
+					UpdateTimer.Restart();
+					Game.UpdateServer();
+				}
+
+				//The remaining time in seconds until the next update
+				double TimeRemaining = (1 / UpdateRate) - UpdateTimer.Elapsed.TotalSeconds;
+				if (TimeRemaining <= 0) {
+					TimeRemaining = 0;
+				}
+				ReadMessages(TimeRemaining);
 			}
 		}
 
-		private static void ReadMessages() {
+		private static void ReadMessages(double TimeToDelay) {
 			List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
-			Server.ReadMessages(Messages);
-			foreach (NetIncomingMessage Message in Messages) {
-				HandleMessages(Message);
+			NetIncomingMessage nim = Server.WaitMessage((int)(TimeToDelay * 1000));
+			if (nim != null){
+				Messages.Add(nim);
+				Server.ReadMessages(Messages);
+				foreach (NetIncomingMessage msg in Messages) {
+					HandleMessages(msg);
+				}
 			}
 		}
 
