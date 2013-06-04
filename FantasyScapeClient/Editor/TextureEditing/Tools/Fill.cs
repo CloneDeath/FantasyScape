@@ -22,6 +22,10 @@ namespace FantasyScape.Client.Editor.Tools {
 				Coord other = obj as Coord;
 				return this.X == other.X && this.Y == other.Y;
 			}
+
+			public override int GetHashCode() {
+				return base.GetHashCode();
+			}
 		}
 		public void UseTool(int X, int Y, PixelData Canvas, ref System.Drawing.Color CurrentColor) {
 			//Canvas[X, Y] = CurrentColor;

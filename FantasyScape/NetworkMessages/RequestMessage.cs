@@ -7,7 +7,7 @@ using GLImp;
 
 namespace FantasyScape.NetworkMessages {
 	public enum RequestType {
-		Textures, BlockTypes, Chunks, NewPlayer,
+		Packages, Chunks, NewPlayer,
 	}
 	public class RequestMessage : Message {
 		RequestType Type;
@@ -28,11 +28,8 @@ namespace FantasyScape.NetworkMessages {
 
 		protected override void ExecuteMessage() {
 			switch (Type) {
-				case RequestType.Textures:
-					SendTextures();
-					break;
-				case RequestType.BlockTypes:
-					SendBlockTypes();
+				case RequestType.Packages:
+					SendPackages();
 					break;
 				case RequestType.Chunks:
 					SendChunks();
@@ -68,24 +65,8 @@ namespace FantasyScape.NetworkMessages {
 			}
 		}
 
-		private void SendTextures() {
-			Message NumTexture = new NumTextures();
-			NumTexture.Reply();
-
-			foreach (Texture t in Textures.GetAll()){
-				NetTexture nettex = new NetTexture(t);
-				nettex.Reply();
-			}
-		}
-
-		private void SendBlockTypes() {
-			BlockTypesNumber btn = new BlockTypesNumber();
-			btn.Reply();
-
-			foreach (BlockType bt in BlockTypes.GetAll()) {
-				BlockTypeData btd = new BlockTypeData(bt);
-				btd.Reply();
-			}
+		private void SendPackages() {
+			throw new NotImplementedException();
 		}
 	}
 }

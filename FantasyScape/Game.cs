@@ -9,6 +9,7 @@ using Lidgren.Network;
 using System.Threading;
 using FantasyScape.NetworkMessages;
 using System.Diagnostics;
+using FantasyScape.Resources;
 
 namespace FantasyScape {
 	public class Game {
@@ -44,8 +45,7 @@ namespace FantasyScape {
 			if (State == GameState.Connecting) {
 				bool Ready = true;
 
-				Ready &= Textures.Ready();
-				Ready &= BlockTypes.Ready();
+				Ready &= Package.Ready();
 				Ready &= World.Ready();
 				Ready &= (Self != null);
 

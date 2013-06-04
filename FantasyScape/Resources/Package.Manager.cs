@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 
 namespace FantasyScape.Resources {
-	partial class Package {
+	public partial class Package : Folder {
 		public static Dictionary<Guid, Package> Packages = new Dictionary<Guid, Package>();
 
 		public static void LoadAll(string ResourceLocation) {

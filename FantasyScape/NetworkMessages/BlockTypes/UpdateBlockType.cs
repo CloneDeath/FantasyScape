@@ -5,27 +5,17 @@ using System.Text;
 using Lidgren.Network;
 
 namespace FantasyScape.NetworkMessages {
-	public class BlockTypeRemove : Message {
-		string block;
-		public BlockTypeRemove(string b) {
-			block = b;
-			Chunk.DirtyAll = true;
-		}
-
-		public BlockTypeRemove() { }
-
+	class UpdateBlockType : Message {
 		protected override void WriteData(NetOutgoingMessage Message) {
-			Message.Write(block);
+			throw new NotImplementedException();
 		}
 
 		protected override void ReadData(NetIncomingMessage Message) {
-			block = Message.ReadString();
+			throw new NotImplementedException();
 		}
 
 		protected override void ExecuteMessage() {
-			BlockTypes.Remove(block);
-
-			new BlockTypeRemove(block).Forward();
+			throw new NotImplementedException();
 		}
 	}
 }

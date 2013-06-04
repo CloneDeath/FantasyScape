@@ -586,7 +586,7 @@ namespace FantasyScape {
 			GraphicsManager.DrawRectangle(6, 6 + (SelectedItem * 25), 28, 28, Color.Yellow);
 			for (int i = 0; i < Inventory.Count; i++){
 				Block block = Inventory[i];
-				GraphicsManager.DrawRectangle(10, 10 + (i * 25), 20, 20, Textures.GetTexture(block.BlockType.SideTexture));
+				GraphicsManager.DrawRectangle(10, 10 + (i * 25), 20, 20, block.BlockType.GetTexture(Blocks.BlockSide.Front).Texture);
 			}
 		}
 	}

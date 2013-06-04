@@ -14,10 +14,11 @@ namespace FantasyScape.Server {
 
 		public GameServer() {
 			/* Load Resources */
+			Console.WriteLine("Loading Resources...");
 			ResourceManager.Load();
 
 			/* Generate World */
-			Console.WriteLine("Generating World");
+			Console.WriteLine("Generating World...");
 			Game.GenerateWorld();
 
 

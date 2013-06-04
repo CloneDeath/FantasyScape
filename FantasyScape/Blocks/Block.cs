@@ -41,9 +41,10 @@ namespace FantasyScape {
 			if (Level <= 0 && BlockType.Liquid) {
 				return;
 			}
-			draw(x, y, z, world, Textures.GetTexture(BlockType.TopTexture),
-				Textures.GetTexture(BlockType.SideTexture),
-				Textures.GetTexture(BlockType.BotTexture), Level / 16.0f);
+			throw new NotImplementedException();
+			//draw(x, y, z, world, Textures.GetTexture(BlockType.TopTexture),
+			//    Textures.GetTexture(BlockType.SideTexture),
+			//    Textures.GetTexture(BlockType.BotTexture), Level / 16.0f);
 		}
 
 		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex, double height) {

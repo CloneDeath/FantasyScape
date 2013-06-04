@@ -11,7 +11,6 @@ namespace FantasyScape {
 	public class Textures{
 		static Texture ErrorTexture;
 		static List<Texture> TextureList = new List<Texture>();
-		static bool RequestSent = false;
 		public static int Count = -1;
 
 		static Textures() {
@@ -46,16 +45,6 @@ namespace FantasyScape {
 				Texture oldtex = GetTexture(nettex.Name);
 				oldtex.Image = nettex.Image;
 			}
-		}
-
-		internal static bool Ready() {
-			if (!RequestSent) {
-				RequestMessage msg = new RequestMessage(RequestType.Textures);
-				msg.Send();
-				RequestSent = true;
-			}
-
-			return TextureList.Count == Count;
 		}
 
 		public static List<Texture> GetAll() {

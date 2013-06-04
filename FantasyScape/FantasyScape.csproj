@@ -90,8 +90,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blocks\Block.cs" />
+    <Compile Include="Blocks\BlockSide.cs" />
     <Compile Include="Blocks\BlockType.cs" />
     <Compile Include="Blocks\BlockTypes.cs" />
+    <Compile Include="Blocks\FSTextureReference.cs" />
     <Compile Include="ListRandomizer.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Game.cs" />
@@ -102,11 +104,11 @@
     <Compile Include="Math\Utility.cs" />
     <Compile Include="Math\Vector3i.cs" />
     <Compile Include="NetworkMessages\Blocks\BlockAdd.cs" />
+    <Compile Include="NetworkMessages\BlockTypes\AddBlockType.cs" />
+    <Compile Include="NetworkMessages\BlockTypes\RemoveBlockType.cs" />
+    <Compile Include="NetworkMessages\BlockTypes\UpdateBlockType.cs" />
     <Compile Include="NetworkMessages\Chunks\ChunkAdd.cs" />
     <Compile Include="NetworkMessages\Blocks\BlockRemove.cs" />
-    <Compile Include="NetworkMessages\BlockTypes\BlockTypeData.cs" />
-    <Compile Include="NetworkMessages\BlockTypes\BlockTypeRemove.cs" />
-    <Compile Include="NetworkMessages\BlockTypes\BlockTypesNumber.cs" />
     <Compile Include="NetworkMessages\TextureRemove.cs" />
     <Compile Include="NetworkMessages\PlayerAdd.cs" />
     <Compile Include="NetworkMessages\Message.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="NetworkMessages\NetTexture.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Folder.cs" />
     <Compile Include="Resources\FSTexture.cs" />
     <Compile Include="Resources\Package.cs" />
     <Compile Include="Resources\Package.Manager.cs" />

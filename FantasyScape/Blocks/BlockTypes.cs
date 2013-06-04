@@ -10,30 +10,12 @@ namespace FantasyScape {
 		static BlockType ErrorBlock = new BlockType();
 
 		static BlockTypes() {
-			ErrorBlock.Texture = "";
+			ErrorBlock.ID = Guid.Empty;
 			ErrorBlock.Liquid = false;
-			ErrorBlock.Name = "";
+			ErrorBlock.Name = "Error";
 		}
 
 		static List<BlockType> Types = new List<BlockType>();
-
-		public void Load() {
-			AddBlockType("Dirt", "Dirt", false);
-			AddBlockType("Granite", "Granite", false);
-
-			AddBlockType("Grass", "Dirt", false);
-			GetBlockType("Grass").TopTexture = "Grass";
-			
-			AddBlockType("Water", "Water", true);
-		}
-
-		private static void AddBlockType(string BlockTypeName, string TextureName, bool Liquid) {
-			BlockType b = new BlockType();
-			b.Name = BlockTypeName;
-			b.Texture = TextureName;
-			b.Liquid = Liquid;
-			Types.Add(b);
-		}
 
 		public static BlockType GetBlockType(string BlockTypeName) {
 			foreach (BlockType b in Types) {
@@ -42,31 +24,6 @@ namespace FantasyScape {
 				}
 			}
 			return ErrorBlock;
-		}
-
-		static bool SentRequest = false;
-		public static int Count = -1;
-		internal static bool Ready() {
-			if (!SentRequest) {
-				SentRequest = true;
-				RequestMessage msg = new RequestMessage(RequestType.BlockTypes);
-				msg.Send();
-			}
-			
-			return Count == Types.Count;
-		}
-
-		public static void Add(BlockType block) {
-			BlockType old = GetBlockType(block.Name);
-			if (old != ErrorBlock) {
-				old.Liquid = block.Liquid;
-				old.TopTexture = block.TopTexture;
-				old.SideTexture = block.SideTexture;
-				old.BotTexture = block.BotTexture;
-			} else {
-				Types.Add(block);
-			}
-			Chunk.DirtyAll = true;
 		}
 
 		public static List<BlockType> GetAll() {

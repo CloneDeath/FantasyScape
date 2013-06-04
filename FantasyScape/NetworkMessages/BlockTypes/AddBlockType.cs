@@ -5,26 +5,17 @@ using System.Text;
 using Lidgren.Network;
 
 namespace FantasyScape.NetworkMessages {
-	public class TextureRemove : Message {
-		string tex;
-		public TextureRemove(string b) {
-			tex = b;
-		}
-
-		public TextureRemove() { }
-
+	class AddBlockType : Message {
 		protected override void WriteData(NetOutgoingMessage Message) {
-			Message.Write(tex);
+			throw new NotImplementedException();
 		}
 
 		protected override void ReadData(NetIncomingMessage Message) {
-			tex = Message.ReadString();
+			throw new NotImplementedException();
 		}
 
 		protected override void ExecuteMessage() {
-			Textures.Remove(tex);
-
-			new TextureRemove(tex).Forward();
+			throw new NotImplementedException();
 		}
 	}
 }

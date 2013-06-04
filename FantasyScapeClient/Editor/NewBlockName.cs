@@ -36,19 +36,20 @@ namespace FantasyScape.Client.Editor {
 		}
 
 		private void CreateNewBlock(string Name) {
-			BlockType b = new BlockType();
-			b.Name = Name;
-			b.TopTexture = "Dirt";
-			b.SideTexture = "Dirt";
-			b.BotTexture = "Dirt";
-			b.Liquid = false;
+			throw new NotImplementedException();
+			//BlockType b = new BlockType();
+			//b.Name = Name;
+			//b.TopTexture = "Dirt";
+			//b.SideTexture = "Dirt";
+			//b.BotTexture = "Dirt";
+			//b.Liquid = false;
 
-			BlockTypes.Add(b);
+			//BlockTypes.Add(b);
 
-			BlockTypeData btd = new BlockTypeData(b);
-			btd.Send();
+			//BlockTypeData btd = new BlockTypeData(b);
+			//btd.Send();
 
-			Game.Self.Inventory.Add(new Block(b.Name));
+			//Game.Self.Inventory.Add(new Block(b.Name));
 		}
 	}
 }

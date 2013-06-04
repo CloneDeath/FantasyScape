@@ -121,15 +121,16 @@ namespace FantasyScape.Client.Editor {
 		bool EnableSubmit = true;
 		private void SubmitChanges(Base sender) {
 			if (EnableSubmit && BlockTypes.Exists(TypeName.Text)) {
-				BlockType b = BlockTypes.GetBlockType(TypeName.Text);
-				//b.Name = Name;
-				b.TopTexture = (string)TopTex.SelectedItem.UserData;
-				b.SideTexture = (string)SideTex.SelectedItem.UserData;
-				b.BotTexture = (string)BotTex.SelectedItem.UserData;
-				b.Liquid = Liquid.IsChecked;
+				throw new NotImplementedException();
+				//BlockType b = BlockTypes.GetBlockType(TypeName.Text);
+				////b.Name = Name;
+				//b.TopTexture = (string)TopTex.SelectedItem.UserData;
+				//b.SideTexture = (string)SideTex.SelectedItem.UserData;
+				//b.BotTexture = (string)BotTex.SelectedItem.UserData;
+				//b.Liquid = Liquid.IsChecked;
 
-				BlockTypeData btd = new BlockTypeData(b);
-				btd.Send();
+				//BlockTypeData btd = new BlockTypeData(b);
+				//btd.Send();
 			}
 		}
 
@@ -140,8 +141,7 @@ namespace FantasyScape.Client.Editor {
 			if (selected != null) {
 				BlockTypes.Remove(selected.Name);
 
-				BlockTypeRemove btr = new BlockTypeRemove(selected.Name);
-				btr.Send();
+				new RemoveBlockType(selected.ID).Send();
 			}
 		}
 
@@ -161,20 +161,21 @@ namespace FantasyScape.Client.Editor {
 		}
 
 		internal void Select(string BlockType) {
-			//Make the item is selected in the list
-			if (BlockTypesList.SelectedRow == null || (string)BlockTypesList.SelectedRow.UserData != BlockType) {
-				BlockTypesList.SelectByUserData(BlockType);
-			}
+			throw new NotImplementedException();
+			////Make the item is selected in the list
+			//if (BlockTypesList.SelectedRow == null || (string)BlockTypesList.SelectedRow.UserData != BlockType) {
+			//    BlockTypesList.SelectByUserData(BlockType);
+			//}
 
-			//Update RHS info
-			EnableSubmit = false;
-			BlockType bt = BlockTypes.GetBlockType(BlockType);
-			TypeName.Text = bt.Name;
-			TopTex.SelectByUserData(bt.TopTexture);
-			SideTex.SelectByUserData(bt.SideTexture);
-			BotTex.SelectByUserData(bt.BotTexture);
-			Liquid.IsChecked = bt.Liquid;
-			EnableSubmit = true;
+			////Update RHS info
+			//EnableSubmit = false;
+			//BlockType bt = BlockTypes.GetBlockType(BlockType);
+			//TypeName.Text = bt.Name;
+			//TopTex.SelectByUserData(bt.TopTexture);
+			//SideTex.SelectByUserData(bt.SideTexture);
+			//BotTex.SelectByUserData(bt.BotTexture);
+			//Liquid.IsChecked = bt.Liquid;
+			//EnableSubmit = true;
 		}
 	}
 }

@@ -7,17 +7,16 @@ using System.IO;
 using System.Xml.Linq;
 
 namespace FantasyScape.Resources {
-	public partial class Package : Resource {
-		public string Name = "None";
+	public partial class Package : Folder {
 		public List<Guid> References = new List<Guid>();
 
 		public Package(Guid UID) {
 			this.ID = UID;
 		}
 
-		private void Load(string dir) {
+		public override void Load(string dir) {
 			LoadPackageInfo(dir);
-			LoadChildren(dir);
+			base.LoadChildren(dir);
 		}
 
 		private void LoadPackageInfo(string dir) {
@@ -48,26 +47,8 @@ namespace FantasyScape.Resources {
 			}
 		}
 
-		private void LoadChildren(string dir) {
-			string[] Files = Directory.GetFiles(dir);
-			foreach (string file in Files){
-				string FileType = Path.GetExtension(file);
-				switch (FileType) {
-					case ".tex":
-						FSTexture tex = new FSTexture(file);
-						break;
-
-					case ".block":
-						BlockType blk = new BlockType(file);
-						break;
-				}
-			}
-
-			string[] Children = Directory.GetDirectories(dir);
-			foreach (string child in Children) {
-				LoadChildren(child);
-			}
+		internal static bool Ready() {
+			throw new NotImplementedException();
 		}
-		
 	}
 }
