@@ -27,5 +27,9 @@ namespace FantasyScape {
 				return (this.X == other.X) && (this.Y == other.Y) && (this.Z == other.Z);
 			}
 		}
+
+		public override int GetHashCode() {
+			return base.GetHashCode();
+		}
 	}
 }

@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FantasyScape.Resources;
+
 
 namespace FantasyScape {
-	class ResourceManager {
+	partial class ResourceManager {
 		public static void Load() {
+			LoadRepository();
+
+			Package.LoadAll(ResourceLocation);
+
 			List<Resource> Resources = GetResources();
 
 			foreach (Resource resource in Resources) {
@@ -12,6 +18,12 @@ namespace FantasyScape {
 				resource.Load();
 			}
 		}
+
+
+
+
+
+
 
 		static List<Resource> GetResources() {
 			List<Type> Types = new List<Type>(Assembly.GetAssembly(typeof(Game)).GetTypes());

@@ -24,7 +24,11 @@ namespace FantasyScape {
 			updateBlocks = new List<Block>();
 			updateLocations = new List<Vector3i>();
 			Dirty = true;
-			DisplayList = GraphicsManager.GenList(1);
+			if (Game.Render) {
+				DisplayList = GraphicsManager.GenList(1);
+			} else {
+				DisplayList = 0;
+			}
 		}
 
 		#region Block Access

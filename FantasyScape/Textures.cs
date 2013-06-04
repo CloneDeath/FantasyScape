@@ -8,10 +8,18 @@ using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class Textures : Resource{
-		static Texture ErrorTexture = new Texture(@"Data\Error.png");
+		static Texture ErrorTexture;
 		static List<Texture> TextureList = new List<Texture>();
 		static bool RequestSent = false;
 		public static int Count = -1;
+
+		static Textures() {
+			if (Game.Render) {
+				ErrorTexture = new Texture(@"Data\Error.png");
+			} else {
+				ErrorTexture = null;
+			}
+		}
 
 		public void Load() {
 			AddTexture("Data/Dirt.png", "Dirt");
