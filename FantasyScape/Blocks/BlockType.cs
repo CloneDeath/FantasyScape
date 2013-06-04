@@ -21,5 +21,12 @@ namespace FantasyScape {
 		public string SideTexture;
 		public string BotTexture;
 		public bool Liquid;
+
+		public BlockType(string file) {
+			throw new NotImplementedException();
+		}
+
+		public BlockType() {
+		}
 	}
 }

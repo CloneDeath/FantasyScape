@@ -5,9 +5,10 @@ using System.Text;
 using GLImp;
 using Lidgren.Network;
 using FantasyScape.NetworkMessages;
+using FantasyScape.Resources;
 
 namespace FantasyScape {
-	public class Textures : Resource{
+	public class Textures{
 		static Texture ErrorTexture;
 		static List<Texture> TextureList = new List<Texture>();
 		static bool RequestSent = false;
@@ -21,13 +22,6 @@ namespace FantasyScape {
 			}
 		}
 
-		public void Load() {
-			AddTexture("Data/Dirt.png", "Dirt");
-			AddTexture("Data/Grass.png", "Grass");
-			AddTexture("Data/Granite.png", "Granite");
-			AddTexture("Data/Water.png", "Water");
-			AddTexture("Data/Player.png", "Player");
-		}
 
 		private static void AddTexture(string filename, string name) {
 			Texture tex = new Texture(filename);

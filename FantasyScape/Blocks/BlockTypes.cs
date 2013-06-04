@@ -6,7 +6,7 @@ using Lidgren.Network;
 using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
-	public class BlockTypes : Resource {
+	public class BlockTypes {
 		static BlockType ErrorBlock = new BlockType();
 
 		static BlockTypes() {
