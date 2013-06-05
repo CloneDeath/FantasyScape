@@ -1,4 +1,5 @@
 <Block>
 	<Name>Water</Name>
 	<Texture Location="All">{9F4AD207-4AEE-48E8-8BAC-1B28C6A23408}</Texture>
+	<Liquid/>
 </Block>

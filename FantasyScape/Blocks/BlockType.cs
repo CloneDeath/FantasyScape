@@ -78,6 +78,9 @@ namespace FantasyScape {
 						}
 						Texture[(int)Enum.Parse(typeof(BlockSide), info.Attribute("Location").Value)].TextureID = TexID;
 						break;
+					case "Liquid":
+						Liquid = true;
+						break;
 					default:
 						throw new Exception("Unknown element in blocktype '" + info.Name + "'.");
 				}
