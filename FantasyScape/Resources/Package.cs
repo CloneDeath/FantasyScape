@@ -85,7 +85,7 @@ namespace FantasyScape.Resources {
 			Packages.Add(package.ID, package);
 		}
 
-		internal static Resource FindResource(Guid ResourceID) {
+		public static Resource FindResource(Guid ResourceID) {
 			foreach (Package pkg in Packages.Values) {
 				Resource ret = pkg.GetResource(ResourceID);
 				if (ret != null) {

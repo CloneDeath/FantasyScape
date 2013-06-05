@@ -5,13 +5,16 @@ using System.Text;
 using System.Drawing;
 using GLImp;
 using FantasyScape.NetworkMessages;
+using FantasyScape.Resources;
 
 namespace FantasyScape.Client.Editor {
 	class PixelData {
+        private bool _subscribed = false;
+
 		public int Width;
 		public int Height;
 		private Color[,] Data;
-		public string Name = null;
+		public Guid ID = Guid.Empty;
 
 		public PixelData(int width, int height) {
 			this.Width = width;
@@ -47,27 +50,36 @@ namespace FantasyScape.Client.Editor {
 				}
 			}
 
-			if (Textures.Exists(Name)) {
-				throw new NotImplementedException();
-				//Texture tex = Textures.GetTexture(Name);
-				//tex.Image = bmp;
-
-				//NetTexture nt = new NetTexture(tex);
-				//nt.Send();
+            FSTexture tex = Package.FindResource(ID) as FSTexture;
+			if (tex != null) {
+                tex.Texture.Image = bmp;
+                new UpdateTexture(tex).Send();
+                tex.TriggerUpdateEvent(this);
 			}
 		}
 
-		internal void Load(Texture Tex) {
-			this.Name = Tex.Name;
-			this.Width = Tex.Width;
-			this.Height = Tex.Height;
+		internal void Load(FSTexture Tex) {
+			this.ID = Tex.ID;
+			this.Width = Tex.Texture.Width;
+			this.Height = Tex.Texture.Height;
 			Data = new Color[Width, Height];
 
 			for (int x = 0; x < Width; x++) {
 				for (int y = 0; y < Height; y++) {
-					this[x, y] = Tex.Image.GetPixel(x, y);
+					this[x, y] = Tex.Texture.Image.GetPixel(x, y);
 				}
 			}
+
+            if (!_subscribed){
+                _subscribed = true;
+                Tex.OnUpdate += FSTextureUpdated;
+            }
 		}
+
+        private void FSTextureUpdated(object sender, Resource tex) {
+            if (sender != this) {
+                this.Load(tex as FSTexture);
+            }
+        }
 	}
 }

@@ -119,6 +119,7 @@
     <Compile Include="NetworkMessages\PlayerAssignment.cs" />
     <Compile Include="NetworkMessages\PlayerUpdate.cs" />
     <Compile Include="NetworkMessages\RequestMessage.cs" />
+    <Compile Include="NetworkMessages\Textures\UpdateTexture.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Folder.cs" />

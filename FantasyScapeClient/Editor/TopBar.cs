@@ -13,18 +13,11 @@ namespace FantasyScape.Client.Editor {
 				MenuItem PackageView = Edit.Menu.AddItem("Package Viewer");
 				PackageView.Clicked += delegate(Base sender) {
 					PackageExplorer win = new PackageExplorer(this.Parent);
-					win.SetPosition(0, 22);
 				};
 
 				MenuItem BlockEditor = Edit.Menu.AddItem("Block Types");
 				BlockEditor.Clicked += delegate(Base sender) {
 					WindowControl win = new BlockTypesEditor(this.Parent);
-					win.SetPosition(0, 22);
-				};
-
-				MenuItem TextureEditor = Edit.Menu.AddItem("Textures");
-				TextureEditor.Clicked += delegate(Base sender) {
-					WindowControl win = new TextureEditor(this.Parent);
 					win.SetPosition(0, 22);
 				};
 

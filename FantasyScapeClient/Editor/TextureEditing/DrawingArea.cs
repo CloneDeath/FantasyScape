@@ -6,6 +6,7 @@ using Gwen.Control;
 using System.Drawing;
 using Gwen.ControlInternal;
 using Gwen;
+using FantasyScape.Resources;
 
 namespace FantasyScape.Client.Editor {
 	class DrawingArea : Base {
@@ -69,8 +70,9 @@ namespace FantasyScape.Client.Editor {
 				if (OnDraw != null) {
 					OnDraw((m_CursorPos.X * Canvas.Width) / Width, (m_CursorPos.Y * Canvas.Height) / Height, Canvas, ref DrawingColor);
 				}
-				//SetColorAt(m_CursorPos.X, m_CursorPos.Y, DrawingColor);
-				Invalidate();
+                if (Canvas != null) {
+                    Canvas.Update();
+                }
             }
         }
 
@@ -96,9 +98,6 @@ namespace FantasyScape.Client.Editor {
         /// </summary>
         public override void Invalidate()
         {
-			if (Canvas != null) {
-				Canvas.Update();
-			}
             if (m_Texture != null)
             {
                 m_Texture.Dispose();
@@ -157,9 +156,14 @@ namespace FantasyScape.Client.Editor {
 			DrawingColor = color;
 		}
 
-		internal void LoadTexture(GLImp.Texture Tex) {
+		internal void LoadTexture(FSTexture Tex) {
 			Canvas.Load(Tex);
+            Tex.OnUpdate += Tex_OnUpdate;
 			this.Invalidate();
 		}
+
+        void Tex_OnUpdate(object sender, Resource res) {
+            this.Invalidate();
+        }
 	}
 }

@@ -29,5 +29,14 @@ namespace FantasyScape.Resources {
 				return null;
 			}
 		}
+
+        public delegate void OnChangeEvent(object sender, Resource res);
+        public event OnChangeEvent OnUpdate;
+
+        public void TriggerUpdateEvent(object sender) {
+            if (OnUpdate != null) {
+                OnUpdate(sender, this);
+            }
+        }
 	}
 }

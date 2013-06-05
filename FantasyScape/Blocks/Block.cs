@@ -47,7 +47,6 @@ namespace FantasyScape {
 		protected void draw(float x, float y, float z, World world, double height) {
 			GL.PushMatrix();
 			GL.Translate(x, y, z);
-			GL.Scale(1.0f, 1.0f, height);
 			if (BlockType.Liquid) {
 				GL.Color4(1.0f, 1.0f, 1.0f, 0.25f);
 			} else {
@@ -58,10 +57,10 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Back).ID);
 			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x, y - 1, z)) {
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
+                GL.TexCoord2(0.0, 1 - height); GL.Vertex3(0.0, 0.0, height);
+                GL.TexCoord2(1.0, 1 - height); GL.Vertex3(1.0, 0.0, height);
+                GL.TexCoord2(1.0, 1.0); GL.Vertex3(1.0, 0.0, 0.0);
+                GL.TexCoord2(0.0, 1.0); GL.Vertex3(0.0, 0.0, 0.0);
 			}
 			GL.End();
 
@@ -69,10 +68,10 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Front).ID);
 			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x, y + 1, z)) {
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
+                GL.TexCoord2(0.0, 1 - height); GL.Vertex3(1.0f, 1.0f, height);
+                GL.TexCoord2(1.0, 1 - height); GL.Vertex3(0.0f, 1.0f, height);
+                GL.TexCoord2(1.0, 1.0); GL.Vertex3(0.0f, 1.0f, 0.0f);
+                GL.TexCoord2(0.0, 1.0); GL.Vertex3(1.0f, 1.0f, 0.0f);
 			}
 			GL.End();
 
@@ -80,10 +79,10 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Left).ID);
 			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x - 1, y, z)) {
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
+                GL.TexCoord2(0.0, 1-height); GL.Vertex3(0.0f, 1.0f, height);
+                GL.TexCoord2(1.0, 1-height); GL.Vertex3(0.0f, 0.0f, height);
+                GL.TexCoord2(1.0, 1.0); GL.Vertex3(0.0f, 0.0f, 0.0f);
+                GL.TexCoord2(0.0, 1.0); GL.Vertex3(0.0f, 1.0f, 0.0f);
 			}
 			GL.End();
 
@@ -91,10 +90,10 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Right).ID);
 			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x + 1, y, z)) {
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
+                GL.TexCoord2(0.0, 1-height); GL.Vertex3(1.0f, 0.0f, height);
+                GL.TexCoord2(1.0, 1-height); GL.Vertex3(1.0f, 1.0f, height);
+                GL.TexCoord2(1.0, 1.0); GL.Vertex3(1.0f, 1.0f, 0.0f);
+                GL.TexCoord2(0.0, 1.0); GL.Vertex3(1.0f, 0.0f, 0.0f);
 			}
 			GL.End();
 
@@ -102,10 +101,10 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Bottom).ID);
 			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x, y, z - 1)) {
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
+				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
+				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
+				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
+				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
 			}
 			GL.End();
 
@@ -113,10 +112,10 @@ namespace FantasyScape {
 			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Top).ID);
 			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x, y, z + 1)) {
-				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
-				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
-				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
-				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
+                GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, height);
+                GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, height);
+                GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, height);
+                GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, height);
 			}
 			GL.End();
 			GL.PopMatrix();
