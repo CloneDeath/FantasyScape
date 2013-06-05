@@ -48,11 +48,12 @@ namespace FantasyScape.Client.Editor {
 			}
 
 			if (Textures.Exists(Name)) {
-				Texture tex = Textures.GetTexture(Name);
-				tex.Image = bmp;
+				throw new NotImplementedException();
+				//Texture tex = Textures.GetTexture(Name);
+				//tex.Image = bmp;
 
-				NetTexture nt = new NetTexture(tex);
-				nt.Send();
+				//NetTexture nt = new NetTexture(tex);
+				//nt.Send();
 			}
 		}
 

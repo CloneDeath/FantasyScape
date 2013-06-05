@@ -6,29 +6,28 @@ using Lidgren.Network;
 using FantasyScape.Resources;
 
 namespace FantasyScape.NetworkMessages {
-	class AddBlockType : Message {
-		private BlockType blockType;
+	class AddFolder : Message {
 		Guid parent = Guid.Empty;
+		private Folder folder;
 
-		public AddBlockType() {
-			blockType = new BlockType();
+		public AddFolder() {
+			folder = new Folder();
 		}
 
-		public AddBlockType(BlockType blockType, Guid parent) {
-			this.blockType = blockType;
+		public AddFolder(Folder folder, Guid parent) {
+			this.folder = folder;
 			this.parent = parent;
 		}
-
 		protected override void WriteData(NetOutgoingMessage Message) {
 			Message.Write(parent.ToString());
-			blockType.Write(Message);
+			folder.Write(Message);
 		}
 
 		protected override void ReadData(NetIncomingMessage Message) {
 			if (!Guid.TryParse(Message.ReadString(), out parent)) {
-				throw new Exception("Could not parse parent guid for block type");
+				throw new Exception("Failed to pare parent for folder");
 			}
-			blockType.Read(Message);
+			folder.Read(Message);
 		}
 
 		protected override void ExecuteMessage() {
@@ -36,9 +35,9 @@ namespace FantasyScape.NetworkMessages {
 			if (res == null) {
 				throw new Exception("Could not find parent resource for texture");
 			}
-			((Folder)res).Children.Add(blockType);
+			((Folder)res).Children.Add(folder);
 
-			new AddBlockType(blockType, parent).Forward();
+			new AddFolder(folder, parent).Forward();
 		}
 	}
 }

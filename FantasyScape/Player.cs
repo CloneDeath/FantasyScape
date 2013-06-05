@@ -96,7 +96,7 @@ namespace FantasyScape {
 			yrot = 0;
 
 			foreach (BlockType type in BlockTypes.GetAll()) {
-				Inventory.Add(new Block(type.Name));
+				Inventory.Add(new Block(type.ID));
 			}
 
 			Width = 0.7;
@@ -231,12 +231,16 @@ namespace FantasyScape {
 					SelectedItem += 1;
 				}
 
-				while (SelectedItem < 0) {
-					SelectedItem += Inventory.Count;
-				}
+				if (Inventory.Count == 0) {
+					SelectedItem = 0;
+				} else {
+					while (SelectedItem < 0) {
+						SelectedItem += Inventory.Count;
+					}
 
-				while (SelectedItem >= Inventory.Count) {
-					SelectedItem -= Inventory.Count;
+					while (SelectedItem >= Inventory.Count) {
+						SelectedItem -= Inventory.Count;
+					}
 				}
 			}
 
@@ -418,7 +422,7 @@ namespace FantasyScape {
 				bestY = temp[1];
 				bestZ = temp[2];
 
-				string BlockName = Inventory[SelectedItem].BlockTypeName;
+				Guid BlockName = Inventory[SelectedItem].BlockTypeID;
 
 				Block b = new Block(BlockName);
 
@@ -586,7 +590,7 @@ namespace FantasyScape {
 			GraphicsManager.DrawRectangle(6, 6 + (SelectedItem * 25), 28, 28, Color.Yellow);
 			for (int i = 0; i < Inventory.Count; i++){
 				Block block = Inventory[i];
-				GraphicsManager.DrawRectangle(10, 10 + (i * 25), 20, 20, block.BlockType.GetTexture(Blocks.BlockSide.Front).Texture);
+				GraphicsManager.DrawRectangle(10, 10 + (i * 25), 20, 20, block.BlockType.GetTexture(Blocks.BlockSide.Front));
 			}
 		}
 	}

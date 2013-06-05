@@ -5,6 +5,8 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using System.Xml.Linq;
+using FantasyScape.NetworkMessages;
+using Lidgren.Network;
 
 namespace FantasyScape.Resources {
 	public partial class Package : Folder {
@@ -47,8 +49,51 @@ namespace FantasyScape.Resources {
 			}
 		}
 
+		static bool RequestSent = false;
 		internal static bool Ready() {
-			throw new NotImplementedException();
+			if (!RequestSent) {
+				new RequestMessage(RequestType.Packages).Send();
+				RequestSent = true;
+			}
+
+			return true;
+		}
+
+		internal override void Write(NetOutgoingMessage Message) {
+			base.Write(Message);
+			Message.Write((Int32)References.Count);
+			foreach (Guid UUID in References) {
+				Message.Write(UUID.ToString());
+			}
+		}
+
+		internal override void Read(NetIncomingMessage Message) {
+			base.Read(Message);
+			int RefCount = Message.ReadInt32();
+			References = new List<Guid>();
+			for (int i = 0; i < RefCount; i++) {
+				Guid UUID;
+				if (!Guid.TryParse(Message.ReadString(), out UUID)) {
+					throw new Exception("Could not parse reference GUID");
+				} else {
+					References.Add(UUID);
+				}
+			}
+		}
+
+		internal static void Add(Package package) {
+			Packages.Add(package.ID, package);
+		}
+
+		internal static Resource FindResource(Guid ResourceID) {
+			foreach (Package pkg in Packages.Values) {
+				Resource ret = pkg.GetResource(ResourceID);
+				if (ret != null) {
+					return ret;
+				}
+			}
+
+			return null;
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		protected override int InitialMessageSize() {
-			return Chunk.Size * Chunk.Size * Chunk.Size * (16);
+			return (Chunk.Size * Chunk.Size * Chunk.Size) * (5 + 38);
 		}
 
 		protected override void WriteData(NetOutgoingMessage Message) {

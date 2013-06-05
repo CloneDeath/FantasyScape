@@ -5,6 +5,7 @@ using System.Text;
 using GLImp;
 using System.IO;
 using System.Xml.Linq;
+using System.Drawing;
 
 namespace FantasyScape.Resources {
 	/// <summary>
@@ -13,6 +14,10 @@ namespace FantasyScape.Resources {
 	public class FSTexture : Resource {
 		public FSTexture() {
 			
+		}
+
+		public void Load(Bitmap img) {
+			this.Texture = new Texture(img, this.Name, 0, 0);
 		}
 
 		public override void Load(string path) {

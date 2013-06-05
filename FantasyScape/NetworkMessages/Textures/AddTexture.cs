@@ -2,39 +2,51 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GLImp;
 using Lidgren.Network;
+using FantasyScape.Resources;
+using GLImp;
 using System.Drawing;
 
 namespace FantasyScape.NetworkMessages {
-	public class NetTexture : Message {
-		Texture texture = null;
+	class AddTexture : Message {
+		FSTexture texture = null;
+		Guid parent = Guid.Empty;
 
-		public NetTexture() { }
+		public AddTexture() {
+			this.texture = new FSTexture();
+		}
 
-		public NetTexture(Texture tex) {
+		public AddTexture(FSTexture tex, Guid parent) {
 			this.texture = tex;
+			this.parent = parent;
 		}
 
 		protected override void WriteData(NetOutgoingMessage Message) {
-			Message.Write(texture.Name);
-			byte[] data = GetBytes(texture);
+			Message.Write(parent.ToString());
+			texture.Write(Message);
+			byte[] data = GetBytes(texture.Texture);
 			Message.Write((Int32)data.Length);
 			Message.Write(data);
 		}
 
 		protected override void ReadData(NetIncomingMessage Message) {
-			string name = Message.ReadString();
+			if (!Guid.TryParse(Message.ReadString(), out parent)) {
+				throw new Exception("Failed to parse parent guid for addtexture");
+			}
+			texture.Read(Message);
 			int datalen = Message.ReadInt32();
 			byte[] data = Message.ReadBytes(datalen);
-			texture = new Texture(GetBitmap(data), name, 0, 0);
+			texture.Load(GetBitmap(data));
 		}
 
 		protected override void ExecuteMessage() {
-			Textures.AddTexture(texture);
+			Resource res = Package.FindResource(parent);
+			if (res == null) {
+				throw new Exception("Could not find parent resource for texture");
+			}
+			((Folder)res).Children.Add(texture);
 
-			NetTexture fwd = new NetTexture(texture);
-			fwd.Forward();
+			new AddTexture(texture, parent).Forward();
 		}
 
 		internal byte[] GetBytes(Texture texture) {

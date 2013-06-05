@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Lidgren.Network;
 
 namespace FantasyScape.Resources {
 	public class Folder : Resource {
@@ -43,6 +44,20 @@ namespace FantasyScape.Resources {
 				Folder f = new Folder();
 				f.Load(child);
 				Children.Add(f);
+			}
+		}
+
+		internal override Resource GetResource(Guid ResourceID) {
+			if (this.ID == ResourceID) {
+				return this;
+			} else {
+				foreach (Resource Child in Children) {
+					Resource ret = Child.GetResource(ResourceID);
+					if (ret != null) {
+						return ret;
+					}
+				}
+				return null;
 			}
 		}
 	}

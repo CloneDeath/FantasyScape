@@ -103,6 +103,9 @@
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />
     <Compile Include="Math\Vector3i.cs" />
+    <Compile Include="NetworkMessages\Textures\AddTexture.cs" />
+    <Compile Include="NetworkMessages\Folders\AddFolder.cs" />
+    <Compile Include="NetworkMessages\Packages\AddPackage.cs" />
     <Compile Include="NetworkMessages\Blocks\BlockAdd.cs" />
     <Compile Include="NetworkMessages\BlockTypes\AddBlockType.cs" />
     <Compile Include="NetworkMessages\BlockTypes\RemoveBlockType.cs" />
@@ -113,11 +116,9 @@
     <Compile Include="NetworkMessages\PlayerAdd.cs" />
     <Compile Include="NetworkMessages\Message.cs" />
     <Compile Include="NetworkMessages\MessageHandler.cs" />
-    <Compile Include="NetworkMessages\NumTextures.cs" />
     <Compile Include="NetworkMessages\PlayerAssignment.cs" />
     <Compile Include="NetworkMessages\PlayerUpdate.cs" />
     <Compile Include="NetworkMessages\RequestMessage.cs" />
-    <Compile Include="NetworkMessages\NetTexture.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Folder.cs" />

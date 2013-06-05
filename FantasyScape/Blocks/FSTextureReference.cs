@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using FantasyScape.Resources;
+using Lidgren.Network;
 
 namespace FantasyScape.Blocks {
 	class FSTextureReference {
+		public bool Defined = false;
 		private Guid _TextureID = Guid.Empty;
 		public Guid TextureID {
 			get {
@@ -18,11 +20,22 @@ namespace FantasyScape.Blocks {
 			}
 		}
 
-		public bool Defined = false;
-
 		public FSTexture Texture {
 			get {
-				throw new NotImplementedException();
+				Resource res = Package.FindResource(_TextureID);
+				return res as FSTexture;
+			}
+		}
+
+		internal void Write(NetOutgoingMessage Message) {
+			Message.Write(Defined);
+			Message.Write(_TextureID.ToString());
+		}
+
+		internal void Read(NetIncomingMessage Message) {
+			Defined = Message.ReadBoolean();
+			if (!Guid.TryParse(Message.ReadString(), out _TextureID)) {
+				throw new Exception("Failed to parse Guid in FSTextureReference");
 			}
 		}
 	}

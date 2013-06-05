@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Lidgren.Network;
 using GLImp;
+using FantasyScape.Resources;
 
 namespace FantasyScape.NetworkMessages {
 	public enum RequestType {
@@ -66,7 +67,27 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		private void SendPackages() {
-			throw new NotImplementedException();
+			foreach (Package pkg in Package.Packages.Values){
+				Send(pkg, Guid.Empty);
+			}
+		}
+
+		private void Send(Resource res, Guid parent) {
+			if (res.GetType() == typeof(Package)) {
+				new AddPackage((Package)res).Reply(NetDeliveryMethod.ReliableOrdered);
+				foreach (Resource child in ((Package)res).Children) {
+					Send(child, res.ID);
+				}
+			} else if (res.GetType() == typeof(Folder)) {
+				new AddFolder((Folder)res, parent).Reply(NetDeliveryMethod.ReliableOrdered);
+				foreach (Resource child in ((Folder)res).Children) {
+					Send(child, res.ID);
+				}
+			} else if (res.GetType() == typeof(FSTexture)) {
+				new AddTexture((FSTexture)res, parent).Reply(NetDeliveryMethod.ReliableOrdered);
+			} else if (res.GetType() == typeof(BlockType)) {
+				new AddBlockType((BlockType)res, parent).Reply(NetDeliveryMethod.ReliableOrdered);
+			}
 		}
 	}
 }

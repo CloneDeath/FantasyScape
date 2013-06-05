@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Lidgren.Network;
 using FantasyScape.NetworkMessages;
+using FantasyScape.Resources;
 
 namespace FantasyScape {
 	public class BlockTypes {
@@ -46,6 +47,10 @@ namespace FantasyScape {
 				Types.RemoveAt(found);
 			}
 			Chunk.DirtyAll = true;
+		}
+
+		internal static BlockType GetBlockType(Guid BlockTypeID) {
+			return Package.FindResource(BlockTypeID) as BlockType ?? ErrorBlock;
 		}
 	}
 }

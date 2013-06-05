@@ -40,13 +40,18 @@ namespace FantasyScape.NetworkMessages {
 			Client = client;
 		}
 
-		public void Reply() {
+		#region Reply
+		public void Reply(NetDeliveryMethod method) {
 			if (CanReply) {
-				this.Send(LastReceivedSender);
+				this.Send(LastReceivedSender, method);
 			} else {
 				throw new Exception("Can only reply in 'Execute' method of a Message"); //It's the only way we know who to reply to.
 			}
 		}
+		public void Reply() {
+			this.Reply(NetDeliveryMethod.ReliableUnordered);
+		}
+		#endregion
 
 		private void Send(NetConnection destination) {
 			this.Send(Connection, destination, NetDeliveryMethod.ReliableUnordered);

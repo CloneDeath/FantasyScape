@@ -38,17 +38,18 @@ namespace FantasyScape.Client.Editor {
 		}
 
 		private void CreateNewTexture(string Name) {
-			Bitmap bmp = new Bitmap(16, 16);
-			for (int i = 0; i < 16; i++) {
-				for (int j = 0; j < 16; j++) {
-					bmp.SetPixel(i, j, Color.White);
-				}
-			}
-			Texture tex = new Texture(bmp, Name);
-			Textures.AddTexture(tex);
+			throw new NotImplementedException();
+			//Bitmap bmp = new Bitmap(16, 16);
+			//for (int i = 0; i < 16; i++) {
+			//    for (int j = 0; j < 16; j++) {
+			//        bmp.SetPixel(i, j, Color.White);
+			//    }
+			//}
+			//Texture tex = new Texture(bmp, Name);
+			//Textures.AddTexture(tex);
 
-			NetTexture nt = new NetTexture(tex);
-			nt.Send();
+			//NetTexture nt = new NetTexture(tex);
+			//nt.Send();
 		}
 	}
 }

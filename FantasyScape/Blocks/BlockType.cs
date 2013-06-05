@@ -17,15 +17,15 @@ namespace FantasyScape {
 			}
 		}
 
-		FSTextureReference[] Texture = new FSTextureReference[(int)BlockSide.Count];
 		public bool Liquid;
+		FSTextureReference[] Texture = new FSTextureReference[(int)BlockSide.Count];
 
-		public FSTexture GetTexture(BlockSide Side) {
+		public Texture GetTexture(BlockSide Side) {
 			switch (Side) {
 				case BlockSide.Top:
 				case BlockSide.Bottom:
 					if (Texture[(int)Side].Defined) {
-						return Texture[(int)Side].Texture;
+						return Texture[(int)Side].Texture.Texture;
 					} else {
 						goto case BlockSide.All;
 					}
@@ -34,24 +34,24 @@ namespace FantasyScape {
 				case BlockSide.Front:
 				case BlockSide.Back:
 					if (Texture[(int)Side].Defined) {
-						return Texture[(int)Side].Texture;
+						return Texture[(int)Side].Texture.Texture;
 					} else {
 						goto case BlockSide.Side;
 					}
 				case BlockSide.Side:
 					if (Texture[(int)BlockSide.Side].Defined) {
-						return Texture[(int)BlockSide.Side].Texture;
+						return Texture[(int)BlockSide.Side].Texture.Texture;
 					} else {
 						goto case BlockSide.All;
 					}
 				case BlockSide.All:
 					if (Texture[(int)BlockSide.All].Defined) {
-						return Texture[(int)BlockSide.All].Texture;
+						return Texture[(int)BlockSide.All].Texture.Texture;
 					}
 					break;
 			}
 
-			return null;
+			return Textures.ErrorTexture;
 		}
 
 		public override void Load(string path) {
@@ -82,8 +82,22 @@ namespace FantasyScape {
 						throw new Exception("Unknown element in blocktype '" + info.Name + "'.");
 				}
 			}
-			
+		}
 
+		internal override void Write(NetOutgoingMessage Message) {
+			base.Write(Message);
+			Message.Write(Liquid);
+			for (int i = 0; i < (int)BlockSide.Count; i++) {
+				Texture[i].Write(Message);
+			}
+		}
+
+		internal override void Read(NetIncomingMessage Message) {
+			base.Read(Message);
+			Liquid = Message.ReadBoolean();
+			for (int i = 0; i < (int)BlockSide.Count; i++) {
+				Texture[i].Read(Message);
+			}
 		}
 	}
 }

@@ -10,22 +10,22 @@ using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class Block {
-		public string BlockTypeName;
+		public Guid BlockTypeID;
 		public BlockType BlockType {
 			get {
-				return BlockTypes.GetBlockType(BlockTypeName);
+				return BlockTypes.GetBlockType(BlockTypeID);
 			}
 		}
 
 		public int Level;
 
 		public Block() {
-			this.BlockTypeName = "";
+			this.BlockTypeID = Guid.Empty;
 			this.Level = 16;
 		}
 
-		public Block(string Type) {
-			this.BlockTypeName = Type;
+		public Block(Guid Type) {
+			this.BlockTypeID = Type;
 			Level = 16;
 		}
 
@@ -41,13 +41,10 @@ namespace FantasyScape {
 			if (Level <= 0 && BlockType.Liquid) {
 				return;
 			}
-			throw new NotImplementedException();
-			//draw(x, y, z, world, Textures.GetTexture(BlockType.TopTexture),
-			//    Textures.GetTexture(BlockType.SideTexture),
-			//    Textures.GetTexture(BlockType.BotTexture), Level / 16.0f);
+			draw(x, y, z, world, Level / 16.0f);
 		}
 
-		protected void draw(float x, float y, float z, World world, Texture TopTex, Texture SideTex, Texture BottomTex, double height) {
+		protected void draw(float x, float y, float z, World world, double height) {
 			GL.PushMatrix();
 			GL.Translate(x, y, z);
 			GL.Scale(1.0f, 1.0f, height);
@@ -57,47 +54,53 @@ namespace FantasyScape {
 				GL.Color3(1.0f, 1.0f, 1.0f);
 			}
 
-			GL.BindTexture(TextureTarget.Texture2D, SideTex.ID);
-			GL.Begin(BeginMode.Quads);// Draw A Quad
 			//Back
+			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Back).ID);
+			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x, y - 1, z)) {
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
 				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
 			}
+			GL.End();
 
 			//Front
+			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Front).ID);
+			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x, y + 1, z)) {
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
 				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
 			}
+			GL.End();
 
 			//Left
+			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Left).ID);
+			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x - 1, y, z)) {
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
 				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
 			}
+			GL.End();
 
 			//Right
+			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Right).ID);
+			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x + 1, y, z)) {
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(1.0f, 0.0f, 0.0f);
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(1.0f, 1.0f, 0.0f);
 				GL.TexCoord2(0.0f, 1.0f); GL.Vertex3(1.0f, 1.0f, 1.0f);
 				GL.TexCoord2(1.0f, 1.0f); GL.Vertex3(1.0f, 0.0f, 1.0f);
 			}
-
-
-
 			GL.End();
 
-			GL.BindTexture(TextureTarget.Texture2D, BottomTex.ID);
-			GL.Begin(BeginMode.Quads);
 			//Bottom
+			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Bottom).ID);
+			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x, y, z - 1)) {
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 0.0f);
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 0.0f);
@@ -106,9 +109,9 @@ namespace FantasyScape {
 			}
 			GL.End();
 
-			GL.BindTexture(TextureTarget.Texture2D, TopTex.ID);
-			GL.Begin(BeginMode.Quads);
 			//Top
+			GL.BindTexture(TextureTarget.Texture2D, BlockType.GetTexture(Blocks.BlockSide.Top).ID);
+			GL.Begin(BeginMode.Quads);
 			if (!world.IsSolid(x, y, z + 1)) {
 				GL.TexCoord2(1.0f, 0.0f); GL.Vertex3(0.0f, 0.0f, 1.0f);
 				GL.TexCoord2(0.0f, 0.0f); GL.Vertex3(0.0f, 1.0f, 1.0f);
@@ -172,7 +175,7 @@ namespace FantasyScape {
 			if (!world.IsSolid(x, y, z)) {
 				if (world[x, y, z] == null) {
 					if (this.Level >= MinWaterDiff) {
-						Block b = new Block(this.BlockTypeName);
+						Block b = new Block(this.BlockTypeID);
 						b.Level = MaxWater;
 						Level -= MaxWater;
 						world.AddBlock(x, y, z, b);
@@ -181,7 +184,7 @@ namespace FantasyScape {
 					}
 				} else {
 					Block b = world[x, y, z];
-					if (b.BlockType.Name == this.BlockTypeName) {
+					if (b.BlockType.ID == this.BlockTypeID) {
 						if (b.Level < 16) {
 							if (Down) {
 								int diff = 16 - b.Level;
@@ -212,12 +215,14 @@ namespace FantasyScape {
 		
 
 		public void Write(NetOutgoingMessage nom) {
-			nom.Write(BlockTypeName);
+			nom.Write(BlockTypeID.ToString());
 			nom.Write((Int32)Level);
 		}
 
 		public void Read(NetIncomingMessage nim) {
-			BlockTypeName = nim.ReadString();
+			if (!Guid.TryParse(nim.ReadString(), out BlockTypeID)) {
+				throw new Exception("Failed to read GUID");
+			}
 			Level = nim.ReadInt32();
 		}
 

@@ -11,7 +11,6 @@ namespace FantasyScape.Client.Editor {
 	class DrawingArea : Base {
 		private Point m_CursorPos;
         private bool m_Depressed;
-        private float m_Hue;
         private Texture m_Texture;
 
 		private Color DrawingColor;

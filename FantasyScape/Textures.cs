@@ -9,7 +9,7 @@ using FantasyScape.Resources;
 
 namespace FantasyScape {
 	public class Textures{
-		static Texture ErrorTexture;
+		public static Texture ErrorTexture;
 		static List<Texture> TextureList = new List<Texture>();
 		public static int Count = -1;
 
