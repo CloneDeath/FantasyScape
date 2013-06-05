@@ -10,6 +10,12 @@ namespace FantasyScape.Client.Editor {
 			this.Dock = Gwen.Pos.Top;
 			MenuItem Edit = this.AddItem("Editor");
 			{
+				MenuItem PackageView = Edit.Menu.AddItem("Package Viewer");
+				PackageView.Clicked += delegate(Base sender) {
+					PackageExplorer win = new PackageExplorer(this.Parent);
+					win.SetPosition(0, 22);
+				};
+
 				MenuItem BlockEditor = Edit.Menu.AddItem("Block Types");
 				BlockEditor.Clicked += delegate(Base sender) {
 					WindowControl win = new BlockTypesEditor(this.Parent);
