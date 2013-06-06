@@ -81,12 +81,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectingWindow.cs" />
+    <Compile Include="Editor\BlockTypeEditing\GLImpTexturePanel.cs" />
+    <Compile Include="Editor\BlockTypeEditing\TextureRefBox.cs" />
     <Compile Include="Editor\CodeEditor.cs" />
     <Compile Include="Editor\DevelopmentMenu.cs" />
-    <Compile Include="Editor\BlockTypesEditor.cs" />
+    <Compile Include="Editor\BlockTypeEditing\BlockTypeEditor.cs" />
     <Compile Include="Editor\PackageExplorer.cs" />
     <Compile Include="Editor\TextureEditing\DrawingArea.cs" />
-    <Compile Include="Editor\NewBlockName.cs" />
     <Compile Include="Editor\TextureEditing\ToolBox.cs" />
     <Compile Include="Editor\TextureEditing\Tools\Brush.cs" />
     <Compile Include="Editor\TextureEditing\Tools\ColorSelection.cs" />

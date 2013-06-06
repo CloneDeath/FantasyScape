@@ -7,7 +7,7 @@ using FantasyScape.Resources;
 using Lidgren.Network;
 
 namespace FantasyScape.Blocks {
-	class FSTextureReference {
+	public class FSTextureReference {
 		public bool Defined = false;
 		private Guid _TextureID = Guid.Empty;
 		public Guid TextureID {
@@ -23,7 +23,7 @@ namespace FantasyScape.Blocks {
 		public FSTexture Texture {
 			get {
 				Resource res = Package.FindResource(_TextureID);
-				return res as FSTexture;
+				return (res as FSTexture) ?? Textures.FSErrorTexture;
 			}
 		}
 

@@ -50,6 +50,10 @@ namespace FantasyScape.Client.Editor{
                         };
                     } else if (child.GetType() == typeof(BlockType)) {
                         node.SetImage(@"Data\blocktype.png");
+                        node.DoubleClicked += delegate(Base sender) {
+                            BlockTypeEditor window = new BlockTypeEditor(this.Parent, sender.UserData as BlockType);
+                            window.Show();
+                        };
                     }
 					node.UserData = child;
 					AddChildren(node);

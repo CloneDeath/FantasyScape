@@ -15,12 +15,6 @@ namespace FantasyScape.Client.Editor {
 					PackageExplorer win = new PackageExplorer(this.Parent);
 				};
 
-				MenuItem BlockEditor = Edit.Menu.AddItem("Block Types");
-				BlockEditor.Clicked += delegate(Base sender) {
-					WindowControl win = new BlockTypesEditor(this.Parent);
-					win.SetPosition(0, 22);
-				};
-
 				MenuItem CodeEdit = Edit.Menu.AddItem("Code Editor");
 				CodeEdit.Clicked += delegate(Base sender) {
 					CodeEditor win = new CodeEditor(this.Parent);

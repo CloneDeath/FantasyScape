@@ -10,12 +10,16 @@ using FantasyScape.Resources;
 namespace FantasyScape {
 	public class Textures{
 		public static Texture ErrorTexture;
+        public static FSTexture FSErrorTexture;
 		static List<Texture> TextureList = new List<Texture>();
 		public static int Count = -1;
 
 		static Textures() {
 			if (Game.Render) {
 				ErrorTexture = new Texture(@"Data\Error.png");
+                FSErrorTexture = new FSTexture();
+                FSErrorTexture.ID = Guid.Empty;
+                FSErrorTexture.Load(ErrorTexture.Image);
 			} else {
 				ErrorTexture = null;
 			}

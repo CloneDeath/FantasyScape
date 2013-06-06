@@ -18,7 +18,7 @@ namespace FantasyScape {
 		}
 
 		public bool Liquid;
-		FSTextureReference[] Texture = new FSTextureReference[(int)BlockSide.Count];
+		public FSTextureReference[] Texture = new FSTextureReference[(int)BlockSide.Count];
 
 		public Texture GetTexture(BlockSide Side) {
 			switch (Side) {
