@@ -18,7 +18,6 @@ namespace FantasyScape {
 		}
 
 		public int Level;
-
 		public Block() {
 			this.BlockTypeID = Guid.Empty;
 			this.Level = 16;
@@ -36,6 +35,8 @@ namespace FantasyScape {
 				return true;
 			}
 		}
+
+		#region Draw
 
 		public virtual void draw(float x, float y, float z, World world) {
 			if (Level <= 0 && BlockType.Liquid) {
@@ -120,6 +121,8 @@ namespace FantasyScape {
 			GL.End();
 			GL.PopMatrix();
 		}
+
+		#endregion
 
 		bool LiquidUpdated = false;
 		static List<Vector2> Directions = new List<Vector2>(

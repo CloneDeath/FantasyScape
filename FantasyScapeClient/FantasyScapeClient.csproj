@@ -87,6 +87,7 @@
     <Compile Include="Editor\DevelopmentMenu.cs" />
     <Compile Include="Editor\BlockTypeEditing\BlockTypeEditor.cs" />
     <Compile Include="Editor\PackageExplorer.cs" />
+    <Compile Include="Editor\PackageTree.cs" />
     <Compile Include="Editor\TextureEditing\DrawingArea.cs" />
     <Compile Include="Editor\TextureEditing\ToolBox.cs" />
     <Compile Include="Editor\TextureEditing\Tools\Brush.cs" />

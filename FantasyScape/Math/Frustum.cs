@@ -95,7 +95,7 @@ namespace FantasyScape {
 		}
 
 
-		int sphereInFrustum(Vector3 p, float raio) {
+		public int sphereInFrustum(Vector3 p, float raio) {
 
 			int result = INSIDE;
 			float distance;
@@ -145,7 +145,7 @@ namespace FantasyScape {
 			return (res);
 		}
 
-		int boxInFrustum(Vector3 box) {
+		public int boxInFrustum(Vector3 box) {
 
 			int result = INSIDE;
 			for (int i = 0; i < 6; i++) {

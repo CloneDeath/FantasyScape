@@ -12,7 +12,7 @@ namespace FantasyScape.Client.Editor {
 			{
 				MenuItem PackageView = Edit.Menu.AddItem("Package Viewer");
 				PackageView.Clicked += delegate(Base sender) {
-					PackageExplorer win = new PackageExplorer(this.Parent);
+					PackageExplorer win = new PackageExplorer();
 				};
 
 				MenuItem CodeEdit = Edit.Menu.AddItem("Code Editor");

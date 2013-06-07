@@ -27,6 +27,10 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
             panel = new GLImpTexturePanel(this);
             panel.SetSize(50, 50);
             panel.SetPosition(85, 0);
+            panel.Clicked += delegate(Base sender) {
+                PackageExplorer pak = new PackageExplorer();
+                pak.Show();
+            };
 
             RefreshTexture();
         }

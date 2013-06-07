@@ -180,18 +180,19 @@ namespace FantasyScape {
 				return true;
 			}
 
-			for (int i = 0; i <= 1; i++) {
-				for (int j = 0; j <= 1; j++) {
-					for (int k = 0; k <= 1; k++) {
-						Vector3 box = new Vector3(XOffset + (Size * i), YOffset + (Size * j), ZOffset + (Size * k));
-						if (p.frustum.pointInFrustum(box) != Frustum.OUTSIDE) {
-							return true;
-						}
-					}
-				}
-			}
+			return p.frustum.sphereInFrustum(new Vector3(XOffset + (Size / 2), YOffset + (Size / 2), ZOffset + (Size / 2)), 
+				(float)(Size)) != Frustum.OUTSIDE;
 
-			return false;
+			//for (int i = 0; i <= 1; i++) {
+			//    for (int j = 0; j <= 1; j++) {
+			//        for (int k = 0; k <= 1; k++) {
+			//            Vector3 box = new Vector3(XOffset + (Size * i), YOffset + (Size * j), ZOffset + (Size * k));
+			//            if (p.frustum.pointInFrustum(box) != Frustum.OUTSIDE) {
+			//                return true;
+			//            }
+			//        }
+			//    }
+			//}
 		}
 
 		public void Draw(int x, int y, int z, World w, Player p) {

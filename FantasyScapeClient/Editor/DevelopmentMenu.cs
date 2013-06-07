@@ -6,20 +6,22 @@ using Gwen.Control;
 
 namespace FantasyScape.Client.Editor {
 	class DevelopmentMenu : Base {
+        public static DevelopmentMenu Instance = new DevelopmentMenu();
+
 		private bool _Hidden = false;
-		public bool Hidden {
-			get { return _Hidden; }
+		public static bool Hidden {
+			get { return Instance._Hidden; }
 			set {
-				_Hidden = value;
-				if (_Hidden) {
-					this.Hide();
+				Instance._Hidden = value;
+				if (Instance._Hidden) {
+                    Instance.Hide();
 				} else {
-					this.Show();
+					Instance.Show();
 				}
 			}
 		}
 
-		public DevelopmentMenu() : base(MainCanvas.GetCanvas()){
+		private DevelopmentMenu() : base(MainCanvas.GetCanvas()){
 			this.Dock = Gwen.Pos.Fill;
 
 			TopBar top = new TopBar(this);

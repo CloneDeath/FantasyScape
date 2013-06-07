@@ -16,7 +16,7 @@ namespace FantasyScape.Client.Editor {
         TextureRefBox[] panels = new TextureRefBox[(int)BlockSide.Count];
         LabeledCheckBox Liquid;
 
-		public BlockTypeEditor(Base parent, BlockType resource) : base(parent) {
+		public BlockTypeEditor(BlockType resource) : base(DevelopmentMenu.Instance) {
             this.Resource = resource;
 
             this.Title = "Block Type Editor";

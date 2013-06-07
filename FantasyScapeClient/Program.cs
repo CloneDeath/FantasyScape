@@ -43,8 +43,7 @@ namespace FantasyScape.Client {
 			/* Create Game World */
 			menu = new MenuManager();
 			escapemenu = new EscapeMenuManager();
-			DevMenu = new DevelopmentMenu();
-			DevMenu.Hidden = true;
+			DevelopmentMenu.Hidden = true;
 
 			/* Start Game */
 			GraphicsManager.Start();
@@ -77,11 +76,11 @@ namespace FantasyScape.Client {
 			}
 
 			if (KeyboardManager.IsPressed(Key.Tilde)) {
-				DevMenu.Hidden = !DevMenu.Hidden;
+				DevelopmentMenu.Hidden = !DevelopmentMenu.Hidden;
 			}
 
 			bool LockMouse = Game.LockMouse;
-			if (escapemenu.Hidden && DevMenu.Hidden) {
+			if (escapemenu.Hidden && DevelopmentMenu.Hidden) {
 				LockMouse = true;
 			} else {
 				LockMouse = false;
@@ -113,7 +112,7 @@ namespace FantasyScape.Client {
 		static void Draw2D() {
 			Game.Draw2D();
 
-			if (!escapemenu.Hidden || !DevMenu.Hidden) {
+			if (!escapemenu.Hidden || !DevelopmentMenu.Hidden) {
 				GraphicsManager.DrawRectangle(0, 0, GraphicsManager.WindowWidth, GraphicsManager.WindowHeight, Color.FromArgb(0, 0, 0, 250));
 			}
 		}

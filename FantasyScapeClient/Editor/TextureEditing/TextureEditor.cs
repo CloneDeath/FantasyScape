@@ -14,7 +14,7 @@ namespace FantasyScape.Client.Editor {
 		ToolBox ToolSelect;
 		HSVColorPicker colorpicker;
 
-		public TextureEditor(Base parent, FSTexture texture) : base(parent) {
+		public TextureEditor(FSTexture texture) : base(DevelopmentMenu.Instance) {
             this.Title = "Texture Editor";
 			this.SetSize(600, 400);
             this.SetPosition((int)MouseManager.GetMousePositionWindows().X, (int)MouseManager.GetMousePositionWindows().Y);
