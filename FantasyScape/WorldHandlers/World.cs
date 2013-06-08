@@ -16,15 +16,32 @@ namespace FantasyScape {
 
 		#region BlockAccessors
 		private void GlobalToLocal(Vector3i GlobalCoords, out Vector3i ChunkCoords, out Vector3i BlockCoords) {
-			ChunkCoords = new Vector3i(
-				GlobalCoords.X / Chunk.Size,
-				GlobalCoords.Y / Chunk.Size,
-				GlobalCoords.Z / Chunk.Size);
+			ChunkCoords = new Vector3i();
+			BlockCoords = new Vector3i();
 
-			BlockCoords = new Vector3i(
-				GlobalCoords.X % Chunk.Size,
-				GlobalCoords.Y % Chunk.Size,
-				GlobalCoords.Z % Chunk.Size);
+			if (GlobalCoords.X >= 0) {
+				ChunkCoords.X = GlobalCoords.X / Chunk.Size;
+				BlockCoords.X = GlobalCoords.X % Chunk.Size;
+			} else {
+				ChunkCoords.X = ((GlobalCoords.X - 1) / Chunk.Size) - 1;
+				BlockCoords.X = (Chunk.Size + (GlobalCoords.X % Chunk.Size)) - 1;
+			}
+
+			if (GlobalCoords.Y >= 0) {
+				ChunkCoords.Y = GlobalCoords.Y / Chunk.Size;
+				BlockCoords.Y = GlobalCoords.Y % Chunk.Size;
+			} else {
+				ChunkCoords.Y = ((GlobalCoords.Y - 1) / Chunk.Size) - 1;
+				BlockCoords.Y = (Chunk.Size + (GlobalCoords.Y % Chunk.Size)) - 1;
+			}
+
+			if (GlobalCoords.Z >= 0) {
+				ChunkCoords.Z = GlobalCoords.Z / Chunk.Size;
+				BlockCoords.Z = GlobalCoords.Z % Chunk.Size;
+			} else {
+				ChunkCoords.Z = ((GlobalCoords.Z - 1) / Chunk.Size) - 1;
+				BlockCoords.Z = (Chunk.Size + (GlobalCoords.Z % Chunk.Size)) - 1;
+			}
 		}
 
 		public Block this[Vector3i Location] {
@@ -190,7 +207,7 @@ namespace FantasyScape {
 			Vector3i BlockLoc;
 			GlobalToLocal(Location, out ChunkLoc, out BlockLoc);
 
-			Chunk chunk;
+			Chunk chunk = null;
 			Chunks.TryGet(ChunkLoc, out chunk);
 
 			if (chunk == null) {
