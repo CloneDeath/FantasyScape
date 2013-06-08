@@ -92,8 +92,14 @@ namespace FantasyScape {
 		}
 
 		public static void GenerateWorld() {
-			MapGenerator mg = new MapGenerator(World);
-			mg.GenerateTerrain();
+			MapGenerator mg = new MapGenerator();
+			for (int x = 0; x < World.XSize; x++) {
+				for (int y = 0; y < World.YSize; y++) {
+					for (int z = 0; z < World.ZSize; z++) {
+						World.Chunks[x,y,z] = mg.GenerateTerrain(x, y, z);
+					}
+				}
+			}
 		}
 
 		internal static Player AddNewPlayer() {

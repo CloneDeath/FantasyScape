@@ -67,6 +67,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLLs\Gwen.Renderer.OpenTK.dll</HintPath>
     </Reference>
+    <Reference Include="LibNoise">
+      <HintPath>..\DLLs\LibNoise.dll</HintPath>
+    </Reference>
     <Reference Include="Lidgren.Network">
       <HintPath>..\DLLs\Lidgren.Network.dll</HintPath>
     </Reference>
@@ -94,12 +97,13 @@
     <Compile Include="Blocks\BlockType.cs" />
     <Compile Include="Blocks\BlockTypes.cs" />
     <Compile Include="Blocks\FSTextureReference.cs" />
+    <Compile Include="HeightMap.cs" />
     <Compile Include="ListRandomizer.cs" />
+    <Compile Include="Math\Vector2i.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MainCanvas.cs" />
     <Compile Include="MapGenerator.cs" />
-    <Compile Include="Math\PerlinMap.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />
     <Compile Include="Math\Vector3i.cs" />

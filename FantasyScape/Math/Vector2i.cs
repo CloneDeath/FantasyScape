@@ -4,32 +4,30 @@ using System.Linq;
 using System.Text;
 
 namespace FantasyScape {
-	public class Vector3i {
-		public int X, Y, Z;
+	public class Vector2i {
+		public int X, Y;
 
-		public Vector3i() {
+		public Vector2i() {
 			X = 0;
 			Y = 0;
-			Z = 0;
 		}
 
-		public Vector3i(int X, int Y, int Z) {
+		public Vector2i(int X, int Y) {
 			this.X = X;
 			this.Y = Y;
-			this.Z = Z;
 		}
 
 		public override bool Equals(object obj) {
-			Vector3i other = obj as Vector3i;
+			Vector2i other = obj as Vector2i;
 			if (other == null) {
 				return false;
 			} else {
-				return (this.X == other.X) && (this.Y == other.Y) && (this.Z == other.Z);
+				return (this.X == other.X) && (this.Y == other.Y);
 			}
 		}
 
 		public override int GetHashCode() {
-			return (X << 22) & (Y << 11) & (Z);
+			return (X << 16) & (Y);
 		}
 	}
 }
