@@ -20,7 +20,7 @@ namespace FantasyScape {
 						c = WorldGen.GenerateTerrain(Location);
 						Game.World.Chunks[Location] = c;
 					} else {
-						if (!PendingRequests.Contains(Location) /*&& PendingRequests.Count <= 1*/) {
+						if (!PendingRequests.Contains(Location) && PendingRequests.Count <= 1) {
 							new RequestChunk(Location).Send();
 							PendingRequests.Add(Location);
 						}

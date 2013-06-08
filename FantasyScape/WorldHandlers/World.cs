@@ -23,24 +23,24 @@ namespace FantasyScape {
 				ChunkCoords.X = GlobalCoords.X / Chunk.Size;
 				BlockCoords.X = GlobalCoords.X % Chunk.Size;
 			} else {
-				ChunkCoords.X = ((GlobalCoords.X - 1) / Chunk.Size) - 1;
-				BlockCoords.X = (Chunk.Size + (GlobalCoords.X % Chunk.Size)) - 1;
+				ChunkCoords.X = ((GlobalCoords.X + 1) / Chunk.Size) - 1;
+				BlockCoords.X = Chunk.Size + (((GlobalCoords.X + 1) % Chunk.Size) - 1);
 			}
 
 			if (GlobalCoords.Y >= 0) {
 				ChunkCoords.Y = GlobalCoords.Y / Chunk.Size;
 				BlockCoords.Y = GlobalCoords.Y % Chunk.Size;
 			} else {
-				ChunkCoords.Y = ((GlobalCoords.Y - 1) / Chunk.Size) - 1;
-				BlockCoords.Y = (Chunk.Size + (GlobalCoords.Y % Chunk.Size)) - 1;
+				ChunkCoords.Y = ((GlobalCoords.Y + 1) / Chunk.Size) - 1;
+				BlockCoords.Y = Chunk.Size + (((GlobalCoords.Y + 1) % Chunk.Size) - 1);
 			}
 
 			if (GlobalCoords.Z >= 0) {
 				ChunkCoords.Z = GlobalCoords.Z / Chunk.Size;
 				BlockCoords.Z = GlobalCoords.Z % Chunk.Size;
 			} else {
-				ChunkCoords.Z = ((GlobalCoords.Z - 1) / Chunk.Size) - 1;
-				BlockCoords.Z = (Chunk.Size + (GlobalCoords.Z % Chunk.Size)) - 1;
+				ChunkCoords.Z = ((GlobalCoords.Z + 1) / Chunk.Size) - 1;
+				BlockCoords.Z = Chunk.Size + (((GlobalCoords.Z + 1) % Chunk.Size) - 1);
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace FantasyScape {
 			AddUpdate(Location + new Vector3i(1, 0, 0));
 			AddUpdate(Location - new Vector3i(1, 0, 0));
 			AddUpdate(Location + new Vector3i(0, 1, 0));
-			AddUpdate(Location - new Vector3i(1, 1, 0));
+			AddUpdate(Location - new Vector3i(0, 1, 0));
 			AddUpdate(Location + new Vector3i(0, 0, 1));
 			AddUpdate(Location - new Vector3i(0, 0, 1));
 		}
