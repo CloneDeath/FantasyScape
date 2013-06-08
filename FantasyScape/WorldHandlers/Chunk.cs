@@ -20,7 +20,7 @@ namespace FantasyScape {
 		public List<Block> updateBlocks;
 		public List<Vector3i> updateLocations;
 
-		bool Dirty = true;
+		public bool Dirty = true;
 		int DisplayList;
 		public static bool DirtyAll = false;
 

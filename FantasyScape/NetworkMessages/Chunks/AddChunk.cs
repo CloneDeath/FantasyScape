@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lidgren.Network;
+using System.Threading;
 
 namespace FantasyScape.NetworkMessages {
 	class AddChunk : Message {
@@ -34,8 +35,10 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		protected override void ExecuteMessage() {
-			chunk.RefreshExposedBlocks(Game.World);
 			Game.World.Chunks[Location] = chunk;
+			new Thread(delegate() {
+				chunk.RefreshExposedBlocks(Game.World);
+			}).Start();
 		}
 	}
 }

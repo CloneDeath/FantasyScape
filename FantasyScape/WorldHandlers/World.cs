@@ -186,7 +186,7 @@ namespace FantasyScape {
 		#endregion
 
 		public void Draw(Player p) {
-			int ViewDistance = 1;
+			int ViewDistance = 4;
 
 			for (int x = -ViewDistance; x <= ViewDistance; x++) {
 				for (int y = -ViewDistance; y <= ViewDistance; y++) {
