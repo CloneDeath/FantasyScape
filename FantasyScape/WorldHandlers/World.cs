@@ -208,9 +208,7 @@ namespace FantasyScape {
 			GlobalToLocal(Location, out ChunkLoc, out BlockLoc);
 
 			Chunk chunk = null;
-			Chunks.TryGet(ChunkLoc, out chunk);
-
-			if (chunk == null) {
+			if (!Chunks.TryGet(ChunkLoc, out chunk) || chunk == null) {
 				return true;
 			} else {
 				Block b = chunk[BlockLoc];
@@ -225,6 +223,24 @@ namespace FantasyScape {
 
 		internal bool Ready() {
 			return Chunks[new Vector3i()] != Chunk.Null;
+		}
+
+		private void TryRefreshChunk(Vector3i loc) {
+			Chunk c;
+			if (Game.World.Chunks.TryGet(loc, out c)) {
+				c.RefreshExposedBlocks(this);
+			}
+		}
+		internal void RefreshExposedChunks(Vector3i Location) {
+			TryRefreshChunk(Location + new Vector3i(0, 0, 0));
+			
+			TryRefreshChunk(Location + new Vector3i(1, 0, 0));
+			TryRefreshChunk(Location - new Vector3i(1, 0, 0));
+			TryRefreshChunk(Location + new Vector3i(0, 1, 0));
+			TryRefreshChunk(Location - new Vector3i(0, 1, 0));
+			TryRefreshChunk(Location + new Vector3i(0, 0, 1));
+			TryRefreshChunk(Location - new Vector3i(0, 0, 1));
+			
 		}
 	}
 }

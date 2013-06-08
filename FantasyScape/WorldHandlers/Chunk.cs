@@ -9,7 +9,7 @@ namespace FantasyScape {
 	public class Chunk {
 		public static Chunk Null = new Chunk(null);
 
-		public const int Size = 16;
+		public const int Size = 8;
 		Block[, ,] Blocks = new Block[Size, Size, Size];
 
 		Vector3i Location;

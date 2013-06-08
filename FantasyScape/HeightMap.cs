@@ -24,11 +24,11 @@ namespace FantasyScape {
 			renderer.AddGradientPoint(1, Color.FromArgb(255, max, max, max));
 			heightMapBuilder.SetSourceModule(perlinModule);
 			heightMapBuilder.SetDestNoiseMap(heightMap);
-			heightMapBuilder.SetDestSize(16, 16);
+			heightMapBuilder.SetDestSize(Chunk.Size, Chunk.Size);
 			renderer.SetSourceNoiseMap(heightMap);
 		}
 
-		static double Scale = 1.0 / 10;
+		static double Scale = Chunk.Size / 160.0;
 		public static Bitmap GetHeightmap(int chunkx, int chunky) {
 			Vector2i location = new Vector2i(chunkx, chunky);
 			if (!Hashmap.ContainsKey(location)) {

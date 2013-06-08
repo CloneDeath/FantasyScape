@@ -42,8 +42,8 @@ namespace FantasyScape {
 			return Chunks.Values.GetEnumerator();
 		}
 
-		internal void TryGet(Vector3i ChunkLoc, out Chunk chunk) {
-			Chunks.TryGetValue(ChunkLoc, out chunk);
+		internal bool TryGet(Vector3i ChunkLoc, out Chunk chunk) {
+			return Chunks.TryGetValue(ChunkLoc, out chunk);
 		}
 	}
 }

@@ -36,7 +36,7 @@ namespace FantasyScape.NetworkMessages {
 
 		protected override void ExecuteMessage() {
 			Game.World.Chunks[Location] = chunk;
-			chunk.RefreshExposedBlocks(Game.World);
+			Game.World.RefreshExposedChunks(Location);
 		}
 	}
 }
