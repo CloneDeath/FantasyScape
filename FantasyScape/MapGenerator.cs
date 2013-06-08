@@ -28,11 +28,11 @@ namespace FantasyScape {
 			Guid.TryParse(Granite, out GraniteGuid);
 		}
 
-		public Chunk GenerateTerrain(int X, int Y, int Z) {
-			Chunk ret = new Chunk();
-			current_heightmap = HeightMap.GetHeightmap(X, Y);
-			GenerateBase(ret, Z);
-			GenerateWater(ret, Z);
+		public Chunk GenerateTerrain(Vector3i Location) {
+			Chunk ret = new Chunk(Location);
+			current_heightmap = HeightMap.GetHeightmap(Location.X, Location.Y);
+			GenerateBase(ret, Location.Z);
+			GenerateWater(ret, Location.Z);
 			return ret;
 		}
 
@@ -45,15 +45,15 @@ namespace FantasyScape {
 				for (int y = 0; y < Chunk.Size; y++) {
 					for (int z = 0; z < Chunk.Size; z++) {
 						Vector3i Location = new Vector3i(x, y, z);
-						if (z + (ChunkZ * Chunk.Size) < current_heightmap.GetPixel(x, y).R) {
-							if (z + (ChunkZ * Chunk.Size) > current_heightmap.GetPixel(x, y).R - (int)(5 + ran.Next(3))) {
+						if (z + (ChunkZ * Chunk.Size) < current_heightmap.GetPixel(x, y).R - 100) {
+							if (z + (ChunkZ * Chunk.Size) > current_heightmap.GetPixel(x, y).R - 100 - (int)(5 + ran.Next(3))) {
 								chunk[Location] = new Block(DirtGuid);
 							} else {
 								chunk[Location] = new Block(GraniteGuid);
 							}
 						}
 
-						if (z + (ChunkZ * Chunk.Size) == current_heightmap.GetPixel(x, y).R) {
+						if (z + (ChunkZ * Chunk.Size) == current_heightmap.GetPixel(x, y).R - 100) {
 							chunk[Location] = new Block(GrassGuid);
 						}
 					}
@@ -61,11 +61,11 @@ namespace FantasyScape {
 			}
 		}
 
-		private const int WaterLevel = 90;
+		private const int WaterLevel = 0;
 		private void GenerateWater(Chunk current, int ChunkZ) {
 			for (int x = 0; x < Chunk.Size; x++) {
 				for (int y = 0; y < Chunk.Size; y++) {
-					for (int z = (int)current_heightmap.GetPixel(x, y).R + 1; z <= WaterLevel; z++) {
+					for (int z = (int)current_heightmap.GetPixel(x, y).R - 100 + 1; z <= WaterLevel; z++) {
 						current[new Vector3i(x, y, z - (ChunkZ * Chunk.Size))] = new Block(WaterGuid);
 					}
 				}

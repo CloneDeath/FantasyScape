@@ -7,8 +7,12 @@ using GLImp;
 
 namespace FantasyScape {
 	public class Chunk {
+		public static Chunk Null = new Chunk(null);
+
 		public const int Size = 16;
 		Block[, ,] Blocks = new Block[Size, Size, Size];
+
+		Vector3i Location;
 
 		List<Block> exposedBlocks;
 		List<Vector3i> exposedLocations;
@@ -19,7 +23,8 @@ namespace FantasyScape {
 		bool Dirty = true;
 		int DisplayList;
 		public static bool DirtyAll = false;
-		public Chunk() {
+
+		public Chunk(Vector3i Location) {
 			Array.Clear(Blocks, 0, Size * Size * Size);
 			updateBlocks = new List<Block>();
 			updateLocations = new List<Vector3i>();
@@ -29,6 +34,7 @@ namespace FantasyScape {
 			} else {
 				DisplayList = 0;
 			}
+			this.Location = Location;
 		}
 
 		#region Block Access
@@ -57,7 +63,7 @@ namespace FantasyScape {
 		#endregion
 
 		#region Update
-		public void Update(Vector3i Location, World parent) {
+		public void Update(World parent) {
 			if (updateBlocks.Count != 0) {
 				Dirty = true;
 				Block[] TempBlocks = new Block[updateBlocks.Count];
@@ -146,7 +152,7 @@ namespace FantasyScape {
 			}
 		}
 
-		internal void RefreshExposedBlocks(Vector3i Location, World world) {
+		internal void RefreshExposedBlocks(World world) {
 			if (Game.Render) {
 				exposedBlocks = new List<Block>();
 				exposedLocations = new List<Vector3i>();
@@ -154,8 +160,8 @@ namespace FantasyScape {
 				for (int x = 0; x < Size; x++) {
 					for (int y = 0; y < Size; y++) {
 						for (int z = 0; z < Size; z++) {
-							if (world.IsExposed(new Vector3i(x + (Location.X * Size), y + (Location.Y * Size), z + (Location.Z * Size)))) {
-								Vector3i loc = new Vector3i(x, y, z);
+							Vector3i loc = new Vector3i(x, y, z);
+							if (this[loc] != null && world.IsExposed(loc + (Location * Size))) {
 								exposedBlocks.Add(this[loc]);
 								exposedLocations.Add(loc);
 							}
@@ -177,47 +183,32 @@ namespace FantasyScape {
 			}
 		}
 
-		public bool ChunkInFrustum(int x, int y, int z, Player p) {
-			int XOffset = x * Size;
-			int YOffset = y * Size;
-			int ZOffset = z * Size;
+		public bool ChunkInFrustum(Player p) {
+			Vector3i Offset = Location * Size;
 
-			if (p.xpos >= XOffset && p.xpos <= XOffset + Size && p.ypos >= YOffset && p.ypos <= YOffset + Size
-				&& p.zpos >= ZOffset && p.zpos <= ZOffset + Size) {
+			if (p.xpos >= Offset.X && p.xpos <= Offset.X + Size && p.ypos >= Offset.Y && p.ypos <= Offset.Y + Size
+				&& p.zpos >= Offset.Z && p.zpos <= Offset.Z + Size) {
 				return true;
 			}
 
-			return p.frustum.sphereInFrustum(new Vector3(XOffset + (Size / 2), YOffset + (Size / 2), ZOffset + (Size / 2)), 
+			return p.frustum.sphereInFrustum(new Vector3(Offset.X + (Size / 2), Offset.Y + (Size / 2), Offset.Z + (Size / 2)), 
 				(float)(Size)) != Frustum.OUTSIDE;
-
-			//for (int i = 0; i <= 1; i++) {
-			//    for (int j = 0; j <= 1; j++) {
-			//        for (int k = 0; k <= 1; k++) {
-			//            Vector3 box = new Vector3(XOffset + (Size * i), YOffset + (Size * j), ZOffset + (Size * k));
-			//            if (p.frustum.pointInFrustum(box) != Frustum.OUTSIDE) {
-			//                return true;
-			//            }
-			//        }
-			//    }
-			//}
 		}
 
-		public void Draw(int x, int y, int z, World w, Player p) {
+		public void Draw(World w, Player p) {
 			if (DirtyAll) {
 				Dirty = true;
 			}
 
-			if (Game.Render && ChunkInFrustum(x, y, z, p)) {
+			if (Game.Render && Location != null && ChunkInFrustum(p)) {
 				if (Dirty) {
 					Dirty = false;
-					int XOffset = x * Size;
-					int YOffset = y * Size;
-					int ZOffset = z * Size;
+					Vector3i Offset = Location * Size;
 
 					GraphicsManager.BeginList(DisplayList);
 					for (int i = 0; i < exposedBlocks.Count(); i++) {
 						Vector3i loc = exposedLocations[i];
-						exposedBlocks[i].draw(new Vector3i(loc.X + XOffset, loc.Y + YOffset, loc.Z + ZOffset), w);
+						exposedBlocks[i].draw(loc + Offset, w);
 					}
 					GraphicsManager.EndList();
 				}

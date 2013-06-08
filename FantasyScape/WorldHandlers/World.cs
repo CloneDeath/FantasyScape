@@ -9,7 +9,7 @@ using FantasyScape.NetworkMessages.Chunks;
 
 namespace FantasyScape {
 	public class World {
-		public Dictionary<Vector3i, Chunk> Chunks = new Dictionary<Vector3i, Chunk>();
+		public ChunkManager Chunks = new ChunkManager();
 
 		public World() {
 		}
@@ -47,8 +47,8 @@ namespace FantasyScape {
 
 		#region Block Update Wrappers
 		public void Update() {
-			foreach (KeyValuePair<Vector3i, Chunk> kvp in Chunks) {
-				kvp.Value.Update(kvp.Key, this);
+			foreach (Chunk c in Chunks) {
+				c.Update(this);
 			}
 		}
 
@@ -82,8 +82,8 @@ namespace FantasyScape {
 
 		#region Block Exposure Wrappers
 		public void RefreshExposedBlocks() {
-			foreach (KeyValuePair<Vector3i, Chunk> kvp in Chunks) {
-				kvp.Value.RefreshExposedBlocks(kvp.Key, this);
+			foreach (Chunk chunk in Chunks) {
+				chunk.RefreshExposedBlocks(this);
 			}
 		}
 
@@ -169,41 +169,45 @@ namespace FantasyScape {
 		#endregion
 
 		public void Draw(Player p) {
-			int ViewDistance = 8;
+			int ViewDistance = 1;
 
-			Dictionary<Vector3i, Chunk> NewChunks = new Dictionary<Vector3i, Chunk>();
 			for (int x = -ViewDistance; x <= ViewDistance; x++) {
 				for (int y = -ViewDistance; y <= ViewDistance; y++) {
 					for (int z = -ViewDistance; z <= ViewDistance; z++) {
-						Vector3i Location = new Vector3i(
+						Vector3i TargetChunk = new Vector3i(
 							x + (int)(p.xpos / Chunk.Size), 
 							y + (int)(p.ypos / Chunk.Size), 
 							z + (int)(p.zpos / Chunk.Size));
-						if (ChunkLoaded(Location)){
-							Chunks[Location].Draw(x, y, z, this, p);
-							NewChunks.Add(Location, Chunks[Location]);
-						} else {
-							new RequestChunk(Location).Send();
-						}
+						Chunks[TargetChunk].Draw(this, p);
 					}
 				}
 			}
-			Chunks = NewChunks; //Doing this removes any chunks that were far away
 			Chunk.DirtyAll = false;
 		}
 
-		public bool ChunkLoaded(Vector3i Location) {
-			return Chunks.ContainsKey(Location);
-		}
-
 		public bool IsSolid(Vector3i Location) {
-			Block b = this[Location];
-			if (b == null)
-				return false;
-			else {
-				return b.isSolid();
+			Vector3i ChunkLoc;
+			Vector3i BlockLoc;
+			GlobalToLocal(Location, out ChunkLoc, out BlockLoc);
+
+			Chunk chunk;
+			Chunks.TryGet(ChunkLoc, out chunk);
+
+			if (chunk == null) {
+				return true;
+			} else {
+				Block b = chunk[BlockLoc];
+				if (b == null)
+					return false;
+				else {
+					return b.isSolid();
+				}
 			}
 
+		}
+
+		internal bool Ready() {
+			return Chunks[new Vector3i()] != Chunk.Null;
 		}
 	}
 }

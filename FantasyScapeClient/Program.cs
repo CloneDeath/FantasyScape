@@ -16,7 +16,6 @@ namespace FantasyScape.Client {
 	class Program {
 		static MenuManager menu;
 		static EscapeMenuManager escapemenu;
-		static DevelopmentMenu DevMenu;
 		
 		static NetClient Client;
 

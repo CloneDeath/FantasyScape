@@ -6,8 +6,6 @@ using Lidgren.Network;
 
 namespace FantasyScape.NetworkMessages {
 	public abstract partial class Message {
-		enum ConnectionType { Server, Client };
-		static ConnectionType ConnType;
 		static NetServer Server;
 		static NetClient Client;
 		static NetConnection LastReceivedSender;
@@ -20,7 +18,7 @@ namespace FantasyScape.NetworkMessages {
 
 		static NetPeer Connection {
 			get {
-				if (ConnType == ConnectionType.Client) {
+				if (Game.Host == HostType.Client) {
 					return Client;
 				} else {
 					return Server;
@@ -29,13 +27,13 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		public static void RegisterServer(NetServer server) {
-			ConnType = ConnectionType.Server;
+			Game.Host = HostType.Server;
 			Server = server;
 			Client = null;
 		}
 
 		public static void RegisterClient(NetClient client) {
-			ConnType = ConnectionType.Client;
+			Game.Host = HostType.Client;
 			Server = null;
 			Client = client;
 		}
@@ -58,7 +56,7 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		public void Send() {
-			if (ConnType == ConnectionType.Client) {
+			if (Game.Host == HostType.Client) {
 				this.Send(Client, NetDeliveryMethod.ReliableUnordered);
 			} else {
 				this.Send(Server, NetDeliveryMethod.ReliableUnordered);
@@ -108,7 +106,7 @@ namespace FantasyScape.NetworkMessages {
 		/// Thus, this is a server only command. Sending it as a client does nothing.
 		/// </summary>
 		internal void Forward() {
-			if (ConnType == ConnectionType.Client) {
+			if (Game.Host == HostType.Client) {
 				//Do nothing
 			} else {
 				List<NetConnection> Replyto = new List<NetConnection>(

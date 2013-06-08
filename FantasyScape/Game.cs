@@ -12,7 +12,11 @@ using System.Diagnostics;
 using FantasyScape.Resources;
 
 namespace FantasyScape {
+	public enum HostType { Server, Client };
+	
 	public class Game {
+		public static HostType Host;
+
 		public static World World;
 		public static List<Player> Players;
 		public static Player Self = null;
@@ -26,8 +30,6 @@ namespace FantasyScape {
 		public static bool LockMouse = false;
 
 		public static GameState State = GameState.NotReady;
-
-		private static MapGenerator WorldGen = new MapGenerator();
 
 		public static void CenterMouse() {
 			MouseManager.SetMousePositionWindows(GraphicsManager.WindowWidth / 2, GraphicsManager.WindowHeight / 2);
@@ -48,7 +50,9 @@ namespace FantasyScape {
 				bool Ready = true;
 
 				Ready &= Package.Ready();
+				Ready &= World.Ready();
 				Ready &= (Self != null);
+				
 
 				if (!RequestedPlayer) {
 					RequestedPlayer = true;
@@ -110,10 +114,6 @@ namespace FantasyScape {
 				}
 			}
 			return null;
-		}
-
-		public static void GenerateChunk(Vector3i Location) {
-			Game.World.Chunks[Location] = WorldGen.GenerateTerrain(Location.X, Location.Y, Location.Z);
 		}
 	}
 }

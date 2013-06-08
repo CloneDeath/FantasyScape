@@ -46,18 +46,19 @@ namespace FantasyScape.Client.Editor {
 
 		bool EnableSubmit = true;
 		private void SubmitChanges(Base sender) {
-			if (EnableSubmit && BlockTypes.Exists(TypeName.Text)) {
-				throw new NotImplementedException();
-				//BlockType b = BlockTypes.GetBlockType(TypeName.Text);
-				////b.Name = Name;
-				//b.TopTexture = (string)TopTex.SelectedItem.UserData;
-				//b.SideTexture = (string)SideTex.SelectedItem.UserData;
-				//b.BotTexture = (string)BotTex.SelectedItem.UserData;
-				//b.Liquid = Liquid.IsChecked;
+			throw new NotImplementedException();
+			//if (EnableSubmit && BlockTypes.Exists(TypeName.Text)) {
+			//    throw new NotImplementedException();
+			//    //BlockType b = BlockTypes.GetBlockType(TypeName.Text);
+			//    ////b.Name = Name;
+			//    //b.TopTexture = (string)TopTex.SelectedItem.UserData;
+			//    //b.SideTexture = (string)SideTex.SelectedItem.UserData;
+			//    //b.BotTexture = (string)BotTex.SelectedItem.UserData;
+			//    //b.Liquid = Liquid.IsChecked;
 
-				//BlockTypeData btd = new BlockTypeData(b);
-				//btd.Send();
-			}
+			//    //BlockTypeData btd = new BlockTypeData(b);
+			//    //btd.Send();
+			//}
 		}
 	}
 }

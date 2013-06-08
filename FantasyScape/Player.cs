@@ -88,10 +88,6 @@ namespace FantasyScape {
 			xrot = (float)Math.PI / 2;
 			yrot = 0;
 
-			foreach (BlockType type in BlockTypes.GetAll()) {
-				Inventory.Add(new Block(type.ID));
-			}
-
 			Width = 0.7;
 			Height = 1.75;
 		}

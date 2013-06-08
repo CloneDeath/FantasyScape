@@ -24,9 +24,6 @@ namespace FantasyScape.NetworkMessages.Chunks {
 		}
 
 		protected override void ExecuteMessage() {
-			if (!Game.World.ChunkLoaded(Location)) {
-				Game.GenerateChunk(Location);
-			}
 			new AddChunk(Location, Game.World.Chunks[Location]).Reply();
 		}
 	}

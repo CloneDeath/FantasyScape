@@ -11,7 +11,6 @@ namespace FantasyScape.NetworkMessages {
 	public class UpdateTexture : Message {
 		FSTexture texture = null;
         Bitmap img = null;
-        private FSTexture tex;
 
 		public UpdateTexture() {
 			this.texture = new FSTexture();

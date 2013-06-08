@@ -11,7 +11,6 @@ namespace FantasyScape.NetworkMessages {
 
 		public AddChunk() {
 			Location = new Vector3i();
-			chunk = new Chunk();
 		}
 
 		public AddChunk(Vector3i loc, Chunk chunk) {
@@ -30,11 +29,12 @@ namespace FantasyScape.NetworkMessages {
 
 		protected override void ReadData(NetIncomingMessage Message) {
 			Location.Read(Message);
-			
+			chunk = new Chunk(Location);
 			chunk.Read(Message);
 		}
 
 		protected override void ExecuteMessage() {
+			chunk.RefreshExposedBlocks(Game.World);
 			Game.World.Chunks[Location] = chunk;
 		}
 	}

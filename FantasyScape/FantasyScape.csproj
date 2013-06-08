@@ -134,6 +134,7 @@
     <Compile Include="Resources\Resource.cs" />
     <Compile Include="Textures.cs" />
     <Compile Include="WorldHandlers\Chunk.cs" />
+    <Compile Include="WorldHandlers\ChunkManager.cs" />
     <Compile Include="WorldHandlers\World.cs" />
   </ItemGroup>
   <ItemGroup />
