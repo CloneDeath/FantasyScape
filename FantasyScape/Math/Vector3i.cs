@@ -31,5 +31,29 @@ namespace FantasyScape {
 		public override int GetHashCode() {
 			return (X << 22) & (Y << 11) & (Z);
 		}
+
+		internal void Write(Lidgren.Network.NetOutgoingMessage Message) {
+			Message.Write((Int32)X);
+			Message.Write((Int32)Y);
+			Message.Write((Int32)Z);
+		}
+
+		internal void Read(Lidgren.Network.NetIncomingMessage Message) {
+			X = Message.ReadInt32();
+			Y = Message.ReadInt32();
+			Z = Message.ReadInt32();
+		}
+
+		public static Vector3i operator +(Vector3i lhs, Vector3i rhs) {
+			return new Vector3i(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z);
+		}
+
+		public static Vector3i operator -(Vector3i lhs, Vector3i rhs) {
+			return new Vector3i(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z);
+		}
+
+		public static Vector3i operator *(Vector3i lhs, int rhs) {
+			return new Vector3i(lhs.X * rhs, lhs.Y * rhs, lhs.Z * rhs);
+		}
 	}
 }

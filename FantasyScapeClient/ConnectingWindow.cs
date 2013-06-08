@@ -28,10 +28,10 @@ namespace FantasyScape.Client {
 		}
 
 		public void Update() {
-			bar.Value = Game.GetProgress();
-			if (Game.GetProgress() >= 1.0f) {
+			//bar.Value = Game.GetProgress();
+			//if (Game.GetProgress() >= 1.0f) {
 				this.Hide();
-			}
+			//}
 		}
 	}
 }

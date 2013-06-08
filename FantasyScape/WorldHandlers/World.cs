@@ -5,23 +5,13 @@ using System.Text;
 using OpenTK;
 using Lidgren.Network;
 using FantasyScape.NetworkMessages;
+using FantasyScape.NetworkMessages.Chunks;
 
 namespace FantasyScape {
 	public class World {
-		public const int XSize = 16;
-		public const int YSize = 16;
-		public const int ZSize = 16;
-
-		public Chunk[, ,] Chunks = new Chunk[XSize, YSize, ZSize];
+		public Dictionary<Vector3i, Chunk> Chunks = new Dictionary<Vector3i, Chunk>();
 
 		public World() {
-			for (int x = 0; x < XSize; x++) {
-				for (int y = 0; y < YSize; y++) {
-					for (int z = 0; z < ZSize; z++) {
-						Chunks[x, y, z] = new Chunk();
-					}
-				}
-			}
 		}
 
 		#region BlockAccessors
@@ -37,152 +27,105 @@ namespace FantasyScape {
 				GlobalCoords.Z % Chunk.Size);
 		}
 
-		public Block this[int x, int y, int z] {
+		public Block this[Vector3i Location] {
 			get {
-				if (OutsideBounds(x, y, z)) {
-					return null;
-				}
-
 				Vector3i chunk;
 				Vector3i sub;
-				GlobalToLocal(new Vector3i(x, y, z), out chunk, out sub);
+				GlobalToLocal(Location, out chunk, out sub);
 
-				return Chunks[chunk.X, chunk.Y, chunk.Z][sub.X, sub.Y, sub.Z];
+				return Chunks[chunk][sub];
 			}
-
 			set {
-				if (OutsideBounds(x, y, z)) {
-					return;
-				}
-
 				Vector3i chunk;
 				Vector3i sub;
-				GlobalToLocal(new Vector3i(x, y, z), out chunk, out sub);
+				GlobalToLocal(Location, out chunk, out sub);
 
-				Chunks[chunk.X, chunk.Y, chunk.Z][sub.X, sub.Y, sub.Z] = value;
+				Chunks[chunk][sub] = value;
 			}
-		}
-
-		private static bool OutsideBounds(int x, int y, int z) {
-			return x < 0 || x >= XSize * Chunk.Size || y < 0 || y >= YSize * Chunk.Size || z < 0 || z >= ZSize * Chunk.Size;
-		}
-		#endregion
-
-		#region Client World Initialization
-		public int ChunkCount = 0;
-		bool SentRequest = false;
-		internal bool Ready() {
-			if (!SentRequest) {
-				SentRequest = true;
-				RequestMessage msg = new RequestMessage(RequestType.Chunks);
-				msg.Send();
-			}
-
-			return ChunkCount == XSize * YSize * ZSize;
 		}
 		#endregion
 
 		#region Block Update Wrappers
 		public void Update() {
-			for (int x = 0; x < XSize; x++) {
-				for (int y = 0; y < YSize; y++) {
-					for (int z = 0; z < ZSize; z++) {
-						Chunks[x, y, z].Update(x, y, z, this);
-					}
-				}
+			foreach (KeyValuePair<Vector3i, Chunk> kvp in Chunks) {
+				kvp.Value.Update(kvp.Key, this);
 			}
 		}
 
-		public void RefreshUpdateBlocks(int x, int y, int z) {
-			AddUpdate(x, y, z);
-			AddUpdate(x + 1, y, z);
-			AddUpdate(x - 1, y, z);
-			AddUpdate(x, y + 1, z);
-			AddUpdate(x, y - 1, z);
-			AddUpdate(x, y, z + 1);
-			AddUpdate(x, y, z - 1);
+		public void RefreshUpdateBlocks(Vector3i Location) {
+			AddUpdate(Location);
+			AddUpdate(Location + new Vector3i(1, 0, 0));
+			AddUpdate(Location - new Vector3i(1, 0, 0));
+			AddUpdate(Location + new Vector3i(0, 1, 0));
+			AddUpdate(Location - new Vector3i(1, 1, 0));
+			AddUpdate(Location + new Vector3i(0, 0, 1));
+			AddUpdate(Location - new Vector3i(0, 0, 1));
 		}
 
-		public void AddUpdate(int x, int y, int z) {
+		public void AddUpdate(Vector3i Location) {
 			Vector3i ChunkCoords;
 			Vector3i BlockCoords;
-			GlobalToLocal(new Vector3i(x, y, z), out ChunkCoords, out BlockCoords);
+			GlobalToLocal(Location, out ChunkCoords, out BlockCoords);
 
-			Chunks[ChunkCoords.X, ChunkCoords.Y, ChunkCoords.Z].AddUpdate(BlockCoords.X, BlockCoords.Y, BlockCoords.Z);
+			Chunks[ChunkCoords].AddUpdate(BlockCoords);
 		}
 
-		public void RemoveUpdate(int x, int y, int z) {
+		public void RemoveUpdate(Vector3i Location) {
 			Vector3i ChunkCoords;
 			Vector3i BlockCoords;
-			GlobalToLocal(new Vector3i(x, y, z), out ChunkCoords, out BlockCoords);
+			GlobalToLocal(Location, out ChunkCoords, out BlockCoords);
 
-			Chunks[ChunkCoords.X, ChunkCoords.Y, ChunkCoords.Z].RemoveUpdate(BlockCoords.X, BlockCoords.Y, BlockCoords.Z);
+			Chunks[ChunkCoords].RemoveUpdate(Location);
 		}
 
 		#endregion
 
 		#region Block Exposure Wrappers
 		public void RefreshExposedBlocks() {
-			for (int x = 0; x < XSize; x++) {
-				for (int y = 0; y < YSize; y++) {
-					for (int z = 0; z < ZSize; z++) {
-						Chunks[x, y, z].RefreshExposedBlocks(x, y, z, this);
-					}
-				}
+			foreach (KeyValuePair<Vector3i, Chunk> kvp in Chunks) {
+				kvp.Value.RefreshExposedBlocks(kvp.Key, this);
 			}
 		}
 
-		public void ExposeBlocksAt(int x, int y, int z) {
-			ExposeBlock(x + 1, y, z);
-			ExposeBlock(x - 1, y, z);
-			ExposeBlock(x, y + 1, z);
-			ExposeBlock(x, y - 1, z);
-			ExposeBlock(x, y, z + 1);
-			ExposeBlock(x, y, z - 1);
+		public void ExposeBlocksAt(Vector3i Location) {
+			ExposeBlock(Location + new Vector3i(1, 0, 0));
+			ExposeBlock(Location - new Vector3i(1, 0, 0));
+			ExposeBlock(Location + new Vector3i(0, 1, 0));
+			ExposeBlock(Location - new Vector3i(0, 1, 0));
+			ExposeBlock(Location + new Vector3i(0, 0, 1));
+			ExposeBlock(Location - new Vector3i(0, 0, 1));
 		}
 
-		public void ExposeBlock(int x, int y, int z) {
+		public void ExposeBlock(Vector3i Location) {
 			Vector3i ChunkCoords;
 			Vector3i BlockCoords;
-			GlobalToLocal(new Vector3i(x, y, z), out ChunkCoords, out BlockCoords);
+			GlobalToLocal(Location, out ChunkCoords, out BlockCoords);
 
-			Chunks[ChunkCoords.X, ChunkCoords.Y, ChunkCoords.Z].ExposeBlock(BlockCoords.X, BlockCoords.Y, BlockCoords.Z);
+			Chunks[ChunkCoords].ExposeBlock(BlockCoords);
 		}
 
-		public void UnexposeBlock(int x, int y, int z) {
+		public void UnexposeBlock(Vector3i Location) {
 			Vector3i ChunkCoords;
 			Vector3i BlockCoords;
-			GlobalToLocal(new Vector3i(x, y, z), out ChunkCoords, out BlockCoords);
+			GlobalToLocal(Location, out ChunkCoords, out BlockCoords);
 
-			Chunks[ChunkCoords.X, ChunkCoords.Y, ChunkCoords.Z].UnexposeBlock(BlockCoords.X, BlockCoords.Y, BlockCoords.Z);
+			Chunks[ChunkCoords].UnexposeBlock(BlockCoords.X, BlockCoords.Y, BlockCoords.Z);
 		}
 
-		public void CheckExposure(int x, int y, int z) {
-			if (this[x, y, z] != null) {
-				if (IsExposed(x, y, z)) {
-					ExposeBlock(x, y, z);
+		public void CheckExposure(Vector3i Location) {
+			if (this[Location] != null) {
+				if (IsExposed(Location)) {
+					ExposeBlock(Location);
 				} else {
-					UnexposeBlock(x, y, z);
+					UnexposeBlock(Location);
 				}
 			}
 		}
 
-		public bool IsExposed(float x, float y, float z) {
-			int xat = (int)x;
-			int yat = (int)y;
-			int zat = (int)z;
-
-			if (xat >= XSize * Chunk.Size || xat < 0 || zat >= ZSize * Chunk.Size || zat < 0 || yat < 0 || yat >= YSize * Chunk.Size) {
-				return false;
-			}
-
-			if (this[xat, yat, zat] == null) {
-				return false;
-			}
-
-			if (!IsSolid(xat, yat + 1, zat) || !IsSolid(xat + 1, yat, zat) ||
-				!IsSolid(xat - 1, yat, zat) || !IsSolid(xat, yat, zat + 1) ||
-				!IsSolid(xat, yat, zat - 1) || !IsSolid(xat, yat - 1, zat)) {
+		public bool IsExposed(Vector3i location) {
+			if (!IsSolid(location + new Vector3i(1, 0, 0)) || !IsSolid(location - new Vector3i(1, 0, 0)) ||
+				!IsSolid(location + new Vector3i(0, 1, 0)) || !IsSolid(location - new Vector3i(0, 1, 0)) ||
+				!IsSolid(location + new Vector3i(0, 0, 1)) || !IsSolid(location - new Vector3i(0, 0, 1))) {
 				return true;
 			} else {
 				return false;
@@ -192,68 +135,73 @@ namespace FantasyScape {
 		#endregion
 
 		#region Block Addition/Removal
-		public void AddBlock(int x, int y, int z, Block b) {
-			if (b.CanCombine(this[x, y, z])) {
-				b.TryCombine(this[x, y, z]);
-				SetBlock(x, y, z, b);
+		public void AddBlock(Vector3i Location, Block b) {
+			Block other = this[Location];
+			if (b.CanCombine(other)) {
+				b.TryCombine(other);
+				this[Location] = b;
 			}
 		}
 
-		public void RemoveBlock(int x, int y, int z) {
-			if (this[x, y, z] != null) {
-				UnexposeBlock(x, y, z);
-				RemoveUpdate(x, y, z);
-				this[x, y, z] = null;
-				ExposeBlocksAt(x, y, z);
-				RefreshUpdateBlocks(x, y, z);
+		public void RemoveBlock(Vector3i Location) {
+			if (this[Location] != null) {
+				UnexposeBlock(Location);
+				RemoveUpdate(Location);
+				this[Location] = null;
+				ExposeBlocksAt(Location);
+				RefreshUpdateBlocks(Location);
 			}
 		}
 
-		public void SetBlock(int x, int y, int z, Block b) {
-			this[x, y, z] = b;
+		public void SetBlock(Vector3i Location, Block b) {
+			this[Location] = b;
 
-			CheckExposure(x, y, z);
-			CheckExposure(x + 1, y, z);
-			CheckExposure(x - 1, y, z);
-			CheckExposure(x, y + 1, z);
-			CheckExposure(x, y - 1, z);
-			CheckExposure(x, y, z + 1);
-			CheckExposure(x, y, z - 1);
+			CheckExposure(Location);
+			CheckExposure(Location + new Vector3i(1, 0, 0));
+			CheckExposure(Location - new Vector3i(1, 0, 0));
+			CheckExposure(Location + new Vector3i(0, 1, 0));
+			CheckExposure(Location - new Vector3i(0, 1, 0));
+			CheckExposure(Location + new Vector3i(0, 0, 1));
+			CheckExposure(Location - new Vector3i(0, 0, 1));
 
-			RefreshUpdateBlocks(x, y, z);
+			RefreshUpdateBlocks(Location);
 		}
 		#endregion
 
 		public void Draw(Player p) {
-			//int ViewDistance = 100;
-			for (int x = 0; x < XSize; x++) {
-				for (int y = 0; y < YSize; y++) {
-					for (int z = 0; z < ZSize; z++) {
-						Chunks[x, y, z].Draw(x, y, z, this, p);
+			int ViewDistance = 8;
+
+			Dictionary<Vector3i, Chunk> NewChunks = new Dictionary<Vector3i, Chunk>();
+			for (int x = -ViewDistance; x <= ViewDistance; x++) {
+				for (int y = -ViewDistance; y <= ViewDistance; y++) {
+					for (int z = -ViewDistance; z <= ViewDistance; z++) {
+						Vector3i Location = new Vector3i(
+							x + (int)(p.xpos / Chunk.Size), 
+							y + (int)(p.ypos / Chunk.Size), 
+							z + (int)(p.zpos / Chunk.Size));
+						if (ChunkLoaded(Location)){
+							Chunks[Location].Draw(x, y, z, this, p);
+							NewChunks.Add(Location, Chunks[Location]);
+						} else {
+							new RequestChunk(Location).Send();
+						}
 					}
 				}
 			}
+			Chunks = NewChunks; //Doing this removes any chunks that were far away
 			Chunk.DirtyAll = false;
 		}
 
-		public bool IsSolid(double x, double y, double z) {
-			int xat = (int)x;
-			int yat = (int)y;
-			int zat = (int)z;
+		public bool ChunkLoaded(Vector3i Location) {
+			return Chunks.ContainsKey(Location);
+		}
 
-			if (xat >= XSize * Chunk.Size || xat < 0 || yat >= YSize * Chunk.Size || yat < 0 || zat < 0) {
-				return true;
-			}
-
-			if (zat >= ZSize * Chunk.Size) {
-				return false;
-			}
-
-
-			if (this[xat, yat, zat] == null)
+		public bool IsSolid(Vector3i Location) {
+			Block b = this[Location];
+			if (b == null)
 				return false;
 			else {
-				return this[xat, yat, zat].isSolid();
+				return b.isSolid();
 			}
 
 		}

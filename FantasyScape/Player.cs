@@ -50,8 +50,8 @@ namespace FantasyScape {
 			//yspeed = 0;
 			zspeed = 0;
 
-			for (int i = World.ZSize * Chunk.Size; i >= 0; i--) {
-				if (Game.World.IsSolid(x, y, i)) {
+			for (int i = 0;; i++) {
+				if (Game.World.IsSolid(new Vector3i((int)x, (int)y, i))) {
 					zpos = i+1;
 					break;
 				}
@@ -83,13 +83,6 @@ namespace FantasyScape {
 			//xspeed = 0;
 			//yspeed = 0;
 			zspeed = 0;
-
-			for (int i = World.ZSize; i >= 0; i--) {
-				if (Game.World.IsSolid(xpos, ypos, i)) {
-					zpos = i + 1;
-					break;
-				}
-			}
 
 
 			xrot = (float)Math.PI / 2;
@@ -212,7 +205,9 @@ namespace FantasyScape {
 					}
 				}
 
-				if (KeyboardManager.IsDown(Key.Space) && Game.World.IsSolid(xpos, ypos, zpos - 1) && !Game.World.IsSolid(xpos, ypos, zpos + 2)) {
+				if (KeyboardManager.IsDown(Key.Space) && 
+					Game.World.IsSolid(new Vector3i((int)xpos, (int)ypos, (int)zpos - 1)) && 
+					!Game.World.IsSolid(new Vector3i((int)xpos, (int)ypos, (int)zpos + 2))) {
 					zspeed = 1;
 				}
 
@@ -245,7 +240,7 @@ namespace FantasyScape {
 			}
 
 
-			if (!Game.World.IsSolid(xpos, ypos, zpos + zspeed)) {
+			if (!Game.World.IsSolid(new Vector3i((int)xpos, (int)ypos, (int)(zpos + zspeed)))) {
 				zspeed -= Gravity;
 			}
 			if (zspeed < 0){
@@ -289,7 +284,7 @@ namespace FantasyScape {
 			foreach (double X in XChecks) {
 				foreach (double Y in YChecks) {
 					foreach (double Z in ZChecks) {
-						if (Game.World.IsSolid(X, Y, Z)) {
+						if (Game.World.IsSolid(new Vector3i((int)X, (int)Y, (int)Z))) {
 							return false;
 						}
 					}
@@ -322,7 +317,7 @@ namespace FantasyScape {
 			for (int x = -CDist; x <= CDist; x++){
 				for (int y = -CDist; y <= CDist; y++){
 					for (int z = -CDist; z <= CDist; z++){
-						if (Game.World.IsSolid(xpos + x, ypos + y, zpos + z + PlayerHeight)) {
+						if (Game.World.IsSolid(new Vector3i((int)(xpos + x), (int)(ypos + y), (int)(zpos + z + PlayerHeight)))) {
 							Vector3 B1 = new Vector3();
 							B1.X = (int)(xpos+x);
 							B1.Y = (int)(ypos+y);
@@ -348,17 +343,17 @@ namespace FantasyScape {
 			}
 		
 			if (foundOne){
-				Game.World.RemoveBlock(bestX, bestY, bestZ);
-				new BlockRemove(bestX, bestY, bestZ).Send();
+				Vector3i Location = new Vector3i(bestX, bestY, bestZ);
+				Game.World.RemoveBlock(Location);
+				new BlockRemove(Location).Send();
 			}
 		}
 
-		bool CanPlaceBlock(int X, int Y, int Z) {
-			return Inventory[SelectedItem].CanCombine(Game.World[X, Y, Z]);
+		bool CanPlaceBlock(Vector3i Location) {
+			return Inventory[SelectedItem].CanCombine(Game.World[Location]);
 		}
 	
 		void AddBlock(){
-
 			float bestDist = 100;
 			int bestX = 0;
 			int bestY = 0;
@@ -382,7 +377,7 @@ namespace FantasyScape {
 			for (int x = -CDist; x <= CDist; x++){
 				for (int y = -CDist; y <= CDist; y++){
 					for (int z = -CDist; z <= CDist; z++){
-						if (Game.World.IsSolid(xpos + x, ypos + y, zpos + z + PlayerHeight)) {
+						if (Game.World.IsSolid(new Vector3i((int)(xpos + x),(int)(ypos + y),(int)(zpos + z + PlayerHeight)))) {
 							Vector3 B1 = new Vector3();
 							B1.X = (int)(xpos+x);
 							B1.Y = (int)(ypos+y);
@@ -399,7 +394,7 @@ namespace FantasyScape {
 									(int)(zpos + z + PlayerHeight), 
 									clb);
 							if (clb != NONE && clb != INSIDE &&
-									CanPlaceBlock(temp[0], temp[1], temp[2])) {
+									CanPlaceBlock(new Vector3i(temp[0], temp[1], temp[2]))) {
 								foundOne = true;
 								float length = (float)Math.Sqrt(x*x + y*y + z*z);
 								if (length < bestDist){
@@ -426,8 +421,9 @@ namespace FantasyScape {
 
 				Block b = new Block(BlockName);
 
-				Game.World.AddBlock(bestX, bestY, bestZ, b);
-				BlockAdd msg = new BlockAdd(bestX, bestY, bestZ, b);
+				Vector3i Location = new Vector3i(bestX, bestY, bestZ);
+				Game.World.AddBlock(Location, b);
+				BlockAdd msg = new BlockAdd(Location, b);
 				msg.Send();
 			}
 		}

@@ -27,6 +27,8 @@ namespace FantasyScape {
 
 		public static GameState State = GameState.NotReady;
 
+		private static MapGenerator WorldGen = new MapGenerator();
+
 		public static void CenterMouse() {
 			MouseManager.SetMousePositionWindows(GraphicsManager.WindowWidth / 2, GraphicsManager.WindowHeight / 2);
 		}
@@ -46,7 +48,6 @@ namespace FantasyScape {
 				bool Ready = true;
 
 				Ready &= Package.Ready();
-				Ready &= World.Ready();
 				Ready &= (Self != null);
 
 				if (!RequestedPlayer) {
@@ -65,10 +66,6 @@ namespace FantasyScape {
 
 		public static void UpdateServer() {
 			World.Update();
-		}
-
-		public static float GetProgress() {
-			return (float)Game.World.ChunkCount / ((float)World.XSize * (float)World.YSize * (float)World.ZSize);
 		}
 
 		public static void Draw() {
@@ -91,19 +88,8 @@ namespace FantasyScape {
 			}
 		}
 
-		public static void GenerateWorld() {
-			MapGenerator mg = new MapGenerator();
-			for (int x = 0; x < World.XSize; x++) {
-				for (int y = 0; y < World.YSize; y++) {
-					for (int z = 0; z < World.ZSize; z++) {
-						World.Chunks[x,y,z] = mg.GenerateTerrain(x, y, z);
-					}
-				}
-			}
-		}
-
 		internal static Player AddNewPlayer() {
-			Player p = new Player((World.XSize * Chunk.Size) / 2, (World.YSize * Chunk.Size) / 2);
+			Player p = new Player(0, 0);
 			p.PlayerID = Players.Count;
 			Players.Add(p);
 			return p;
@@ -124,6 +110,10 @@ namespace FantasyScape {
 				}
 			}
 			return null;
+		}
+
+		public static void GenerateChunk(Vector3i Location) {
+			Game.World.Chunks[Location] = WorldGen.GenerateTerrain(Location.X, Location.Y, Location.Z);
 		}
 	}
 }

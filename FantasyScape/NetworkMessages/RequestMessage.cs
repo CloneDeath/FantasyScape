@@ -8,7 +8,7 @@ using FantasyScape.Resources;
 
 namespace FantasyScape.NetworkMessages {
 	public enum RequestType {
-		Packages, Chunks, NewPlayer,
+		Packages, NewPlayer,
 	}
 	public class RequestMessage : Message {
 		RequestType Type;
@@ -32,9 +32,6 @@ namespace FantasyScape.NetworkMessages {
 				case RequestType.Packages:
 					SendPackages();
 					break;
-				case RequestType.Chunks:
-					SendChunks();
-					break;
 				case RequestType.NewPlayer:
 					SendPlayerData();
 					break;
@@ -54,16 +51,6 @@ namespace FantasyScape.NetworkMessages {
 
 			PlayerAdd padd = new PlayerAdd(passign.player);
 			padd.Forward();
-		}
-
-		private void SendChunks() {
-			for (int x = 0; x < World.XSize; x++) {
-				for (int y = 0; y < World.YSize; y++) {
-					for (int z = 0; z < World.ZSize; z++) {
-						new ChunkAdd(x, y, z, Game.World.Chunks[x,y,z]).Reply();
-					}
-				}
-			}
 		}
 
 		private void SendPackages() {

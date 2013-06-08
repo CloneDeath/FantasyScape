@@ -5,29 +5,25 @@ using System.Text;
 
 namespace FantasyScape.NetworkMessages {
 	class BlockRemove : Message {
-		int x, y, z;
-		public BlockRemove() { }
+		Vector3i Location;
+		public BlockRemove() {
+			Location = new Vector3i();
+		}
 
-		public BlockRemove(int xpos, int ypos, int zpos) {
-			x = xpos;
-			y = ypos;
-			z = zpos;
+		public BlockRemove(Vector3i location) {
+			this.Location = location;
 		}
 
 		protected override void WriteData(Lidgren.Network.NetOutgoingMessage Message) {
-			Message.Write((Int32)x);
-			Message.Write((Int32)y);
-			Message.Write((Int32)z);
+			Location.Write(Message);
 		}
 
 		protected override void ReadData(Lidgren.Network.NetIncomingMessage Message) {
-			x = Message.ReadInt32();
-			y = Message.ReadInt32();
-			z = Message.ReadInt32();
+			Location.Read(Message);
 		}
 
 		protected override void ExecuteMessage() {
-			Game.World.RemoveBlock(x, y, z);
+			Game.World.RemoveBlock(Location);
 			this.Forward();
 		}
 	}

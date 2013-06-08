@@ -5,35 +5,31 @@ using System.Text;
 
 namespace FantasyScape.NetworkMessages {
 	class BlockAdd : Message {
-		int x, y, z;
+		Vector3i Location;
 		Block block;
 
-		public BlockAdd() { }
+		public BlockAdd() {
+			Location = new Vector3i();
+			block = new Block();
+		}
 
-		public BlockAdd(int xpos, int ypos, int zpos, Block b) {
-			x = xpos;
-			y = ypos;
-			z = zpos;
+		public BlockAdd(Vector3i l, Block b) {
+			this.Location = l;
 			this.block = b;
 		}
 
 		protected override void WriteData(Lidgren.Network.NetOutgoingMessage Message) {
-			Message.Write((Int32)x);
-			Message.Write((Int32)y);
-			Message.Write((Int32)z);
+			Location.Write(Message);
 			block.Write(Message);
 		}
 
 		protected override void ReadData(Lidgren.Network.NetIncomingMessage Message) {
-			x = Message.ReadInt32();
-			y = Message.ReadInt32();
-			z = Message.ReadInt32();
-			block = new Block();
+			Location.Read(Message);
 			block.Read(Message);
 		}
 
 		protected override void ExecuteMessage() {
-			Game.World.SetBlock(x, y, z, block);
+			Game.World.SetBlock(Location, block);
 			this.Forward();
 		}
 	}

@@ -44,16 +44,17 @@ namespace FantasyScape {
 			for (int x = 0; x < Chunk.Size; x++) {
 				for (int y = 0; y < Chunk.Size; y++) {
 					for (int z = 0; z < Chunk.Size; z++) {
+						Vector3i Location = new Vector3i(x, y, z);
 						if (z + (ChunkZ * Chunk.Size) < current_heightmap.GetPixel(x, y).R) {
 							if (z + (ChunkZ * Chunk.Size) > current_heightmap.GetPixel(x, y).R - (int)(5 + ran.Next(3))) {
-								chunk[x, y, z] = new Block(DirtGuid);
+								chunk[Location] = new Block(DirtGuid);
 							} else {
-								chunk[x, y, z] = new Block(GraniteGuid);
+								chunk[Location] = new Block(GraniteGuid);
 							}
 						}
 
 						if (z + (ChunkZ * Chunk.Size) == current_heightmap.GetPixel(x, y).R) {
-							chunk[x, y, z] = new Block(GrassGuid);
+							chunk[Location] = new Block(GrassGuid);
 						}
 					}
 				}
@@ -65,7 +66,7 @@ namespace FantasyScape {
 			for (int x = 0; x < Chunk.Size; x++) {
 				for (int y = 0; y < Chunk.Size; y++) {
 					for (int z = (int)current_heightmap.GetPixel(x, y).R + 1; z <= WaterLevel; z++) {
-						current[x, y, z - (ChunkZ * Chunk.Size)] = new Block(WaterGuid);
+						current[new Vector3i(x, y, z - (ChunkZ * Chunk.Size))] = new Block(WaterGuid);
 					}
 				}
 			}

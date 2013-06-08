@@ -32,20 +32,24 @@ namespace FantasyScape {
 		}
 
 		#region Block Access
-		public Block this[int x, int y, int z] {
+		public Block this[Vector3i Location] {
 			get {
-				if (x < 0 || x >= Size || y < 0 || y >= Size || z < 0 || z >= Size) {
+				if (Location.X < 0 || Location.X >= Size || 
+					Location.Y < 0 || Location.Y >= Size || 
+					Location.Z < 0 || Location.Z >= Size) {
 					return null;
 				} else {
-					return Blocks[x, y, z];
+					return Blocks[Location.X, Location.Y, Location.Z];
 				}
 			}
 
 			set {
-				if (x < 0 || x >= Size || y < 0 || y >= Size || z < 0 || z >= Size) {
+				if (Location.X < 0 || Location.X >= Size || 
+					Location.Y < 0 || Location.Y >= Size || 
+					Location.Z < 0 || Location.Z >= Size) {
 					return;
 				} else {
-					Blocks[x, y, z] = value;
+					Blocks[Location.X, Location.Y, Location.Z] = value;
 					Dirty = true;
 				}
 			}
@@ -53,7 +57,7 @@ namespace FantasyScape {
 		#endregion
 
 		#region Update
-		public void Update(int x, int y, int z, World parent) {
+		public void Update(Vector3i Location, World parent) {
 			if (updateBlocks.Count != 0) {
 				Dirty = true;
 				Block[] TempBlocks = new Block[updateBlocks.Count];
@@ -64,27 +68,27 @@ namespace FantasyScape {
 
 				for (int i = 0; i < TempBlocks.Count(); i++) {
 					Vector3i loc = TempLocs[i];
-					TempBlocks[i].update((x * Size) + loc.X, (y * Size) + loc.Y, (z * Size) + loc.Z, parent);
+					TempBlocks[i].update(loc + (Location * Size), parent);
 				}
 
 				for (int i = 0; i < TempBlocks.Count(); i++) {
 					Vector3i loc = TempLocs[i];
-					TempBlocks[i].postUpdate((x * Size) + loc.X, (y * Size) + loc.Y, (z * Size) + loc.Z, parent);
+					TempBlocks[i].postUpdate(loc + (Location * Size), parent);
 				}
 			}
 		}
 
-		internal void AddUpdate(int x, int y, int z) {
-			Block b = this[x, y, z];
+		internal void AddUpdate(Vector3i Location) {
+			Block b = this[Location];
 			if (b != null && !updateBlocks.Contains(b)) {
 				updateBlocks.Add(b);
-				updateLocations.Add(new Vector3i(x, y, z));
+				updateLocations.Add(Location);
 				Dirty = true;
 			}
 		}
 
-		internal void RemoveUpdate(int x, int y, int z) {
-			Block b = this[x, y, z];
+		internal void RemoveUpdate(Vector3i Location) {
+			Block b = this[Location];
 			if (b != null && updateBlocks.Contains(b)) {
 				int rval = updateBlocks.IndexOf(b);
 				updateBlocks.RemoveAt(rval);
@@ -99,9 +103,10 @@ namespace FantasyScape {
 			for (int x = 0; x < Size; x++) {
 				for (int y = 0; y < Size; y++) {
 					for (int z = 0; z < Size; z++) {
-						if (this[x, y, z] != null) {
+						Vector3i Location = new Vector3i(x, y, z);
+						if (this[Location] != null) {
 							Message.Write(true);
-							this[x, y, z].Write(Message);
+							this[Location].Write(Message);
 						} else {
 							Message.Write(false);
 						}
@@ -115,11 +120,12 @@ namespace FantasyScape {
 				for (int y = 0; y < Size; y++) {
 					for (int z = 0; z < Size; z++) {
 						bool BlockExists = Message.ReadBoolean();
+						Vector3i Location = new Vector3i(x, y, z);
 						if (BlockExists) {
-							this[x, y, z] = new Block();
-							this[x, y, z].Read(Message);
+							this[Location] = new Block();
+							this[Location].Read(Message);
 						} else {
-							this[x, y, z] = null;
+							this[Location] = null;
 						}
 					}
 				}
@@ -127,20 +133,20 @@ namespace FantasyScape {
 		}
 		#endregion
 
-		internal void ExposeBlock(int x, int y, int z) {
-			if (this[x, y, z] != null && Game.Render) {
-				if (!exposedLocations.Contains(new Vector3i(x, y, z))) {
-					exposedBlocks.Add(this[x, y, z]);
-					exposedLocations.Add(new Vector3i(x, y, z));
+		internal void ExposeBlock(Vector3i Location) {
+			if (this[Location] != null && Game.Render) {
+				if (!exposedLocations.Contains(Location)) {
+					exposedBlocks.Add(this[Location]);
+					exposedLocations.Add(Location);
 				} else {
-					int index = exposedLocations.IndexOf(new Vector3i(x, y, z));
-					exposedBlocks[index] = this[x, y, z];
+					int index = exposedLocations.IndexOf(Location);
+					exposedBlocks[index] = this[Location];
 				}
 				Dirty = true;
 			}
 		}
 
-		internal void RefreshExposedBlocks(int X, int Y, int Z, World world) {
+		internal void RefreshExposedBlocks(Vector3i Location, World world) {
 			if (Game.Render) {
 				exposedBlocks = new List<Block>();
 				exposedLocations = new List<Vector3i>();
@@ -148,9 +154,10 @@ namespace FantasyScape {
 				for (int x = 0; x < Size; x++) {
 					for (int y = 0; y < Size; y++) {
 						for (int z = 0; z < Size; z++) {
-							if (world.IsExposed(x + (X * Size), y + (Y * Size), z + (Z * Size))) {
-								exposedBlocks.Add(this[x, y, z]);
-								exposedLocations.Add(new Vector3i(x, y, z));
+							if (world.IsExposed(new Vector3i(x + (Location.X * Size), y + (Location.Y * Size), z + (Location.Z * Size)))) {
+								Vector3i loc = new Vector3i(x, y, z);
+								exposedBlocks.Add(this[loc]);
+								exposedLocations.Add(loc);
 							}
 						}
 					}
@@ -210,7 +217,7 @@ namespace FantasyScape {
 					GraphicsManager.BeginList(DisplayList);
 					for (int i = 0; i < exposedBlocks.Count(); i++) {
 						Vector3i loc = exposedLocations[i];
-						exposedBlocks[i].draw(loc.X + XOffset, loc.Y + YOffset, loc.Z + ZOffset, w);
+						exposedBlocks[i].draw(new Vector3i(loc.X + XOffset, loc.Y + YOffset, loc.Z + ZOffset), w);
 					}
 					GraphicsManager.EndList();
 				}

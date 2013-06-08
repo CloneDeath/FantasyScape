@@ -19,8 +19,14 @@ namespace FantasyScape.Server {
 
 			/* Generate World */
 			Console.WriteLine("Generating World...");
-			Game.GenerateWorld();
-
+			int InitialRange = 3;
+			for (int x = -InitialRange; x <= InitialRange; x++) {
+				for (int y = -InitialRange; y <= InitialRange; y++) {
+					for (int z = -InitialRange; z <= InitialRange; z++) {
+						Game.GenerateChunk(new Vector3i(x, y, z));
+					}
+				}
+			}
 
 			/* Listen for Clients */
 			NetPeerConfiguration Configuration = new NetPeerConfiguration("FantasyScape");
