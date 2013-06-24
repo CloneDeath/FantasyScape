@@ -51,7 +51,8 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GLImp">
+    <Reference Include="GLImp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLLs\GLImp.dll</HintPath>
     </Reference>
     <Reference Include="Gwen">
@@ -82,6 +83,7 @@
   <ItemGroup>
     <Compile Include="ConnectingWindow.cs" />
     <Compile Include="Editor\BlockTypeEditing\GLImpTexturePanel.cs" />
+    <Compile Include="Editor\BlockTypeEditing\OpenTextureWindow.cs" />
     <Compile Include="Editor\BlockTypeEditing\TextureRefBox.cs" />
     <Compile Include="Editor\CodeEditor.cs" />
     <Compile Include="Editor\DevelopmentMenu.cs" />

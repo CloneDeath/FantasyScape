@@ -188,6 +188,7 @@ namespace FantasyScape {
 		public void Draw(Player p) {
 			int ViewDistance = 4;
 
+			Chunks.Draw(this);
 			for (int x = -ViewDistance; x <= ViewDistance; x++) {
 				for (int y = -ViewDistance; y <= ViewDistance; y++) {
 					for (int z = -ViewDistance; z <= ViewDistance; z++) {
@@ -225,21 +226,15 @@ namespace FantasyScape {
 			return Chunks[new Vector3i()] != Chunk.Null;
 		}
 
-		private void TryRefreshChunk(Vector3i loc) {
-			Chunk c;
-			if (Game.World.Chunks.TryGet(loc, out c)) {
-				c.RefreshExposedBlocks(this);
-			}
-		}
 		internal void RefreshExposedChunks(Vector3i Location) {
-			TryRefreshChunk(Location + new Vector3i(0, 0, 0));
-			
-			TryRefreshChunk(Location + new Vector3i(1, 0, 0));
-			TryRefreshChunk(Location - new Vector3i(1, 0, 0));
-			TryRefreshChunk(Location + new Vector3i(0, 1, 0));
-			TryRefreshChunk(Location - new Vector3i(0, 1, 0));
-			TryRefreshChunk(Location + new Vector3i(0, 0, 1));
-			TryRefreshChunk(Location - new Vector3i(0, 0, 1));
+			Chunks.AddRefreshQueue(Location + new Vector3i(0, 0, 0));
+
+			Chunks.AddRefreshQueue(Location + new Vector3i(1, 0, 0));
+			Chunks.AddRefreshQueue(Location - new Vector3i(1, 0, 0));
+			Chunks.AddRefreshQueue(Location + new Vector3i(0, 1, 0));
+			Chunks.AddRefreshQueue(Location - new Vector3i(0, 1, 0));
+			Chunks.AddRefreshQueue(Location + new Vector3i(0, 0, 1));
+			Chunks.AddRefreshQueue(Location - new Vector3i(0, 0, 1));
 			
 		}
 	}

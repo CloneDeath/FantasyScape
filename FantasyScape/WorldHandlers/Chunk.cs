@@ -200,7 +200,7 @@ namespace FantasyScape {
 				Dirty = true;
 			}
 
-			if (Game.Render && Location != null && ChunkInFrustum(p)) {
+			if (Game.Render && Location != null && ChunkInFrustum(p) && exposedBlocks != null) {
 				if (Dirty) {
 					Dirty = false;
 					Vector3i Offset = Location * Size;

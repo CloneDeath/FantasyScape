@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Gwen.Control;
 using FantasyScape.Blocks;
+using FantasyScape.Resources;
 
 namespace FantasyScape.Client.Editor.BlockTypeEditing {
     class TextureRefBox : GroupBox {
@@ -28,14 +29,14 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
             panel.SetSize(50, 50);
             panel.SetPosition(85, 0);
             panel.Clicked += delegate(Base sender) {
-                PackageExplorer pak = new PackageExplorer();
-                pak.Show();
+				OpenTextureWindow otw = new OpenTextureWindow(SetTexture);
+				otw.Show();
             };
 
-            RefreshTexture();
+            RefreshAll();
         }
 
-        private void RefreshTexture() {
+        private void RefreshAll() {
             if (Texture.Defined) {
                 TextureName.Text = Texture.Texture.Name;
             } else {
@@ -44,5 +45,11 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
             Defined.IsChecked = Texture.Defined;
             panel.Texture = Texture.Texture.Texture; //lol, I need better names
         }
+
+		private void SetTexture(FSTexture tex) {
+			Texture.Texture = tex;
+			RefreshAll();
+			Chunk.DirtyAll = true;
+		}
     }
 }

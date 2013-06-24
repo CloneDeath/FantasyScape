@@ -16,6 +16,14 @@ namespace FantasyScape.Client.Editor{
 
 			PackageView = new PackageTree(this);
 			PackageView.SetPosition(10, 10);
+			PackageView.TextureOpened += delegate(Base sender) {
+				TextureEditor window = new TextureEditor(sender.UserData as FSTexture);
+				window.Show();
+			};
+			PackageView.BlockTypeOpened += delegate(Base sender) {
+				BlockTypeEditor window = new BlockTypeEditor(sender.UserData as BlockType);
+				window.Show();
+			};
             
             this.SetSize(340, 450);
 		}

@@ -25,6 +25,10 @@ namespace FantasyScape.Blocks {
 				Resource res = Package.FindResource(_TextureID);
 				return (res as FSTexture) ?? Textures.FSErrorTexture;
 			}
+
+			set {
+				_TextureID = value.ID;
+			}
 		}
 
 		internal void Write(NetOutgoingMessage Message) {
