@@ -54,6 +54,36 @@ namespace FantasyScape {
 			return Textures.ErrorTexture;
 		}
 
+		public override void Save(string path) {
+			string BlockPath = Path.Combine(path, GetIDString() + ".block");
+
+			XDocument doc = new XDocument();
+			{
+				XElement Base = new XElement("Block");
+				{
+					XElement Name = new XElement("Name", this.Name);
+					Base.Add(Name);
+
+					for (int i = 0; i < (int)BlockSide.Count; i++){
+						FSTextureReference tex = Texture[i];
+						if (tex.Defined){
+							XElement TexNode = new XElement("Texture");
+							TexNode.SetAttributeValue("Location", ((BlockSide)i).ToString());
+							TexNode.SetValue(tex.TextureID);
+							Base.Add(TexNode);
+						}
+					}
+
+					if (Liquid){
+						XElement LiquidNode = new XElement("Liquid");
+						Base.Add(LiquidNode);
+					}
+				}
+				doc.Add(Base);
+			}
+			doc.Save(BlockPath);
+		}
+
 		public override void Load(string path) {
 			if (!Guid.TryParse(Path.GetFileNameWithoutExtension(path), out this.ID)){
 				throw new Exception("Could not parse GUID: " + path);

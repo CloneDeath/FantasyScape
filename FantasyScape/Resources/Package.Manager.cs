@@ -22,6 +22,10 @@ namespace FantasyScape.Resources {
 			}
 		}
 
-		
+		public static void SaveAll(string ResourceLocation) {
+			foreach (Package pak in Packages.Values) {
+				pak.Save(ResourceLocation);
+			}
+		}
 	}
 }

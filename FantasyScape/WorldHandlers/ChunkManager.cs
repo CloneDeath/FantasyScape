@@ -55,13 +55,15 @@ namespace FantasyScape {
 		}
 
 		internal void Draw(World world) {
-			if (RefreshQueue.Count != 0) {
-				Vector3i Loc = RefreshQueue[0]; 
-				RefreshQueue.RemoveAt(0);
+			for (int i = 0; i < 10; i++) {
+				if (RefreshQueue.Count != 0) {
+					Vector3i Loc = RefreshQueue[0];
+					RefreshQueue.RemoveAt(0);
 
-				Chunk chunk;
-				if (TryGet(Loc, out chunk)) {
-					chunk.RefreshExposedBlocks(world);
+					Chunk chunk;
+					if (TryGet(Loc, out chunk)) {
+						chunk.RefreshExposedBlocks(world);
+					}
 				}
 			}
 		}

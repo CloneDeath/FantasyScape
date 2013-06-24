@@ -7,13 +7,21 @@ using System.IO;
 
 namespace FantasyScape {
 	partial class ResourceManager {
-		const string ResourceLocation = @".\Data";
+		
 		static Repository Repo;
 		private static void LoadRepository() {
-			if (!Directory.Exists(ResourceLocation)) {
+			if (!Directory.Exists(Path.Combine(ResourceLocation, ".git"))) {
 				Git.Init(ResourceLocation);
 			}
 			Repo = new Repository(ResourceLocation);
+		}
+
+		private static void SaveRepository() {
+			Repo.Index.AddAll();
+
+			if (Repo.Index.Status.AnyDifferences) {
+				Repo.Commit("Automated FantasyScape Server Commit", new Author("FantasyScape Server", "none"));
+			}
 		}
 	}
 }

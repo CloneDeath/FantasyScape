@@ -22,7 +22,6 @@ namespace FantasyScape {
 
 		public bool Dirty = true;
 		int DisplayList;
-		public static bool DirtyAll = false;
 
 		public Chunk(Vector3i Location) {
 			Array.Clear(Blocks, 0, Size * Size * Size);
@@ -196,10 +195,6 @@ namespace FantasyScape {
 		}
 
 		public void Draw(World w, Player p) {
-			if (DirtyAll) {
-				Dirty = true;
-			}
-
 			if (Game.Render && Location != null && ChunkInFrustum(p) && exposedBlocks != null) {
 				if (Dirty) {
 					Dirty = false;

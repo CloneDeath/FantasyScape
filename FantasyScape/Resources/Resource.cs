@@ -9,6 +9,11 @@ namespace FantasyScape.Resources {
 		public Guid ID;
 		public string Name = "[New Resource]";
 		public abstract void Load(string path);
+		public abstract void Save(string path);
+
+		protected string GetIDString() {
+			return "{" + ID.ToString().ToUpper() + "}";
+		}
 
 		internal virtual void Write(NetOutgoingMessage Message) {
 			Message.Write(ID.ToString());

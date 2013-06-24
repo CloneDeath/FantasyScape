@@ -16,6 +16,37 @@ namespace FantasyScape.Resources {
 			this.ID = UID;
 		}
 
+		#region Save
+		public override void Save(string dir) {
+			string PackageDir = Path.Combine(dir, GetIDString());
+			if (!Directory.Exists(PackageDir)) {
+				Directory.CreateDirectory(PackageDir);
+			}
+			
+			SavePackageInfo(PackageDir);
+			base.SaveChildren(PackageDir);
+		}
+
+		private void SavePackageInfo(string PackageDir) {
+			XDocument doc = new XDocument();
+			{
+				XElement Package = new XElement("Package");
+				{
+					XElement Name = new XElement("Name", this.Name);
+					Package.Add(Name);
+
+					foreach (Guid guid in References) {
+						XElement Reference = new XElement("Reference", guid.ToString());
+						Package.Add(References);
+					}
+				}
+				doc.Add(Package);
+			}
+			doc.Save(Path.Combine(PackageDir, "package.info"));
+		}
+		#endregion
+
+		#region Load
 		public override void Load(string dir) {
 			LoadPackageInfo(dir);
 			base.LoadChildren(dir);
@@ -48,6 +79,7 @@ namespace FantasyScape.Resources {
 				}
 			}
 		}
+		#endregion
 
 		static bool RequestSent = false;
 		internal static bool Ready() {

@@ -49,7 +49,7 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
 		private void SetTexture(FSTexture tex) {
 			Texture.Texture = tex;
 			RefreshAll();
-			Chunk.DirtyAll = true;
+			Game.World.DirtyAll();
 		}
     }
 }

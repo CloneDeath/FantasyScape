@@ -200,7 +200,6 @@ namespace FantasyScape {
 					}
 				}
 			}
-			Chunk.DirtyAll = false;
 		}
 
 		public bool IsSolid(Vector3i Location) {
@@ -236,6 +235,12 @@ namespace FantasyScape {
 			Chunks.AddRefreshQueue(Location + new Vector3i(0, 0, 1));
 			Chunks.AddRefreshQueue(Location - new Vector3i(0, 0, 1));
 			
+		}
+
+		public void DirtyAll() {
+			foreach (Chunk c in Chunks) {
+				c.Dirty = true;
+			}
 		}
 	}
 }

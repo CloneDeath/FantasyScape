@@ -46,6 +46,8 @@ namespace FantasyScape.Server {
 		internal static void Run() {
 			/* Respond to Requests and Update World */
 			while (true) {
+				ConsoleHandler.Update();
+
 				if (UpdateTimer.Elapsed.TotalSeconds >= 1 / UpdateRate) {
 					UpdateTimer.Restart();
 					Game.UpdateServer();
@@ -67,16 +69,12 @@ namespace FantasyScape.Server {
 				Messages.Add(nim);
 				Server.ReadMessages(Messages);
 				foreach (NetIncomingMessage msg in Messages) {
-					HandleMessages(msg);
+					if (msg.MessageType == NetIncomingMessageType.Data) {
+						Message.Handle(msg);
+					} else {
+						//Console.WriteLine(Message.ReadString());
+					}
 				}
-			}
-		}
-
-		private static void HandleMessages(NetIncomingMessage nim) {
-			if (nim.MessageType == NetIncomingMessageType.Data) {
-				Message.Handle(nim);
-			} else {
-				//Console.WriteLine(Message.ReadString());
 			}
 		}
 	}

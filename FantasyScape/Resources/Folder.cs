@@ -13,11 +13,26 @@ namespace FantasyScape.Resources {
 			ID = Guid.NewGuid();
 		}
 
+		public override void Save(string path) {
+			string FolderPath = Path.Combine(path, Name.ToString());
+			if (!Directory.Exists(FolderPath)) {
+				Directory.CreateDirectory(FolderPath);
+			}
+
+			this.SaveChildren(FolderPath);
+		}
+
+		internal void SaveChildren(string dir) {
+			foreach (Resource child in Children) {
+				child.Save(dir);
+			}
+		}
+
 		public override void Load(string path) {
 			string[] dirs = path.Split(Path.DirectorySeparatorChar);
 			this.Name = dirs.Last();
 			this.LoadChildren(path);
-		}
+		}		
 
 		public void LoadChildren(string dir) {
 			string[] Files = Directory.GetFiles(dir);
@@ -60,5 +75,7 @@ namespace FantasyScape.Resources {
 				return null;
 			}
 		}
+
+		
 	}
 }
