@@ -85,7 +85,7 @@
     <Compile Include="Editor\BlockTypeEditing\GLImpTexturePanel.cs" />
     <Compile Include="Editor\BlockTypeEditing\OpenTextureWindow.cs" />
     <Compile Include="Editor\BlockTypeEditing\TextureRefBox.cs" />
-    <Compile Include="Editor\CodeEditor.cs" />
+    <Compile Include="Editor\CodeEditing\CodeEditor.cs" />
     <Compile Include="Editor\DevelopmentMenu.cs" />
     <Compile Include="Editor\BlockTypeEditing\BlockTypeEditor.cs" />
     <Compile Include="Editor\PackageExplorer.cs" />

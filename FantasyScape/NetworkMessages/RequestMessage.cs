@@ -5,6 +5,7 @@ using System.Text;
 using Lidgren.Network;
 using GLImp;
 using FantasyScape.Resources;
+using FantasyScape.NetworkMessages.Code;
 
 namespace FantasyScape.NetworkMessages {
 	public enum RequestType {
@@ -74,6 +75,8 @@ namespace FantasyScape.NetworkMessages {
 				new AddTexture((FSTexture)res, parent).Reply(NetDeliveryMethod.ReliableOrdered);
 			} else if (res.GetType() == typeof(BlockType)) {
 				new AddBlockType((BlockType)res, parent).Reply(NetDeliveryMethod.ReliableOrdered);
+			} else if (res.GetType() == typeof(CodeFile)) {
+				new AddCode((CodeFile)res, parent).Reply(NetDeliveryMethod.ReliableOrdered);
 			}
 		}
 	}

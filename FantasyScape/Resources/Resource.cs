@@ -8,8 +8,8 @@ namespace FantasyScape.Resources {
 	public abstract class Resource {
 		public Guid ID;
 		public string Name = "[New Resource]";
-		public abstract void Load(string path);
 		public abstract void Save(string path);
+		public abstract void Load(string path);		
 
 		protected string GetIDString() {
 			return "{" + ID.ToString().ToUpper() + "}";

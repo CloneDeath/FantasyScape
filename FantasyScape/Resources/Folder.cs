@@ -47,6 +47,10 @@ namespace FantasyScape.Resources {
 					case ".block":
 						res = new BlockType();
 						break;
+
+					case ".code":
+						res = new CodeFile();
+						break;
 				}
 				if (res != null) {
 					res.Load(file);

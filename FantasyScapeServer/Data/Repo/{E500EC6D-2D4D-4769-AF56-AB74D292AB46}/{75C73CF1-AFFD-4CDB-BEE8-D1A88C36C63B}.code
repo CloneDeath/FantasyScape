@@ -1,0 +1,20 @@
+<Code>
+	<Name>TestCode.cs</Name>
+	<Language>CSharp</Language>
+	<Content>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using LibNoise.Generator;
+using LibNoise.Utilities;
+using System.Drawing;
+
+namespace City_Generation {
+	class TestCode {
+		public static void Main(){
+			Console.WriteLine("Hello World");
+		}
+	}
+}
+</Content>
+</Code>

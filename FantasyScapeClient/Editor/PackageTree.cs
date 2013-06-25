@@ -6,10 +6,13 @@ using Gwen.Control;
 using FantasyScape.Resources;
 
 namespace FantasyScape.Client.Editor {
+	[Flags]
 	enum ResourceType {
-		All,
-		Texture,
-		BlockType
+		Texture		= 0x01 << 0,
+		BlockType	= 0x01 << 1,
+		CodeFile	= 0x01 << 2,
+
+		All			= 0xFF,
 	}
 	class PackageTree : TreeControl {
 		public PackageTree(Base parent) : base(parent) {
@@ -20,7 +23,8 @@ namespace FantasyScape.Client.Editor {
 		public ResourceType Filter = ResourceType.All;
 
 		public GwenEventHandler TextureOpened;
-		public GwenEventHandler BlockTypeOpened;
+		public GwenEventHandler BlockTypeOpened; 
+		public GwenEventHandler CodeOpened;
 
 		private void RefreshPackageView() {
 			foreach (Package pack in Package.Packages.Values) {
@@ -38,13 +42,16 @@ namespace FantasyScape.Client.Editor {
 					TreeNode node = tn.AddNode(child.Name);
                     if (child.GetType() == typeof(Folder)) {
                         node.SetImage(@"Data\folder.png");
-					} else if (child.GetType() == typeof(FSTexture) && (Filter == ResourceType.All || Filter == ResourceType.Texture)) {
+					} else if (child.GetType() == typeof(FSTexture) && ((Filter | ResourceType.Texture) != 0)) {
                         node.SetImage(@"Data\image.png");
 						node.DoubleClicked += OnTexClicked;
-                    } else if (child.GetType() == typeof(BlockType) && (Filter == ResourceType.All || Filter == ResourceType.BlockType)) {
+					} else if (child.GetType() == typeof(BlockType) && ((Filter | ResourceType.BlockType) != 0)) {
                         node.SetImage(@"Data\blocktype.png");
 						node.DoubleClicked += OnBlockClicked;
-                    }
+					} else if (child.GetType() == typeof(CodeFile) && ((Filter | ResourceType.CodeFile) != 0)) {
+						node.SetImage(@"Data\SharedCode.png");
+						node.DoubleClicked += OnCodeClicked;
+					}
 					node.UserData = child;
 					AddChildren(node);
 				}
@@ -60,6 +67,12 @@ namespace FantasyScape.Client.Editor {
 		private void OnBlockClicked(Base item) {
 			if (BlockTypeOpened != null) {
 				BlockTypeOpened(item);
+			}
+		}
+
+		private void OnCodeClicked(Base item) {
+			if (CodeOpened != null) {
+				CodeOpened(item);
 			}
 		}
 
