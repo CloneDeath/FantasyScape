@@ -7,6 +7,7 @@ using FantasyScape.Resources;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using FantasyScape.NetworkMessages.Code;
 
 namespace FantasyScape.Client.Editor {
 	class CodeEditor : WindowControl {
@@ -27,6 +28,7 @@ namespace FantasyScape.Client.Editor {
 			CodeArea.Text = Resource.Code;
 			CodeArea.Font = new Gwen.Font(MainCanvas.Renderer, "Consolas");
 			CodeArea.Dock = Gwen.Pos.Fill;
+			CodeArea.TextChanged += new GwenEventHandler(CodeArea_TextChanged);
 
 			TopBar = new Base(this);
 			TopBar.Dock = Gwen.Pos.Top;
@@ -38,11 +40,16 @@ namespace FantasyScape.Client.Editor {
 			}			
 		}
 
+		void CodeArea_TextChanged(Base control) {
+			Resource.Code = CodeArea.Text;
+			new UpdateCode(Resource).Send();
+		}
+
 		void Run_Clicked(Base control) {
 			var csc = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v3.5" } });
 			var parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.Core.dll" });
 			parameters.GenerateExecutable = false;
-			CompilerResults results = csc.CompileAssemblyFromSource(parameters, CodeArea.Text);
+			CompilerResults results = csc.CompileAssemblyFromSource(parameters, Resource.Code);
 			results.Errors.Cast<CompilerError>().ToList().ForEach(error => Console.WriteLine(error.ErrorText));
 
 			if (results.Errors.Count == 0) {

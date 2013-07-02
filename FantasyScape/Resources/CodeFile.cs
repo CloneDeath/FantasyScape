@@ -10,7 +10,7 @@ namespace FantasyScape.Resources {
 	public class CodeFile : Resource {
 		public string Code = "";
 		public CodeLanguage Language;
-		public CodeLocation Location;
+		public CodeLocation ExecutionLocation;
 
 		public override void Save(string path) {
 			string CodePath = Path.Combine(path, GetIDString());
@@ -25,7 +25,7 @@ namespace FantasyScape.Resources {
 					XElement Language = new XElement("Language", this.Language.ToString());
 					Base.Add(Language);
 
-					XElement Location = new XElement("Location", this.Location.ToString());
+					XElement Location = new XElement("Location", this.ExecutionLocation.ToString());
 					Base.Add(Location);
 
 					XElement Content = new XElement("Content", this.Code);
@@ -58,7 +58,7 @@ namespace FantasyScape.Resources {
 						this.Language = (CodeLanguage)Enum.Parse(typeof(CodeLanguage), info.Value);
 						break;
 					case "Location":
-						this.Location = (CodeLocation)Enum.Parse(typeof(CodeLocation), info.Value);
+						this.ExecutionLocation = (CodeLocation)Enum.Parse(typeof(CodeLocation), info.Value);
 						break;
 					case "Content":
 						this.Code = info.Value;
@@ -72,12 +72,14 @@ namespace FantasyScape.Resources {
 		internal override void Write(NetOutgoingMessage Message) {
 			base.Write(Message);
 			Message.Write(Language.ToString());
+			Message.Write(ExecutionLocation.ToString());
 			Message.Write(Code);
 		}
 
 		internal override void Read(NetIncomingMessage Message) {
 			base.Read(Message);
 			Language = (CodeLanguage)Enum.Parse(typeof(CodeLanguage), Message.ReadString());
+			ExecutionLocation = (CodeLocation)Enum.Parse(typeof(CodeLocation), Message.ReadString());
 			Code = Message.ReadString();
 		}
 

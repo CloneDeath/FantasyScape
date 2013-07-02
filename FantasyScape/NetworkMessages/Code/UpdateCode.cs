@@ -2,19 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Lidgren.Network;
+using FantasyScape.Resources;
 
 namespace FantasyScape.NetworkMessages.Code {
-	class UpdateCode : Message {
-		protected override void WriteData(Lidgren.Network.NetOutgoingMessage Message) {
-			throw new NotImplementedException();
+	public class UpdateCode : Message {
+		CodeFile Resource;
+
+		public UpdateCode() {
+			this.Resource = new CodeFile();
 		}
 
-		protected override void ReadData(Lidgren.Network.NetIncomingMessage Message) {
-			throw new NotImplementedException();
+		public UpdateCode(CodeFile resource) {
+			this.Resource = resource;
+		}
+
+		protected override void WriteData(NetOutgoingMessage Message) {
+			Resource.Write(Message);
+		}
+
+		protected override void ReadData(NetIncomingMessage Message) {
+			Resource.Read(Message);
 		}
 
 		protected override void ExecuteMessage() {
-			throw new NotImplementedException();
+			CodeFile res = Package.FindResource(Resource.ID) as CodeFile;
+			if (res == null) {
+				throw new Exception("Expected to find a texture with given ID, found something else instead.");
+			}
+			res.Name = Resource.Name;
+			res.Language = Resource.Language;
+			res.ExecutionLocation = Resource.ExecutionLocation;
+			res.Code = Resource.Code;
+			res.TriggerUpdateEvent(this);
+
+			new UpdateCode(res).Forward();
 		}
 	}
 }
