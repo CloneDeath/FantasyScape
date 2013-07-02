@@ -132,6 +132,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\CodeFile.cs" />
     <Compile Include="Resources\CodeLanguage_Enum.cs" />
+    <Compile Include="Resources\CodeLocation_Enum.cs" />
     <Compile Include="Resources\Folder.cs" />
     <Compile Include="Resources\FSTexture.cs" />
     <Compile Include="Resources\Package.cs" />

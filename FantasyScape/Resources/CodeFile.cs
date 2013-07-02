@@ -8,8 +8,9 @@ using Lidgren.Network;
 
 namespace FantasyScape.Resources {
 	public class CodeFile : Resource {
-		string Code = "";
-		CodeLanguage Language;
+		public string Code = "";
+		public CodeLanguage Language;
+		public CodeLocation Location;
 
 		public override void Save(string path) {
 			string CodePath = Path.Combine(path, GetIDString());
@@ -23,6 +24,9 @@ namespace FantasyScape.Resources {
 
 					XElement Language = new XElement("Language", this.Language.ToString());
 					Base.Add(Language);
+
+					XElement Location = new XElement("Location", this.Location.ToString());
+					Base.Add(Location);
 
 					XElement Content = new XElement("Content", this.Code);
 					Base.Add(Content);
@@ -52,6 +56,9 @@ namespace FantasyScape.Resources {
 						break;
 					case "Language":
 						this.Language = (CodeLanguage)Enum.Parse(typeof(CodeLanguage), info.Value);
+						break;
+					case "Location":
+						this.Location = (CodeLocation)Enum.Parse(typeof(CodeLocation), info.Value);
 						break;
 					case "Content":
 						this.Code = info.Value;

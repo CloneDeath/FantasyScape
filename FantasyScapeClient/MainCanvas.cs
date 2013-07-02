@@ -13,9 +13,16 @@ using OpenTK.Graphics.OpenGL;
 namespace FantasyScape.Client
 {
 	public class MainCanvas {
+		public static Gwen.Renderer.OpenTK Renderer {
+			get;
+			private set;
+		}
+		public static Gwen.Skin.Base Skin {
+			get;
+			private set;
+		}
+
 		private static Gwen.Input.OpenTK input;
-		private static Gwen.Renderer.OpenTK renderer;
-		private static Gwen.Skin.Base skin;
 		private static Gwen.Control.Canvas canvas;
 
 		private static bool altDown = false;
@@ -41,11 +48,11 @@ namespace FantasyScape.Client
 
 			GraphicsManager.OnDispose += new GraphicsManager.Disposer(Dispose);
 
-			renderer = new Gwen.Renderer.OpenTK();
-			skin = new Gwen.Skin.TexturedBase(renderer, @"Data\DefaultSkin.png");
+			Renderer = new Gwen.Renderer.OpenTK();
+			Skin = new Gwen.Skin.TexturedBase(Renderer, @"Data\DefaultSkin.png");
 			//skin = new Gwen.Skin.Simple(renderer);
 			//skin.DefaultFont = new Gwen.Font(renderer, "Courier", 10);
-			canvas = new Canvas(skin);
+			canvas = new Canvas(Skin);
 
 			input = new Gwen.Input.OpenTK(GraphicsManager.Instance);
 			input.Initialize(canvas);
@@ -66,8 +73,8 @@ namespace FantasyScape.Client
 		public static void Dispose() {
 			if(!disposed) {
 				canvas.Dispose();
-				skin.Dispose();
-				renderer.Dispose();
+				Skin.Dispose();
+				Renderer.Dispose();
 				disposed = true;
 			}
 		}
@@ -126,8 +133,8 @@ namespace FantasyScape.Client
 		/// <param name="e">Contains timing information.</param>
 		/// <remarks>There is no need to call the base implementation.</remarks>
 		public static void OnUpdateFrame() {
-			if(renderer.TextCacheSize > 1000) // each cached string is an allocated texture, flush the cache once in a while in your real project
-				renderer.FlushTextCache();
+			if(Renderer.TextCacheSize > 1000) // each cached string is an allocated texture, flush the cache once in a while in your real project
+				Renderer.FlushTextCache();
 		}
 
 		/// <summary>

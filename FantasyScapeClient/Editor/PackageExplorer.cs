@@ -24,6 +24,10 @@ namespace FantasyScape.Client.Editor{
 				BlockTypeEditor window = new BlockTypeEditor(sender.UserData as BlockType);
 				window.Show();
 			};
+			PackageView.CodeOpened += delegate(Base sender) {
+				CodeEditor window = new CodeEditor(sender.UserData as CodeFile);
+				window.Show();
+			};
             
             this.SetSize(340, 450);
 		}
