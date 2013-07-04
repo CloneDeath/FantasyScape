@@ -88,8 +88,10 @@
     <Compile Include="Editor\CodeEditing\CodeEditor.cs" />
     <Compile Include="Editor\DevelopmentMenu.cs" />
     <Compile Include="Editor\BlockTypeEditing\BlockTypeEditor.cs" />
+    <Compile Include="Editor\PackageEditing\PackageEditor.cs" />
     <Compile Include="Editor\PackageExplorer.cs" />
-    <Compile Include="Editor\PackageTree.cs" />
+    <Compile Include="Editor\PackageViewing\PackageTree.cs" />
+    <Compile Include="Editor\PackageViewing\ResourceNode.cs" />
     <Compile Include="Editor\TextureEditing\DrawingArea.cs" />
     <Compile Include="Editor\TextureEditing\ToolBox.cs" />
     <Compile Include="Editor\TextureEditing\Tools\Brush.cs" />

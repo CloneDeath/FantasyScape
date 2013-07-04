@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape.Resources {
 	/// <summary>
@@ -19,7 +20,7 @@ namespace FantasyScape.Resources {
 		}
 
 		public FSTexture() {
-			
+			ID = Guid.NewGuid();
 		}
 
 		public void Load(Bitmap img) {
@@ -66,6 +67,10 @@ namespace FantasyScape.Resources {
 				}
 			}
 			
+		}
+
+		public override void SendUpdate() {
+			new UpdateTexture(this).Send();
 		}
 	}
 }

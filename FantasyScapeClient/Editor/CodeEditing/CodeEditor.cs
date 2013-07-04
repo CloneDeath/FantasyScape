@@ -8,6 +8,7 @@ using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.Reflection;
 using FantasyScape.NetworkMessages.Code;
+using GLImp;
 
 namespace FantasyScape.Client.Editor {
 	class CodeEditor : WindowControl {
@@ -16,19 +17,21 @@ namespace FantasyScape.Client.Editor {
 		MultilineTextBox CodeArea;
 		Base TopBar;
 		Button Run;
+		ListBox ErrorList;
 
 
 		public CodeEditor(CodeFile resource) : base(DevelopmentMenu.Instance) {
 			this.Resource = resource;
-			this.SetSize(400, 400);
+			this.SetSize(600, 400);
+			this.SetPosition((int)MouseManager.GetMousePositionWindows().X, (int)MouseManager.GetMousePositionWindows().Y);
 
 			CodeArea = new MultilineTextBox(this);
 			CodeArea.AcceptTabs = true;
 			CodeArea.SetSize(400, 400);
-			CodeArea.Text = Resource.Code;
+			CodeArea.Text = Resource.Source;
 			CodeArea.Font = new Gwen.Font(MainCanvas.Renderer, "Consolas");
 			CodeArea.Dock = Gwen.Pos.Fill;
-			CodeArea.TextChanged += new GwenEventHandler(CodeArea_TextChanged);
+			CodeArea.TextChanged +=new GwenEventHandler<EventArgs>(CodeArea_TextChanged);
 
 			TopBar = new Base(this);
 			TopBar.Dock = Gwen.Pos.Top;
@@ -36,31 +39,25 @@ namespace FantasyScape.Client.Editor {
 			{
 				Run = new Button(TopBar);
 				Run.Text = "Run";
-				Run.Clicked += new GwenEventHandler(Run_Clicked);
-			}			
+				Run.Clicked += new GwenEventHandler<ClickedEventArgs>(Run_Clicked);
+			}
+
+			ErrorList = new ListBox(this);
+			ErrorList.Dock = Gwen.Pos.Bottom;
+			ErrorList.Height = 50;
 		}
 
-		void CodeArea_TextChanged(Base control) {
-			Resource.Code = CodeArea.Text;
+		void CodeArea_TextChanged(Base control, EventArgs args) {
+			Resource.Source = CodeArea.Text;
 			new UpdateCode(Resource).Send();
 		}
 
-		void Run_Clicked(Base control) {
-			var csc = new CSharpCodeProvider(new Dictionary<string, string>() { { "CompilerVersion", "v3.5" } });
-			var parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.Core.dll" });
-			parameters.GenerateExecutable = false;
-			CompilerResults results = csc.CompileAssemblyFromSource(parameters, Resource.Code);
-			results.Errors.Cast<CompilerError>().ToList().ForEach(error => Console.WriteLine(error.ErrorText));
+		void Run_Clicked(Base control, ClickedEventArgs args) {
+			Package.RecompilePackages();
 
-			if (results.Errors.Count == 0) {
-				Module module = results.CompiledAssembly.GetModules()[0];
-
-				foreach (Type mt in module.GetTypes()){
-					MethodInfo methInfo = mt.GetMethod("Main");
-					if (methInfo != null) {
-						methInfo.Invoke(null, new object[0]);
-					}
-				}
+			ErrorList.RemoveAllRows();
+			foreach (CompilerError error in Resource.Errors) {
+				ErrorList.AddRow(error.ErrorText);
 			}
 		}
 	}

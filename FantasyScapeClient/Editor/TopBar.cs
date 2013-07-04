@@ -9,7 +9,7 @@ namespace FantasyScape.Client.Editor {
 		public TopBar(Base parent) : base(parent) {
 			this.Dock = Gwen.Pos.Top;
 			MenuItem Edit = this.AddItem("Package Viewer");
-			Edit.Clicked += delegate(Base sender) {
+			Edit.Clicked += delegate(Base sender, ClickedEventArgs args) {
 				PackageExplorer win = new PackageExplorer();
 			};
 		}

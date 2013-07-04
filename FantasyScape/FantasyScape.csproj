@@ -97,6 +97,7 @@
     <Compile Include="Blocks\BlockType.cs" />
     <Compile Include="Blocks\BlockTypes.cs" />
     <Compile Include="Blocks\FSTextureReference.cs" />
+    <Compile Include="CodeCompilation\CodeManager.cs" />
     <Compile Include="HeightMap.cs" />
     <Compile Include="ListRandomizer.cs" />
     <Compile Include="Math\Vector2i.cs" />
@@ -111,6 +112,8 @@
     <Compile Include="NetworkMessages\Code\AddCode.cs" />
     <Compile Include="NetworkMessages\Code\RemoveCode.cs" />
     <Compile Include="NetworkMessages\Code\UpdateCode.cs" />
+    <Compile Include="NetworkMessages\Folders\UpdateFolder.cs" />
+    <Compile Include="NetworkMessages\Packages\UpdatePackage.cs" />
     <Compile Include="NetworkMessages\Textures\AddTexture.cs" />
     <Compile Include="NetworkMessages\Folders\AddFolder.cs" />
     <Compile Include="NetworkMessages\Packages\AddPackage.cs" />

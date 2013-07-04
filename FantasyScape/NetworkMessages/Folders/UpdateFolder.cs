@@ -6,38 +6,33 @@ using Lidgren.Network;
 using FantasyScape.Resources;
 
 namespace FantasyScape.NetworkMessages {
-	public class AddFolder : Message {
-		Guid parent = Guid.Empty;
+	public class UpdateFolder : Message {
 		private Folder folder;
 
-		public AddFolder() {
+		public UpdateFolder() {
 			folder = new Folder();
 		}
 
-		public AddFolder(Folder folder, Guid parent) {
+		public UpdateFolder(Folder folder) {
 			this.folder = folder;
-			this.parent = parent;
 		}
+
 		protected override void WriteData(NetOutgoingMessage Message) {
-			Message.Write(parent.ToString());
 			folder.Write(Message);
 		}
 
 		protected override void ReadData(NetIncomingMessage Message) {
-			if (!Guid.TryParse(Message.ReadString(), out parent)) {
-				throw new Exception("Failed to pare parent for folder");
-			}
 			folder.Read(Message);
 		}
 
 		protected override void ExecuteMessage() {
-			Resource res = Package.FindResource(parent);
+			Resource res = Package.FindResource(folder.ID) as Folder;
 			if (res == null) {
-				throw new Exception("Could not find parent resource for texture");
+				throw new Exception("Could not find existing folder resource.");
 			}
-			((Folder)res).Add(folder);
-
-			new AddFolder(folder, parent).Forward();
+			res.Name = folder.Name;
+			
+			new UpdateFolder(folder).Forward();
 		}
 	}
 }

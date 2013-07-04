@@ -17,7 +17,7 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
 
 		public OpenTextureWindow(TextureCallback callback) : base(DevelopmentMenu.Instance) {
 			this.Title = "Select Texture";
-			this.Resized += new GwenEventHandler(OnResize);
+			this.Resized += OnResize;
 			this.SetPosition((int)MouseManager.GetMousePositionWindows().X, (int)MouseManager.GetMousePositionWindows().Y);
 			Callback = callback;
 
@@ -34,21 +34,21 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
 
 			Cancel = new Button(this);
 			Cancel.Text = "Cancel";
-			Cancel.Clicked += delegate(Base item) {
+			Cancel.Clicked += delegate(Base item, ClickedEventArgs args) {
 				this.Close();
 			};
 
 			this.SetSize(340, 450);
 		}
 
-		private void ItemSelected(Base item) {
+		private void ItemSelected(FSTexture tex) {
 			if (Callback != null) {
-				Callback(item.UserData as FSTexture);
+				Callback(tex);
 			}
 			this.Close();
 		}
 
-		void OnResize(Base control) {
+		void OnResize(Base control, EventArgs args) {
 			PackageView.SetSize(this.Width - 40, this.Height - 85);
 			OK.SetPosition(this.Width - 120, this.Height - 70);
 			Cancel.SetPosition(10, this.Height - 70);

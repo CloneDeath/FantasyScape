@@ -8,7 +8,7 @@ using GLImp;
 using System.Drawing;
 
 namespace FantasyScape.NetworkMessages {
-	class AddTexture : Message {
+	public class AddTexture : Message {
 		FSTexture texture = null;
 		Guid parent = Guid.Empty;
 
@@ -44,7 +44,7 @@ namespace FantasyScape.NetworkMessages {
 			if (res == null) {
 				throw new Exception("Could not find parent resource for texture");
 			}
-			((Folder)res).Children.Add(texture);
+			((Folder)res).Add(texture);
 
 			new AddTexture(texture, parent).Forward();
 		}

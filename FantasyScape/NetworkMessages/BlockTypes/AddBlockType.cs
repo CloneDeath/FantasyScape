@@ -6,7 +6,7 @@ using Lidgren.Network;
 using FantasyScape.Resources;
 
 namespace FantasyScape.NetworkMessages {
-	class AddBlockType : Message {
+	public class AddBlockType : Message {
 		private BlockType blockType;
 		Guid parent = Guid.Empty;
 
@@ -36,7 +36,7 @@ namespace FantasyScape.NetworkMessages {
 			if (res == null) {
 				throw new Exception("Could not find parent resource for texture");
 			}
-			((Folder)res).Children.Add(blockType);
+			((Folder)res).Add(blockType);
 
 			new AddBlockType(blockType, parent).Forward();
 		}

@@ -28,7 +28,7 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
             panel = new GLImpTexturePanel(this);
             panel.SetSize(50, 50);
             panel.SetPosition(85, 0);
-            panel.Clicked += delegate(Base sender) {
+			panel.Clicked += delegate(Base sender, ClickedEventArgs args) {
 				OpenTextureWindow otw = new OpenTextureWindow(SetTexture);
 				otw.Show();
             };

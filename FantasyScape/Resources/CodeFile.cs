@@ -5,12 +5,16 @@ using System.Text;
 using System.IO;
 using System.Xml.Linq;
 using Lidgren.Network;
+using FantasyScape.NetworkMessages.Code;
+using System.CodeDom.Compiler;
 
 namespace FantasyScape.Resources {
 	public class CodeFile : Resource {
-		public string Code = "";
+		public string Source = "";
 		public CodeLanguage Language;
 		public CodeLocation ExecutionLocation;
+
+		public List<CompilerError> Errors = new List<CompilerError>();
 
 		public override void Save(string path) {
 			string CodePath = Path.Combine(path, GetIDString());
@@ -28,7 +32,7 @@ namespace FantasyScape.Resources {
 					XElement Location = new XElement("Location", this.ExecutionLocation.ToString());
 					Base.Add(Location);
 
-					XElement Content = new XElement("Content", this.Code);
+					XElement Content = new XElement("Content", this.Source);
 					Base.Add(Content);
 				}
 				doc.Add(Base);
@@ -61,7 +65,7 @@ namespace FantasyScape.Resources {
 						this.ExecutionLocation = (CodeLocation)Enum.Parse(typeof(CodeLocation), info.Value);
 						break;
 					case "Content":
-						this.Code = info.Value;
+						this.Source = info.Value;
 						break;
 					default:
 						throw new Exception("Unknown element in blocktype '" + info.Name + "'.");
@@ -73,15 +77,27 @@ namespace FantasyScape.Resources {
 			base.Write(Message);
 			Message.Write(Language.ToString());
 			Message.Write(ExecutionLocation.ToString());
-			Message.Write(Code);
+			Message.Write(Source);
 		}
 
 		internal override void Read(NetIncomingMessage Message) {
 			base.Read(Message);
 			Language = (CodeLanguage)Enum.Parse(typeof(CodeLanguage), Message.ReadString());
 			ExecutionLocation = (CodeLocation)Enum.Parse(typeof(CodeLocation), Message.ReadString());
-			Code = Message.ReadString();
+			Source = Message.ReadString();
 		}
 
+
+		public override void SendUpdate() {
+			new UpdateCode(this).Send();
+		}
+
+		internal void ClearErrors() {
+			Errors.Clear();
+		}
+
+		internal void AddError(CompilerError error) {
+			Errors.Add(error);
+		}
 	}
 }

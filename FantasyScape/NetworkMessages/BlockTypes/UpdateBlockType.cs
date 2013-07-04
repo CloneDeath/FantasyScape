@@ -6,6 +6,14 @@ using Lidgren.Network;
 
 namespace FantasyScape.NetworkMessages {
 	class UpdateBlockType : Message {
+		public UpdateBlockType() {
+			throw new NotImplementedException();
+		}
+
+		public UpdateBlockType(BlockType block) {
+			throw new NotImplementedException();
+		}
+
 		protected override void WriteData(NetOutgoingMessage Message) {
 			throw new NotImplementedException();
 		}

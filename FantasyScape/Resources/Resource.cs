@@ -43,5 +43,7 @@ namespace FantasyScape.Resources {
                 OnUpdate(sender, this);
             }
         }
+
+		public abstract void SendUpdate();
 	}
 }

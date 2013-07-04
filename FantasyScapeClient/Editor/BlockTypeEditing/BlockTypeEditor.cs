@@ -21,6 +21,7 @@ namespace FantasyScape.Client.Editor {
 
             this.Title = "Block Type Editor";
             this.SetSize(375, 450);
+			this.SetPosition((int)MouseManager.GetMousePositionWindows().X, (int)MouseManager.GetMousePositionWindows().Y);
 
 			Label lblName = new Label(this);
 			lblName.AutoSizeToContents = true;
@@ -44,8 +45,8 @@ namespace FantasyScape.Client.Editor {
 
 		}
 
-		bool EnableSubmit = true;
-		private void SubmitChanges(Base sender) {
+		//bool EnableSubmit = true;
+		private void SubmitChanges(Base sender, EventArgs args) {
 			throw new NotImplementedException();
 			//if (EnableSubmit && BlockTypes.Exists(TypeName.Text)) {
 			//    throw new NotImplementedException();

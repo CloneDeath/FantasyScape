@@ -25,7 +25,7 @@ namespace FantasyScape.Client.Editor {
 
             colorpicker = new HSVColorPicker(this);
 			colorpicker.SetPosition(320, 10);
-			colorpicker.ColorChanged += delegate(Base sender) {
+			colorpicker.ColorChanged += delegate(Base sender, EventArgs args) {
 				Canvas.SetColor(colorpicker.SelectedColor);
 			};
 

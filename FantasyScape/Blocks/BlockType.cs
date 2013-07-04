@@ -8,10 +8,12 @@ using FantasyScape.Resources;
 using System.Xml.Linq;
 using FantasyScape.Blocks;
 using System.IO;
+using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class BlockType : Resource {
 		public BlockType() {
+			ID = Guid.NewGuid();
 			for (int i = 0; i < Texture.Length; i++) {
 				Texture[i] = new FSTextureReference();
 			}
@@ -131,6 +133,10 @@ namespace FantasyScape {
 			for (int i = 0; i < (int)BlockSide.Count; i++) {
 				Texture[i].Read(Message);
 			}
+		}
+
+		public override void SendUpdate() {
+			new UpdateBlockType(this).Send();
 		}
 	}
 }

@@ -55,7 +55,7 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		private void SendPackages() {
-			foreach (Package pkg in Package.Packages.Values){
+			foreach (Package pkg in Package.GetPackages()){
 				Send(pkg, Guid.Empty);
 			}
 		}
@@ -63,12 +63,12 @@ namespace FantasyScape.NetworkMessages {
 		private void Send(Resource res, Guid parent) {
 			if (res.GetType() == typeof(Package)) {
 				new AddPackage((Package)res).Reply(NetDeliveryMethod.ReliableOrdered);
-				foreach (Resource child in ((Package)res).Children) {
+				foreach (Resource child in ((Package)res).GetChildren()) {
 					Send(child, res.ID);
 				}
 			} else if (res.GetType() == typeof(Folder)) {
 				new AddFolder((Folder)res, parent).Reply(NetDeliveryMethod.ReliableOrdered);
-				foreach (Resource child in ((Folder)res).Children) {
+				foreach (Resource child in ((Folder)res).GetChildren()) {
 					Send(child, res.ID);
 				}
 			} else if (res.GetType() == typeof(FSTexture)) {

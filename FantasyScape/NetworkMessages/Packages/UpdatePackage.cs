@@ -6,14 +6,14 @@ using FantasyScape.Resources;
 using Lidgren.Network;
 
 namespace FantasyScape.NetworkMessages {
-	public class AddPackage : Message {
+	public class UpdatePackage : Message {
 		Package package;
 
-		public AddPackage() {
+		public UpdatePackage() {
 			package = new Package(Guid.Empty);
 		}
 
-		public AddPackage(Package pkg){
+		public UpdatePackage(Package pkg) {
 			this.package = pkg;
 		}
 
@@ -26,8 +26,11 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		protected override void ExecuteMessage() {
-			Package.Add(package);
-			new AddPackage(package).Forward();
+			Package res = Package.FindResource(package.ID) as Package;
+			res.Name = package.Name;
+			res.References = package.References;
+
+			new UpdatePackage(package).Forward();
 		}
 	}
 }

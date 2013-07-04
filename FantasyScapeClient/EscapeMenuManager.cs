@@ -32,7 +32,7 @@ namespace FantasyScape.Client {
 			Button Close = new Button(EscapeWindow);
 			Close.SetPosition(10, 10);
 			Close.SetText("Continue");
-			Close.Clicked += delegate(Base sender) {
+			Close.Clicked += delegate(Base sender, ClickedEventArgs args) {
 				EscapeWindow.Hide();
 				Game.LockMouse = true;
 			};
@@ -40,7 +40,7 @@ namespace FantasyScape.Client {
 			Button Quit = new Button(EscapeWindow);
 			Quit.SetPosition(10, 40);
 			Quit.SetText("Quit");
-			Quit.Clicked += delegate(Base sender) {
+			Quit.Clicked += delegate(Base sender, ClickedEventArgs args) {
 				MainCanvas.Dispose();
 				Environment.Exit(0);
 			};

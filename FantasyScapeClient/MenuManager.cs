@@ -45,7 +45,7 @@ namespace FantasyScape.Client {
 			JoinGame.SetText("Join Game");
 			JoinGame.SetPosition(10, 70);
 			JoinGame.SetSize(220, 20);
-			JoinGame.Clicked += delegate(Base sender) {
+			JoinGame.Clicked += delegate(Base sender, ClickedEventArgs args) {
 				MainMenu.Hide();
 				FindGame.Show();
 
@@ -56,7 +56,7 @@ namespace FantasyScape.Client {
 			Quit.SetText("Quit");
 			Quit.SetPosition(10, 100);
 			Quit.SetSize(220, 20);
-			Quit.Clicked += delegate(Base sender) {
+			Quit.Clicked += delegate(Base sender, ClickedEventArgs args) {
 				MainCanvas.Dispose();
 				Environment.Exit(0);
 			};
@@ -88,7 +88,7 @@ namespace FantasyScape.Client {
 			Connect.SetText("Connect");
 			Connect.SetPosition(10, 200);
 			Connect.SetSize(200, 20);
-			Connect.Clicked += delegate(Base sender) {
+			Connect.Clicked += delegate(Base sender, ClickedEventArgs args) {
 				Program.Connect(IPAddress.Text, Int32.Parse(Port.Text));
 				MainMenu.Hide();
 				FindGame.Hide();
@@ -100,7 +100,7 @@ namespace FantasyScape.Client {
 			Back.SetText("Back");
 			Back.SetPosition(10, 225);
 			Back.SetSize(200, 20);
-			Back.Clicked += delegate(Base sender) {
+			Back.Clicked += delegate(Base sender, ClickedEventArgs args) {
 				Mode = MenuMode.MainMenu;
 				MainMenu.Show();
 				FindGame.Hide();

@@ -22,7 +22,7 @@ namespace FantasyScape.Client.Editor {
 			this.SetSelection(0);
 		}
 
-		private void ToolChanged(Base sender) {
+		private void ToolChanged(Base sender, EventArgs args) {
 			CurrentTool = (ITool)this.Selected.UserData;
 		}
 

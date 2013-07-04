@@ -5,7 +5,7 @@ using System.Text;
 using FantasyScape.Resources;
 
 namespace FantasyScape.NetworkMessages.Code {
-	class AddCode : Message {
+	public class AddCode : Message {
 		CodeFile Code;
 		Guid Parent;
 
@@ -35,7 +35,7 @@ namespace FantasyScape.NetworkMessages.Code {
 			if (res == null) {
 				throw new Exception("Could not find parent resource for texture");
 			}
-			((Folder)res).Children.Add(Code);
+			((Folder)res).Add(Code);
 
 			new AddCode(Code, Parent).Forward();
 		}
