@@ -1,4 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Block>
-	<Name>Dirt</Name>
-	<Texture Location="All">{B3D9EBD0-9DA6-4E97-9400-62DFC8826239}</Texture>
+  <Name>Dirt</Name>
+  <Texture Location="All">b3d9ebd0-9da6-4e97-9400-62dfc8826239</Texture>
 </Block>

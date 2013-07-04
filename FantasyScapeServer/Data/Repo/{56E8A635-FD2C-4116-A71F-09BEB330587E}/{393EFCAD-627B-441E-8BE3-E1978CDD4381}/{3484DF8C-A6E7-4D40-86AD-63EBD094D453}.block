@@ -1,5 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Block>
-	<Name>Water</Name>
-	<Texture Location="All">{9F4AD207-4AEE-48E8-8BAC-1B28C6A23408}</Texture>
-	<Liquid/>
+  <Name>Water</Name>
+  <Texture Location="All">9f4ad207-4aee-48e8-8bac-1b28c6a23408</Texture>
+  <Liquid />
 </Block>

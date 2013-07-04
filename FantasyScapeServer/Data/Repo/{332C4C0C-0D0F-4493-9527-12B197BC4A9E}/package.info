@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Texture>
-  <Name>Water</Name>
-</Texture>
+<Package>
+  <Name>Pong</Name>
+</Package>

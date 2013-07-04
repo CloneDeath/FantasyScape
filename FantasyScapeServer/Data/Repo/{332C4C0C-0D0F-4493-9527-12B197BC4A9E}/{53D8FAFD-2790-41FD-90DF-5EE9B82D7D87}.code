@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Code>
+  <Name>WorldGen.cs</Name>
+  <Language>CSharp</Language>
+  <Location>0</Location>
+  <Content>public class WorldGen {
+	public static void Main(){
+		Console.WriteLine("Hello");
+		asfd;
+	}
+}</Content>
+</Code>

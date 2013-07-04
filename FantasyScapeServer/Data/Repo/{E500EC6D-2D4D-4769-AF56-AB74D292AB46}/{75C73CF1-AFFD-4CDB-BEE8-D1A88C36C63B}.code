@@ -1,8 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Code>
-	<Name>TestCode.cs</Name>
-	<Language>CSharp</Language>
-	<Location>Shared</Location>
-	<Content>using System;
+  <Name>TestCode.cs</Name>
+  <Language>CSharp</Language>
+  <Location>Shared</Location>
+  <Content>using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
