@@ -16,6 +16,10 @@ namespace FantasyScape.Resources {
 
 		public List<CompilerError> Errors = new List<CompilerError>();
 
+		public CodeFile() {
+			ID = Guid.NewGuid();
+		}
+
 		public override void Save(string path) {
 			string CodePath = Path.Combine(path, GetIDString());
 

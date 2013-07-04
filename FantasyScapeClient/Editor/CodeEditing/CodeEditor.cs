@@ -66,7 +66,7 @@ namespace FantasyScape.Client.Editor {
 
 		void row_Clicked(Base sender, ClickedEventArgs arguments) {
 			CompilerError error = sender.UserData as CompilerError;
-			CodeArea.CursorPosition = new Point(0, error.Line - 1);
+			CodeArea.CursorPosition = new Point(error.Column - 1, error.Line - 1);
 			CodeArea.CursorEnd = new Point(CodeArea.GetTextLine(error.Line - 1).Length, error.Line - 1);
 			CodeArea.Focus();
 		}
