@@ -9,6 +9,7 @@ using System.CodeDom.Compiler;
 using System.Reflection;
 using FantasyScape.NetworkMessages.Code;
 using GLImp;
+using System.Drawing;
 
 namespace FantasyScape.Client.Editor {
 	class CodeEditor : WindowControl {
@@ -57,8 +58,17 @@ namespace FantasyScape.Client.Editor {
 
 			ErrorList.RemoveAllRows();
 			foreach (CompilerError error in Resource.Errors) {
-				ErrorList.AddRow(error.ErrorText);
+				ListBoxRow row = ErrorList.AddRow(error.ErrorText);
+				row.UserData = error;
+				row.DoubleClicked += new GwenEventHandler<ClickedEventArgs>(row_Clicked);
 			}
+		}
+
+		void row_Clicked(Base sender, ClickedEventArgs arguments) {
+			CompilerError error = sender.UserData as CompilerError;
+			CodeArea.CursorPosition = new Point(0, error.Line - 1);
+			CodeArea.CursorEnd = new Point(CodeArea.GetTextLine(error.Line - 1).Length, error.Line - 1);
+			CodeArea.Focus();
 		}
 	}
 }
