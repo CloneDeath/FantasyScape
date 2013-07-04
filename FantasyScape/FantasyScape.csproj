@@ -114,6 +114,7 @@
     <Compile Include="NetworkMessages\Code\UpdateCode.cs" />
     <Compile Include="NetworkMessages\Folders\UpdateFolder.cs" />
     <Compile Include="NetworkMessages\Packages\UpdatePackage.cs" />
+    <Compile Include="NetworkMessages\ServerInformation\UpdateServerInfo.cs" />
     <Compile Include="NetworkMessages\Textures\AddTexture.cs" />
     <Compile Include="NetworkMessages\Folders\AddFolder.cs" />
     <Compile Include="NetworkMessages\Packages\AddPackage.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Resources\Package.cs" />
     <Compile Include="Resources\Package.Manager.cs" />
     <Compile Include="Resources\Resource.cs" />
+    <Compile Include="ServerInfo.cs" />
     <Compile Include="Textures.cs" />
     <Compile Include="WorldHandlers\Chunk.cs" />
     <Compile Include="WorldHandlers\ChunkManager.cs" />

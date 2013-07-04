@@ -21,6 +21,8 @@ namespace FantasyScape {
 		public static List<Player> Players;
 		public static Player Self = null;
 
+		public static ServerInfo ServerInfo = new ServerInfo();
+
 		public enum GameState {
 			NotReady, Connecting, Playing
 		}

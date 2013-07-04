@@ -9,6 +9,7 @@ using FantasyScape.NetworkMessages;
 using FantasyScape.Client.Editor.PackageViewing;
 using System.Drawing;
 using FantasyScape.NetworkMessages.Code;
+using FantasyScape.NetworkMessages.ServerInformation;
 
 namespace FantasyScape.Client.Editor {
 	[Flags]
@@ -67,7 +68,12 @@ namespace FantasyScape.Client.Editor {
                         node.SetImage(@"Data\blocktype.png");
 						node.DoubleClicked += OnBlockClicked;
 					} else if (child.GetType() == typeof(CodeFile) && ((Filter & ResourceType.CodeFile) != 0)) {
-						node.SetImage(@"Data\SharedCode.png");
+						CodeFile cf = child as CodeFile;
+						if (cf.Errors.Count() > 0) {
+							node.SetImage(@"Data\SharedCode_Error.png");
+						} else {
+							node.SetImage(@"Data\SharedCode.png");
+						}
 						node.DoubleClicked += OnCodeClicked;
 					}
 					node.RightClicked += OnResourceRightClicked;
@@ -155,6 +161,15 @@ namespace FantasyScape.Client.Editor {
 							};
 						}
 					}
+				}
+
+				if (ClickedResource is Folder) {
+					MenuItem Startup = RightClickMenu.AddItem("Set as Startup Package");
+					Startup.Clicked += delegate(Base sender, ClickedEventArgs args2) {
+						Game.ServerInfo.StartupPackage = ((ResourceNode)item).Resource.ID;
+						new UpdateServerInfo(Game.ServerInfo).Send();
+						Package.TriggerOnChangeEvent();
+					};
 				}
 
 				MenuItem Rename = RightClickMenu.AddItem("Rename");

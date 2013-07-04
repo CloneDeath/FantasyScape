@@ -6,6 +6,7 @@ using Lidgren.Network;
 using GLImp;
 using FantasyScape.Resources;
 using FantasyScape.NetworkMessages.Code;
+using FantasyScape.NetworkMessages.ServerInformation;
 
 namespace FantasyScape.NetworkMessages {
 	public enum RequestType {
@@ -52,6 +53,9 @@ namespace FantasyScape.NetworkMessages {
 
 			PlayerAdd padd = new PlayerAdd(passign.player);
 			padd.Forward();
+
+			UpdateServerInfo info = new UpdateServerInfo(Game.ServerInfo);
+			info.Reply();
 		}
 
 		private void SendPackages() {

@@ -9,11 +9,15 @@ namespace FantasyScape {
 
 		public static void Load() {
 			LoadRepository();
+
+			Game.ServerInfo.Load(ResourceLocation);
 			Package.LoadAll(ResourceLocation);
 		}
 
 		internal static void Save() {
+			Game.ServerInfo.Save(ResourceLocation);			
 			Package.SaveAll(ResourceLocation);
+
 			SaveRepository();
 		}
 	}

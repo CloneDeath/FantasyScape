@@ -72,7 +72,7 @@ namespace FantasyScape.Resources {
 						this.Source = info.Value;
 						break;
 					default:
-						throw new Exception("Unknown element in blocktype '" + info.Name + "'.");
+						throw new Exception("Unknown element in CodeFile '" + info.Name + "'.");
 				}
 			}
 		}
