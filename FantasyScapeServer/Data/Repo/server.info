@@ -1,4 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Server>
-	<Name>Test Server</Name>
-	<StartupPackage>{332C4C0C-0D0F-4493-9527-12B197BC4A9E}</StartupPackage>
+  <Name>Test Server</Name>
+  <StartupPackage>{56E8A635-FD2C-4116-A71F-09BEB330587E}</StartupPackage>
 </Server>

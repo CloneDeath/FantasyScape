@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Code>
-  <Name>WorldGen.cs</Name>
+  <Name>Main.cs</Name>
   <Language>CSharp</Language>
   <Location>0</Location>
-  <Content>public class WorldGen {
+  <Content>using FantasyScape;
+
+public class Program {
 	public static void Main(){
-		Console.WriteLine("Hello");
-		asfd;
+		Chunk.SetSize(32, 32, 2);
+		World.SetBounds(1, 1, 1);
 	}
 }</Content>
 </Code>

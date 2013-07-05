@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Code>
+  <Name>WorldGen.cs</Name>
+  <Language>CSharp</Language>
+  <Location>0</Location>
+  <Content>using FantasyScape;
+
+public class WorldGen : WorldGenerator {
+	public override void GenerateChunk(Chunk chunk){
+		for (int x = 0; x &lt; Chunk.Size.X; x++){
+			for (int y = 0; y &lt; Chunk.Size.Y; y++){
+				chunk[x, y, 0] = BlockType.GetInstance("Background.block");
+				chunk[x, y, 1] = null;
+			}
+		}
+	}
+}</Content>
+</Code>

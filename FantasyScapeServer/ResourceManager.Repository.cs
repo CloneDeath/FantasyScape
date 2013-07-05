@@ -7,7 +7,6 @@ using System.IO;
 
 namespace FantasyScape {
 	partial class ResourceManager {
-		
 		static Repository Repo;
 		private static void LoadRepository() {
 			if (!Directory.Exists(Path.Combine(ResourceLocation, ".git"))) {
