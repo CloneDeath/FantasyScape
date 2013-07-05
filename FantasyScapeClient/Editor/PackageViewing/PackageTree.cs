@@ -38,7 +38,7 @@ namespace FantasyScape.Client.Editor {
 		public Action<CodeFile> CodeOpened;
 		public Action<Package> PackageOpened;
 
-		private void RefreshPackageView() {
+		public void RefreshPackageView() {
 			this.RemoveAll();
 			foreach (Package pack in Package.GetPackages()) {
 				ResourceNode tn = new ResourceNode(this, pack);
@@ -57,17 +57,21 @@ namespace FantasyScape.Client.Editor {
 			Folder folder = tn.Resource as Folder;
 			if (folder != null) {
 				foreach (Resource child in folder.GetChildren()) {
-					ResourceNode node = new ResourceNode(tn, child);
+					ResourceNode node = null;
 
                     if (child.GetType() == typeof(Folder)) {
+						node = new ResourceNode(tn, child);
                         node.SetImage(@"Data\folder.png");
 					} else if (child.GetType() == typeof(FSTexture) && ((Filter & ResourceType.Texture) != 0)) {
+						node = new ResourceNode(tn, child);
 						node.SetImage(@"Data\texture.png");
 						node.DoubleClicked += OnTexClicked;
 					} else if (child.GetType() == typeof(BlockType) && ((Filter & ResourceType.BlockType) != 0)) {
+						node = new ResourceNode(tn, child);
                         node.SetImage(@"Data\blocktype.png");
 						node.DoubleClicked += OnBlockClicked;
 					} else if (child.GetType() == typeof(CodeFile) && ((Filter & ResourceType.CodeFile) != 0)) {
+						node = new ResourceNode(tn, child);
 						CodeFile cf = child as CodeFile;
 						if (cf.Errors.Count() > 0) {
 							node.SetImage(@"Data\SharedCode_Error.png");
@@ -76,9 +80,11 @@ namespace FantasyScape.Client.Editor {
 						}
 						node.DoubleClicked += OnCodeClicked;
 					}
-					node.RightClicked += OnResourceRightClicked;
 
-					AddChildren(node);
+					if (node != null) {
+						node.RightClicked += OnResourceRightClicked;
+						AddChildren(node);
+					}
 				}
 			}
 		}
@@ -144,7 +150,7 @@ namespace FantasyScape.Client.Editor {
 							submenu.SetImage(@"Data\blocktype.png");
 							submenu.Clicked += delegate(Base sender, ClickedEventArgs args2) {
 								BlockType bt = new BlockType();
-								bt.Name = "NewTexture.png";
+								bt.Name = "NewBlock.block";
 								FolderResource.Add(bt);
 								new AddBlockType(bt, ClickedResource.ID).Send();
 							};

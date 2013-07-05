@@ -27,6 +27,10 @@ namespace FantasyScape.Resources {
 			Name = Message.ReadString();
 		}
 
+		internal virtual void Copy(Resource other) {
+			this.Name = other.Name;
+		}
+
 		internal virtual Resource GetResource(Guid ResourceID) {
 			if (this.ID == ResourceID) {
 				return this;

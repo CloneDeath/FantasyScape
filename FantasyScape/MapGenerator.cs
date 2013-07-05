@@ -6,70 +6,21 @@ using System.Drawing;
 
 namespace FantasyScape {
 	class MapGenerator {
-		Guid GrassGuid;
-		Guid WaterGuid;
-		Guid DirtGuid;
-		Guid GraniteGuid;
-
-		Bitmap current_heightmap;
-
-		public MapGenerator() {
-			//TODO: Remove this terrible temporary hack. Will require moving terrain generation code to in-game.
-			string Grass = "{6F4C26B5-BF84-41F2-A166-BA6C3FB3C47E}";
-			Guid.TryParse(Grass, out GrassGuid);
-
-			string Water = "{3484DF8C-A6E7-4D40-86AD-63EBD094D453}";
-			Guid.TryParse(Water, out WaterGuid);
-
-			string Dirt = "{E632A3E7-F377-4D60-9E89-20EC068AF3A3}";
-			Guid.TryParse(Dirt, out DirtGuid);
-
-			string Granite = "{D7C42849-C769-476A-B7B1-2EE4A806D7A5}";
-			Guid.TryParse(Granite, out GraniteGuid);
-		}
-
 		public Chunk GenerateTerrain(Vector3i Location) {
-			Chunk ret = new Chunk(Location);
-			current_heightmap = HeightMap.GetHeightmap(Location.X, Location.Y);
-			GenerateBase(ret, Location.Z);
-			GenerateWater(ret, Location.Z);
-			return ret;
+			Chunk chunk = new Chunk(Location);
+			foreach (WorldGenerator gen in Generators) {
+				gen.GenerateChunk(chunk);
+			}
+			return chunk;
 		}
 
-		private void GenerateBase(Chunk chunk, int ChunkZ) {
-
-			Random ran = new Random();
-
-			//Create Terrain
-			for (int x = 0; x < Chunk.Size; x++) {
-				for (int y = 0; y < Chunk.Size; y++) {
-					for (int z = 0; z < Chunk.Size; z++) {
-						Vector3i Location = new Vector3i(x, y, z);
-						if (z + (ChunkZ * Chunk.Size) < current_heightmap.GetPixel(x, y).R - 100) {
-							if (z + (ChunkZ * Chunk.Size) > current_heightmap.GetPixel(x, y).R - 100 - (int)(5 + ran.Next(3))) {
-								chunk[Location] = new Block(DirtGuid);
-							} else {
-								chunk[Location] = new Block(GraniteGuid);
-							}
-						}
-
-						if (z + (ChunkZ * Chunk.Size) == current_heightmap.GetPixel(x, y).R - 100) {
-							chunk[Location] = new Block(GrassGuid);
-						}
-					}
-				}
-			}
+		List<WorldGenerator> Generators = new List<WorldGenerator>();
+		internal void Clear() {
+			Generators.Clear();
 		}
 
-		private const int WaterLevel = 0;
-		private void GenerateWater(Chunk current, int ChunkZ) {
-			for (int x = 0; x < Chunk.Size; x++) {
-				for (int y = 0; y < Chunk.Size; y++) {
-					for (int z = (int)current_heightmap.GetPixel(x, y).R - 100 + 1; z <= WaterLevel; z++) {
-						current[new Vector3i(x, y, z - (ChunkZ * Chunk.Size))] = new Block(WaterGuid);
-					}
-				}
-			}
+		internal void Add(List<WorldGenerator> list) {
+			Generators.AddRange(list);
 		}
 	}
 }

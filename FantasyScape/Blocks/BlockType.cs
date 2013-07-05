@@ -135,6 +135,20 @@ namespace FantasyScape {
 			}
 		}
 
+		internal override void Copy(Resource other) {
+			base.Copy(other);
+
+			BlockType res = other as BlockType;
+			this.Liquid = res.Liquid;
+			for (int i = 0; i < (int)BlockSide.Count; i++) {
+				Texture[i] = res.Texture[i];
+			}
+		}
+
+		public static Block GetInstance(string BlockName) {
+			return new Block(Package.FindResourceByName(BlockName).ID);
+		}
+
 		public override void SendUpdate() {
 			new UpdateBlockType(this).Send();
 		}

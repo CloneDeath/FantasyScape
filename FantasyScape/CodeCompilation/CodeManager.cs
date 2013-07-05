@@ -8,8 +8,9 @@ using System.Reflection;
 using FantasyScape.Resources;
 
 namespace FantasyScape.CodeCompilation {
-	class CodeManager {
-		internal static void Compile(List<CodeFile> CodeFiles)
+	public class CodeManager {
+		CompilerResults Assembly;
+		internal void Compile(List<CodeFile> CodeFiles)
 		{
 			if (CodeFiles.Count() == 0) return;
 
@@ -22,20 +23,9 @@ namespace FantasyScape.CodeCompilation {
 				code.ClearErrors();
 				CodeSources.Add(code.Source);
 			}
-			CompilerResults results = csc.CompileAssemblyFromSource(parameters, CodeSources.ToArray());
+			Assembly = csc.CompileAssemblyFromSource(parameters, CodeSources.ToArray());
 
-			//if (results.Errors.Count == 0) {
-			//    Module module = results.CompiledAssembly.GetModules()[0];
-
-			//    foreach (Type mt in module.GetTypes()) {
-			//        MethodInfo methInfo = mt.GetMethod("Main");
-			//        if (methInfo != null) {
-			//            methInfo.Invoke(null, new object[0]);
-			//        }
-			//    }
-			//}
-
-			foreach (CompilerError error in results.Errors) {
+			foreach (CompilerError error in Assembly.Errors) {
 				int CodeIndex = GetCodeIndex(error.FileName);
 				CodeFiles[CodeIndex].AddError(error);
 			}
@@ -46,6 +36,36 @@ namespace FantasyScape.CodeCompilation {
 
 			//Code index is 2nd to last part
 			return Int32.Parse(parts[parts.Count() - 2]);
+		}
+
+		public void RunMain() {
+			if (Assembly.Errors.HasErrors) {
+				throw new Exception("Error! The assembly has errors!");
+			}
+
+			foreach (Module module in Assembly.CompiledAssembly.GetModules()) {
+				foreach (Type mt in module.GetTypes()) {
+					MethodInfo methInfo = mt.GetMethod("Main");
+					if (methInfo != null) {
+						methInfo.Invoke(null, new object[0]);
+					}
+				}
+			}
+		}
+
+		public List<WorldGenerator> GetWorldGens() {
+			List<WorldGenerator> ret = new List<WorldGenerator>();
+			foreach (Module module in Assembly.CompiledAssembly.GetModules()) {
+				foreach (Type mt in module.GetTypes()) {
+					if (typeof(WorldGenerator).IsAssignableFrom(mt)) {
+						ConstructorInfo info = mt.GetConstructor(new Type[0]);
+						if (info != null) {
+							ret.Add((WorldGenerator)info.Invoke(new object[0]));
+						}
+					}
+				}
+			}
+			return ret;
 		}
 	}
 }

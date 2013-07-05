@@ -67,5 +67,13 @@ namespace FantasyScape {
 				}
 			}
 		}
+
+		public void ClearWorldGen() {
+			WorldGen.Clear();
+		}
+
+		public void AddWorldGens(List<WorldGenerator> list) {
+			WorldGen.Add(list);
+		}
 	}
 }

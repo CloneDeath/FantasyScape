@@ -5,6 +5,8 @@ using System.Text;
 using System.Diagnostics;
 using Lidgren.Network;
 using FantasyScape.NetworkMessages;
+using FantasyScape.Resources;
+using FantasyScape.CodeCompilation;
 
 namespace FantasyScape.Server {
 	class GameServer {
@@ -17,17 +19,14 @@ namespace FantasyScape.Server {
 			Console.WriteLine("Loading Resources...");
 			ResourceManager.Load();
 
-			/* Generate World */
-			Console.WriteLine("Generating World...");
-			int InitialRange = 3;
-			for (int x = -InitialRange; x <= InitialRange; x++) {
-				for (int y = -InitialRange; y <= InitialRange; y++) {
-					for (int z = -InitialRange; z <= InitialRange; z++) {
-						//Ensure these chunks are loaded by trying to request them
-						Chunk c = Game.World.Chunks[new Vector3i(x, y, z)];
-					}
-				}
-			}
+			/* Setting Up Server */
+			Console.WriteLine("Starting Up Server...");
+			Package.RecompilePackages();
+			CodeManager StartUp = Package.GetPackage(Game.ServerInfo.StartupPackage).CodeManager;
+			StartUp.RunMain();
+			Game.World.Chunks.ClearWorldGen();
+			Game.World.Chunks.AddWorldGens(StartUp.GetWorldGens());
+
 
 			/* Listen for Clients */
 			NetPeerConfiguration Configuration = new NetPeerConfiguration("FantasyScape");

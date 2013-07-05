@@ -3,27 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lidgren.Network;
+using FantasyScape.Resources;
 
 namespace FantasyScape.NetworkMessages {
 	class UpdateBlockType : Message {
+		BlockType bt;
 		public UpdateBlockType() {
-			throw new NotImplementedException();
+			bt = new BlockType();
 		}
 
 		public UpdateBlockType(BlockType block) {
-			throw new NotImplementedException();
+			bt = block;
 		}
 
 		protected override void WriteData(NetOutgoingMessage Message) {
-			throw new NotImplementedException();
+			bt.Write(Message);
 		}
 
 		protected override void ReadData(NetIncomingMessage Message) {
-			throw new NotImplementedException();
+			bt.Read(Message);
 		}
 
 		protected override void ExecuteMessage() {
-			throw new NotImplementedException();
+			BlockType res = (BlockType)Package.FindResource(bt.ID);
+			res.Copy(bt);
+			new UpdateBlockType(bt).Forward();
 		}
 	}
 }

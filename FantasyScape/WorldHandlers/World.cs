@@ -9,9 +9,16 @@ using FantasyScape.NetworkMessages.Chunks;
 
 namespace FantasyScape {
 	public class World {
+		public static Vector3i Bounds = new Vector3i(0, 0, 0);
 		public ChunkManager Chunks = new ChunkManager();
 
 		public World() {
+		}
+
+		private bool InsideBounds(Vector3i chunk) {
+			return !((Bounds.X > 0 && chunk.X > Bounds.X) ||
+					(Bounds.Y > 0 && chunk.Y > Bounds.Y) ||
+					(Bounds.Z > 0 && chunk.Z > Bounds.Z));
 		}
 
 		#region BlockAccessors
@@ -20,27 +27,27 @@ namespace FantasyScape {
 			BlockCoords = new Vector3i();
 
 			if (GlobalCoords.X >= 0) {
-				ChunkCoords.X = GlobalCoords.X / Chunk.Size;
-				BlockCoords.X = GlobalCoords.X % Chunk.Size;
+				ChunkCoords.X = GlobalCoords.X / Chunk.Size.X;
+				BlockCoords.X = GlobalCoords.X % Chunk.Size.X;
 			} else {
-				ChunkCoords.X = ((GlobalCoords.X + 1) / Chunk.Size) - 1;
-				BlockCoords.X = Chunk.Size + (((GlobalCoords.X + 1) % Chunk.Size) - 1);
+				ChunkCoords.X = ((GlobalCoords.X + 1) / Chunk.Size.X) - 1;
+				BlockCoords.X = Chunk.Size.X + (((GlobalCoords.X + 1) % Chunk.Size.X) - 1);
 			}
 
 			if (GlobalCoords.Y >= 0) {
-				ChunkCoords.Y = GlobalCoords.Y / Chunk.Size;
-				BlockCoords.Y = GlobalCoords.Y % Chunk.Size;
+				ChunkCoords.Y = GlobalCoords.Y / Chunk.Size.Y;
+				BlockCoords.Y = GlobalCoords.Y % Chunk.Size.Y;
 			} else {
-				ChunkCoords.Y = ((GlobalCoords.Y + 1) / Chunk.Size) - 1;
-				BlockCoords.Y = Chunk.Size + (((GlobalCoords.Y + 1) % Chunk.Size) - 1);
+				ChunkCoords.Y = ((GlobalCoords.Y + 1) / Chunk.Size.Y) - 1;
+				BlockCoords.Y = Chunk.Size.Y + (((GlobalCoords.Y + 1) % Chunk.Size.Y) - 1);
 			}
 
 			if (GlobalCoords.Z >= 0) {
-				ChunkCoords.Z = GlobalCoords.Z / Chunk.Size;
-				BlockCoords.Z = GlobalCoords.Z % Chunk.Size;
+				ChunkCoords.Z = GlobalCoords.Z / Chunk.Size.Z;
+				BlockCoords.Z = GlobalCoords.Z % Chunk.Size.Z;
 			} else {
-				ChunkCoords.Z = ((GlobalCoords.Z + 1) / Chunk.Size) - 1;
-				BlockCoords.Z = Chunk.Size + (((GlobalCoords.Z + 1) % Chunk.Size) - 1);
+				ChunkCoords.Z = ((GlobalCoords.Z + 1) / Chunk.Size.Z) - 1;
+				BlockCoords.Z = Chunk.Size.Z + (((GlobalCoords.Z + 1) % Chunk.Size.Z) - 1);
 			}
 		}
 
@@ -50,7 +57,11 @@ namespace FantasyScape {
 				Vector3i sub;
 				GlobalToLocal(Location, out chunk, out sub);
 
-				return Chunks[chunk][sub];
+				if (!InsideBounds(chunk)) {
+					return null;
+				} else {
+					return Chunks[chunk][sub];
+				}
 			}
 			set {
 				Vector3i chunk;
@@ -193,10 +204,16 @@ namespace FantasyScape {
 				for (int y = -ViewDistance; y <= ViewDistance; y++) {
 					for (int z = -ViewDistance; z <= ViewDistance; z++) {
 						Vector3i TargetChunk = new Vector3i(
-							x + (int)(p.xpos / Chunk.Size), 
-							y + (int)(p.ypos / Chunk.Size), 
-							z + (int)(p.zpos / Chunk.Size));
-						Chunks[TargetChunk].Draw(this, p);
+							x + (int)(p.xpos / Chunk.Size.X), 
+							y + (int)(p.ypos / Chunk.Size.Y), 
+							z + (int)(p.zpos / Chunk.Size.Z));
+						if ((Bounds.X > 0 && TargetChunk.X > Bounds.X) ||
+							(Bounds.Y > 0 && TargetChunk.Y > Bounds.Y) ||
+							(Bounds.Z > 0 && TargetChunk.Z > Bounds.Z)) {
+							//Do nothing
+						} else {
+							Chunks[TargetChunk].Draw(this, p);
+						}
 					}
 				}
 			}
@@ -241,6 +258,10 @@ namespace FantasyScape {
 			foreach (Chunk c in Chunks) {
 				c.Dirty = true;
 			}
+		}
+
+		public static void SetBounds(int X, int Y, int Z) {
+			Bounds = new Vector3i(X, Y, Z);
 		}
 	}
 }

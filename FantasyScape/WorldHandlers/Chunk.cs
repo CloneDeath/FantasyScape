@@ -7,12 +7,12 @@ using GLImp;
 
 namespace FantasyScape {
 	public class Chunk {
+		public static Vector3i Size = new Vector3i(1, 1, 1);
 		public static Chunk Null = new Chunk(null);
 
-		public const int Size = 8;
-		Block[, ,] Blocks = new Block[Size, Size, Size];
+		Block[, ,] Blocks;
 
-		Vector3i Location;
+		public Vector3i Location;
 
 		List<Block> exposedBlocks;
 		List<Vector3i> exposedLocations;
@@ -24,7 +24,8 @@ namespace FantasyScape {
 		int DisplayList;
 
 		public Chunk(Vector3i Location) {
-			Array.Clear(Blocks, 0, Size * Size * Size);
+			Blocks = new Block[Size.X, Size.Y, Size.Z];
+			Array.Clear(Blocks, 0, Size.X * Size.Y * Size.Z);
 			updateBlocks = new List<Block>();
 			updateLocations = new List<Vector3i>();
 			Dirty = true;
@@ -39,9 +40,12 @@ namespace FantasyScape {
 		#region Block Access
 		public Block this[Vector3i Location] {
 			get {
-				if (Location.X < 0 || Location.X >= Size || 
-					Location.Y < 0 || Location.Y >= Size || 
-					Location.Z < 0 || Location.Z >= Size) {
+				if (Blocks.Length != Size.X * Size.Y * Size.Z) {
+					return null;
+				}
+				if (Location.X < 0 || Location.X >= Size.X || 
+					Location.Y < 0 || Location.Y >= Size.Y || 
+					Location.Z < 0 || Location.Z >= Size.Z) {
 					return null;
 				} else {
 					return Blocks[Location.X, Location.Y, Location.Z];
@@ -49,14 +53,23 @@ namespace FantasyScape {
 			}
 
 			set {
-				if (Location.X < 0 || Location.X >= Size || 
-					Location.Y < 0 || Location.Y >= Size || 
-					Location.Z < 0 || Location.Z >= Size) {
+				if (Location.X < 0 || Location.X >= Size.X || 
+					Location.Y < 0 || Location.Y >= Size.Y || 
+					Location.Z < 0 || Location.Z >= Size.Z) {
 					return;
 				} else {
 					Blocks[Location.X, Location.Y, Location.Z] = value;
 					Dirty = true;
 				}
+			}
+		}
+
+		public Block this[int x, int y, int z] {
+			get {
+				return this[new Vector3i(x, y, z)];
+			}
+			set {
+				this[new Vector3i(x, y, z)] = value;
 			}
 		}
 		#endregion
@@ -105,9 +118,9 @@ namespace FantasyScape {
 
 		#region Serialization
 		internal void Write(Lidgren.Network.NetOutgoingMessage Message) {
-			for (int x = 0; x < Size; x++) {
-				for (int y = 0; y < Size; y++) {
-					for (int z = 0; z < Size; z++) {
+			for (int x = 0; x < Size.X; x++) {
+				for (int y = 0; y < Size.Y; y++) {
+					for (int z = 0; z < Size.Z; z++) {
 						Vector3i Location = new Vector3i(x, y, z);
 						if (this[Location] != null) {
 							Message.Write(true);
@@ -121,9 +134,9 @@ namespace FantasyScape {
 		}
 
 		internal void Read(Lidgren.Network.NetIncomingMessage Message) {
-			for (int x = 0; x < Size; x++) {
-				for (int y = 0; y < Size; y++) {
-					for (int z = 0; z < Size; z++) {
+			for (int x = 0; x < Size.X; x++) {
+				for (int y = 0; y < Size.Y; y++) {
+					for (int z = 0; z < Size.Z; z++) {
 						bool BlockExists = Message.ReadBoolean();
 						Vector3i Location = new Vector3i(x, y, z);
 						if (BlockExists) {
@@ -156,9 +169,9 @@ namespace FantasyScape {
 				exposedBlocks = new List<Block>();
 				exposedLocations = new List<Vector3i>();
 
-				for (int x = 0; x < Size; x++) {
-					for (int y = 0; y < Size; y++) {
-						for (int z = 0; z < Size; z++) {
+				for (int x = 0; x < Size.X; x++) {
+					for (int y = 0; y < Size.Y; y++) {
+						for (int z = 0; z < Size.Z; z++) {
 							Vector3i loc = new Vector3i(x, y, z);
 							if (this[loc] != null && world.IsExposed(loc + (Location * Size))) {
 								exposedBlocks.Add(this[loc]);
@@ -185,13 +198,13 @@ namespace FantasyScape {
 		public bool ChunkInFrustum(Player p) {
 			Vector3i Offset = Location * Size;
 
-			if (p.xpos >= Offset.X && p.xpos <= Offset.X + Size && p.ypos >= Offset.Y && p.ypos <= Offset.Y + Size
-				&& p.zpos >= Offset.Z && p.zpos <= Offset.Z + Size) {
+			if (p.xpos >= Offset.X && p.xpos <= Offset.X + Size.X && p.ypos >= Offset.Y && p.ypos <= Offset.Y + Size.Y
+				&& p.zpos >= Offset.Z && p.zpos <= Offset.Z + Size.Z) {
 				return true;
 			}
 
-			return p.frustum.sphereInFrustum(new Vector3(Offset.X + (Size / 2), Offset.Y + (Size / 2), Offset.Z + (Size / 2)), 
-				(float)(Size)) != Frustum.OUTSIDE;
+			return p.frustum.sphereInFrustum(new Vector3(Offset.X + (Size.X / 2), Offset.Y + (Size.Y / 2), Offset.Z + (Size.Z / 2)), 
+				(float)(Size.Length)) != Frustum.OUTSIDE;
 		}
 
 		public void Draw(World w, Player p) {
@@ -210,6 +223,11 @@ namespace FantasyScape {
 
 				GraphicsManager.CallList(DisplayList);
 			}
+		}
+
+		public static void SetSize(int SizeX, int SizeY, int SizeZ) {
+			Size = new Vector3i(SizeX, SizeY, SizeZ);
+			Null = new Chunk(null);
 		}
 	}
 }

@@ -12,6 +12,7 @@ using FantasyScape.CodeCompilation;
 namespace FantasyScape.Resources {
 	public partial class Package : Folder {
 		public List<Guid> References = new List<Guid>();
+		public CodeManager CodeManager = new CodeManager();
 
 		public Package() {
 			this.ID = Guid.NewGuid();
@@ -135,6 +136,21 @@ namespace FantasyScape.Resources {
 			}
 
 			CodeManager.Compile(codes);
+		}
+
+		public static Package GetPackage(Guid guid) {
+			return Packages[guid];
+		}
+
+		internal static Resource FindResourceByName(string ResourceName) {
+			foreach (Package pkg in Packages.Values) {
+				foreach (Resource res in pkg.GetAllChildren()) {
+					if (res.Name == ResourceName) {
+						return res;
+					}
+				}
+			}
+			return null;
 		}
 	}
 }

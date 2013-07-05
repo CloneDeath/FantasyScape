@@ -11,8 +11,6 @@ using FantasyScape.Blocks;
 namespace FantasyScape.Client.Editor {
 	class BlockTypeEditor : WindowControl {
         BlockType Resource;
-
-		TextBox TypeName;
         TextureRefBox[] panels = new TextureRefBox[(int)BlockSide.Count];
         LabeledCheckBox Liquid;
 
@@ -20,46 +18,31 @@ namespace FantasyScape.Client.Editor {
             this.Resource = resource;
 
             this.Title = "Block Type Editor";
-            this.SetSize(375, 450);
+            this.SetSize(375, 425);
 			this.SetPosition((int)MouseManager.GetMousePositionWindows().X, (int)MouseManager.GetMousePositionWindows().Y);
-
-			Label lblName = new Label(this);
-			lblName.AutoSizeToContents = true;
-			lblName.SetPosition(10, 10);
-			lblName.Text = "Name:";
-
-            TypeName = new TextBox(this);
-            TypeName.Width = 200;
-			TypeName.SetPosition(55, 10);
 
             for (int i = 0; i < (int)BlockSide.Count; i++) {
                 panels[i] = new TextureRefBox(this, Resource.Texture[i]);
-                panels[i].SetPosition(10 + ((i%2) * 170), 35 + ((i/2) * 85));
+                panels[i].SetPosition(10 + ((i%2) * 170), 10 + ((i/2) * 85));
                 panels[i].Text = ((BlockSide)i).ToString();
+				panels[i].TextureChanged += SubmitChanges;
             }
 
             Liquid = new LabeledCheckBox(this);
             Liquid.Text = "Liquid: ";
-            Liquid.SetPosition(10, 375);
+            Liquid.SetPosition(10, 350);
 			Liquid.CheckChanged += SubmitChanges;
 
 		}
 
-		//bool EnableSubmit = true;
 		private void SubmitChanges(Base sender, EventArgs args) {
-			throw new NotImplementedException();
-			//if (EnableSubmit && BlockTypes.Exists(TypeName.Text)) {
-			//    throw new NotImplementedException();
-			//    //BlockType b = BlockTypes.GetBlockType(TypeName.Text);
-			//    ////b.Name = Name;
-			//    //b.TopTexture = (string)TopTex.SelectedItem.UserData;
-			//    //b.SideTexture = (string)SideTex.SelectedItem.UserData;
-			//    //b.BotTexture = (string)BotTex.SelectedItem.UserData;
-			//    //b.Liquid = Liquid.IsChecked;
+			for (int i = 0; i < (int)BlockSide.Count; i++) {
+				Resource.Texture[i] = panels[i].Texture;
+			}
 
-			//    //BlockTypeData btd = new BlockTypeData(b);
-			//    //btd.Send();
-			//}
+			Resource.Liquid = Liquid.IsChecked;
+
+			Resource.SendUpdate();
 		}
 	}
 }

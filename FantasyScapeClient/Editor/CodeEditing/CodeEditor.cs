@@ -22,6 +22,7 @@ namespace FantasyScape.Client.Editor {
 
 
 		public CodeEditor(CodeFile resource) : base(DevelopmentMenu.Instance) {
+			this.Title = "Code Editor";
 			this.Resource = resource;
 			this.SetSize(600, 400);
 			this.SetPosition((int)MouseManager.GetMousePositionWindows().X, (int)MouseManager.GetMousePositionWindows().Y);

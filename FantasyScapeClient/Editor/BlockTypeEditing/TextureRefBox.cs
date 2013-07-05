@@ -8,10 +8,11 @@ using FantasyScape.Resources;
 
 namespace FantasyScape.Client.Editor.BlockTypeEditing {
     class TextureRefBox : GroupBox {
-        FSTextureReference Texture;
+        public FSTextureReference Texture;
         Label TextureName;
         LabeledCheckBox Defined;
         GLImpTexturePanel panel;
+		public GwenEventHandler<EventArgs> TextureChanged;
 
         public TextureRefBox(Base parent, FSTextureReference Texture) : base(parent) {
             this.Texture = Texture;
@@ -24,6 +25,7 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
             Defined = new LabeledCheckBox(this);
             Defined.Text = "Defined";
             Defined.SetPosition(10, 20);
+			Defined.CheckChanged += new GwenEventHandler<EventArgs>(Defined_CheckChanged);
 
             panel = new GLImpTexturePanel(this);
             panel.SetSize(50, 50);
@@ -48,8 +50,23 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
 
 		private void SetTexture(FSTexture tex) {
 			Texture.Texture = tex;
+			if (tex.ID != Guid.Empty) {
+				Texture.Defined = true;
+			}
 			RefreshAll();
 			Game.World.DirtyAll();
+			if (TextureChanged != null) {
+				TextureChanged(this, EventArgs.Empty);
+			}
+		}
+
+		void Defined_CheckChanged(Base sender, EventArgs arguments) {
+			Texture.Defined = Defined.IsChecked;
+			RefreshAll();
+			Game.World.DirtyAll();
+			if (TextureChanged != null) {
+				TextureChanged(this, EventArgs.Empty);
+			}
 		}
     }
 }

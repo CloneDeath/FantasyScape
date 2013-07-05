@@ -55,6 +55,9 @@ namespace FantasyScape {
 		internal void Write(NetOutgoingMessage Message) {
 			Message.Write(Name);
 			Message.Write(StartupPackage.ToString());
+			Message.Write((Int32)Chunk.Size.X);
+			Message.Write((Int32)Chunk.Size.Y);
+			Message.Write((Int32)Chunk.Size.Z);
 		}
 
 		internal void Read(NetIncomingMessage Message) {
@@ -62,11 +65,15 @@ namespace FantasyScape {
 			if (!Guid.TryParse(Message.ReadString(), out StartupPackage)) {
 				throw new Exception("Unable to parse GUID for startup package in server info.");
 			}
+			Chunk.Size.X = Message.ReadInt32();
+			Chunk.Size.Y = Message.ReadInt32();
+			Chunk.Size.Z = Message.ReadInt32();
 		}
 
 		internal void Copy(ServerInfo info) {
 			this.Name = info.Name;
 			this.StartupPackage = info.StartupPackage;
+			Chunk.SetSize(Chunk.Size.X, Chunk.Size.Y, Chunk.Size.Z);
 		}
 	}
 }

@@ -9,7 +9,6 @@ using FantasyScape.Resources;
 namespace FantasyScape.Client.Editor.BlockTypeEditing {
 	class OpenTextureWindow : WindowControl {
 		PackageTree PackageView;
-		Button OK;
 		Button Cancel;
 
 		public delegate void TextureCallback(FSTexture texture);
@@ -25,16 +24,14 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
 			PackageView.SetPosition(10, 10);
 			PackageView.Filter = ResourceType.Texture;
 			PackageView.TextureOpened += ItemSelected;
-
-			OK = new Button(this);
-			OK.Text = "OK";
-			/*OK.Clicked += delegate(Base item) {
-				ItemSelected(PackageView
-			};*/
+			PackageView.RefreshPackageView();
 
 			Cancel = new Button(this);
 			Cancel.Text = "Cancel";
 			Cancel.Clicked += delegate(Base item, ClickedEventArgs args) {
+				FSTexture none = new FSTexture();
+				none.ID = Guid.Empty;
+				this.ItemSelected(none);
 				this.Close();
 			};
 
@@ -50,7 +47,6 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
 
 		void OnResize(Base control, EventArgs args) {
 			PackageView.SetSize(this.Width - 40, this.Height - 85);
-			OK.SetPosition(this.Width - 120, this.Height - 70);
 			Cancel.SetPosition(10, this.Height - 70);
 		}
 	}
