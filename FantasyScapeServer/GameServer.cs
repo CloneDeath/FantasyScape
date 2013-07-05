@@ -14,18 +14,25 @@ namespace FantasyScape.Server {
 		static Stopwatch UpdateTimer;
 		static double UpdateRate = 30.0;
 
+		public ResourceManager Resources { get; private set; }
+		
 		public GameServer() {
 			/* Load Resources */
 			Console.WriteLine("Loading Resources...");
-			ResourceManager.Load();
+			Resources = new ResourceManager();
+			Resources.Load();
 
 			/* Setting Up Server */
 			Console.WriteLine("Starting Up Server...");
-			Package.RecompilePackages();
-			CodeManager StartUp = Package.GetPackage(Game.ServerInfo.StartupPackage).CodeManager;
-			StartUp.RunMain();
+			//Package.RecompilePackages();
+			//CodeManager StartUp = Package.GetPackage(Game.ServerInfo.StartupPackage).CodeManager;
+			//StartUp.RunMain();
+			//Game.World.Chunks.ClearWorldGen();
+			//Game.World.Chunks.AddWorldGens(StartUp.GetWorldGens());
 			Game.World.Chunks.ClearWorldGen();
-			Game.World.Chunks.AddWorldGens(StartUp.GetWorldGens());
+			List<WorldGenerator> temp = new List<WorldGenerator>();
+			temp.Add(new WorldGenerator());
+			Game.World.Chunks.AddWorldGens(temp);
 
 
 			/* Listen for Clients */
@@ -42,10 +49,10 @@ namespace FantasyScape.Server {
 			Console.WriteLine("Ready!");
 		}
 
-		internal static void Run() {
+		internal void Run() {
 			/* Respond to Requests and Update World */
 			while (true) {
-				ConsoleHandler.Update();
+				ConsoleHandler.Update(this);
 
 				if (UpdateTimer.Elapsed.TotalSeconds >= 1 / UpdateRate) {
 					UpdateTimer.Restart();
@@ -61,7 +68,7 @@ namespace FantasyScape.Server {
 			}
 		}
 
-		private static void ReadMessages(double TimeToDelay) {
+		private void ReadMessages(double TimeToDelay) {
 			List<NetIncomingMessage> Messages = new List<NetIncomingMessage>();
 			NetIncomingMessage nim = Server.WaitMessage((int)(TimeToDelay * 1000));
 			if (nim != null){

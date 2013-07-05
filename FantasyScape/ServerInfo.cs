@@ -5,14 +5,31 @@ using System.Text;
 using System.Xml.Linq;
 using System.IO;
 using Lidgren.Network;
+using FantasyScape.Resources;
 
 namespace FantasyScape {
 	public class ServerInfo {
+		public enum ServerMode {
+			Gameplay,
+			Development
+		}
 		public string Name;
 		public Guid StartupPackage;
+		public ServerMode Mode;
 
 		public void Load(string ResourceLocation) {
-			XDocument doc = XDocument.Load(Path.Combine(ResourceLocation, "server.info"));
+			string InfoFile = Path.Combine(ResourceLocation, "server.info");
+			if (File.Exists(InfoFile)) {
+				LoadServerInfo(ResourceLocation, InfoFile);
+			} else {
+				Name = "FantasyScape Server";
+				StartupPackage = Guid.Empty;
+				Mode = ServerMode.Development;
+			}
+		}
+
+		private void LoadServerInfo(string ResourceLocation, string InfoFile) {
+			XDocument doc = XDocument.Load(InfoFile);
 
 			XElement Base = doc.FirstNode as XElement;
 			if (Base == null || Base.Name != "Server") {
@@ -26,9 +43,12 @@ namespace FantasyScape {
 						this.Name = info.Value;
 						break;
 					case "StartupPackage":
-						if (!Guid.TryParse(info.Value, out StartupPackage)){
+						if (!Guid.TryParse(info.Value, out StartupPackage)) {
 							throw new Exception("Unable to parse Guid for startup package");
 						}
+						break;
+					case "Mode":
+						this.Mode = (ServerMode)Enum.Parse(typeof(ServerMode), info.Value);
 						break;
 					default:
 						throw new Exception("Unknown element in ServerInfo '" + info.Name + "'.");
@@ -44,8 +64,11 @@ namespace FantasyScape {
 					XElement Name = new XElement("Name", this.Name);
 					Base.Add(Name);
 
-					XElement Language = new XElement("StartupPackage", "{" + (StartupPackage.ToString().ToUpper()) + "}");
-					Base.Add(Language);
+					XElement Package = new XElement("StartupPackage", "{" + (this.StartupPackage.ToString().ToUpper()) + "}");
+					Base.Add(Package);
+
+					XElement Mode = new XElement("Mode", this.Mode.ToString());
+					Base.Add(Mode);
 				}
 				doc.Add(Base);
 			}
@@ -55,6 +78,7 @@ namespace FantasyScape {
 		internal void Write(NetOutgoingMessage Message) {
 			Message.Write(Name);
 			Message.Write(StartupPackage.ToString());
+			Message.Write((Int32)Mode);
 			Message.Write((Int32)Chunk.Size.X);
 			Message.Write((Int32)Chunk.Size.Y);
 			Message.Write((Int32)Chunk.Size.Z);
@@ -65,6 +89,7 @@ namespace FantasyScape {
 			if (!Guid.TryParse(Message.ReadString(), out StartupPackage)) {
 				throw new Exception("Unable to parse GUID for startup package in server info.");
 			}
+			this.Mode = (ServerMode)Message.ReadInt32();
 			Chunk.Size.X = Message.ReadInt32();
 			Chunk.Size.Y = Message.ReadInt32();
 			Chunk.Size.Z = Message.ReadInt32();

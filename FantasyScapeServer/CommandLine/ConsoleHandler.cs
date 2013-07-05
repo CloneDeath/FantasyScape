@@ -8,17 +8,17 @@ using FantasyScape.Server.CommandLine;
 namespace FantasyScape.Server {
 	class ConsoleHandler {
 		static CommandQueue Commands = new CommandQueue();
-		public static void Update() {
+		public static void Update(GameServer server) {
 			if (Commands.LineAvailable) {
 				string Command = Commands.ReadLine();
-				ProcessCommand(Command.ToLower());
+				ProcessCommand(server, Command.ToLower());
 			}
 		}
 
-		private static void ProcessCommand(string Command) {
+		private static void ProcessCommand(GameServer server, string Command) {
 			if (Command == "save") {
 				Console.WriteLine("Saving Game...");
-				ResourceManager.Save();
+				server.Resources.Save();
 				Console.WriteLine("Game Saved!");
 			}
 		}
