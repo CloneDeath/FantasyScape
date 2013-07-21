@@ -169,15 +169,6 @@ namespace FantasyScape.Client.Editor {
 					}
 				}
 
-				if (ClickedResource is Folder) {
-					MenuItem Startup = RightClickMenu.AddItem("Set as Startup Package");
-					Startup.Clicked += delegate(Base sender, ClickedEventArgs args2) {
-						Game.ServerInfo.StartupPackage = ((ResourceNode)item).Resource.ID;
-						new UpdateServerInfo(Game.ServerInfo).Send();
-						Package.TriggerOnChangeEvent();
-					};
-				}
-
 				MenuItem Rename = RightClickMenu.AddItem("Rename");
 				Rename.Clicked += delegate(Base sender, ClickedEventArgs renameargs) {
 					((ResourceNode)item).StartRename();

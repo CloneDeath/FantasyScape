@@ -14,12 +14,15 @@ namespace FantasyScape {
 	public class BlockType : Resource {
 		public BlockType() {
 			ID = Guid.NewGuid();
+			Liquid = false;
+			Transparent = false;
 			for (int i = 0; i < Texture.Length; i++) {
 				Texture[i] = new FSTextureReference();
 			}
 		}
 
 		public bool Liquid;
+		public bool Transparent;
 		public FSTextureReference[] Texture = new FSTextureReference[(int)BlockSide.Count];
 
 		public Texture GetTexture(BlockSide Side) {
@@ -80,6 +83,11 @@ namespace FantasyScape {
 						XElement LiquidNode = new XElement("Liquid");
 						Base.Add(LiquidNode);
 					}
+
+					if (Transparent) {
+						XElement LiquidNode = new XElement("Transparent");
+						Base.Add(LiquidNode);
+					}
 				}
 				doc.Add(Base);
 			}
@@ -113,6 +121,9 @@ namespace FantasyScape {
 					case "Liquid":
 						Liquid = true;
 						break;
+					case "Transparent":
+						Transparent = true;
+						break;
 					default:
 						throw new Exception("Unknown element in blocktype '" + info.Name + "'.");
 				}
@@ -122,6 +133,7 @@ namespace FantasyScape {
 		internal override void Write(NetOutgoingMessage Message) {
 			base.Write(Message);
 			Message.Write(Liquid);
+			Message.Write(Transparent);
 			for (int i = 0; i < (int)BlockSide.Count; i++) {
 				Texture[i].Write(Message);
 			}
@@ -130,18 +142,20 @@ namespace FantasyScape {
 		internal override void Read(NetIncomingMessage Message) {
 			base.Read(Message);
 			Liquid = Message.ReadBoolean();
+			Transparent = Message.ReadBoolean();
 			for (int i = 0; i < (int)BlockSide.Count; i++) {
 				Texture[i].Read(Message);
 			}
 		}
 
-		internal override void Copy(Resource other) {
-			base.Copy(other);
+		internal override void Copy(Resource res) {
+			base.Copy(res);
 
-			BlockType res = other as BlockType;
-			this.Liquid = res.Liquid;
+			BlockType other = res as BlockType;
+			this.Liquid = other.Liquid;
+			this.Transparent = other.Transparent;
 			for (int i = 0; i < (int)BlockSide.Count; i++) {
-				Texture[i] = res.Texture[i];
+				Texture[i] = other.Texture[i];
 			}
 		}
 

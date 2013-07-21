@@ -14,12 +14,8 @@ namespace FantasyScape.Client.Editor.PackageViewing {
 			this.Resource = res;
 
 			this.Text = res.Name;
-			if (Game.ServerInfo.StartupPackage == res.ID) {
-				this.Text += " (Startup)";
-				this.m_Title.Font = new Gwen.Font(MainCanvas.Renderer, "Arial Black");
-			} else {
-				this.m_Title.Font = new Gwen.Font(MainCanvas.Renderer, "Arial");
-			}
+			this.m_Title.Font = new Gwen.Font(MainCanvas.Renderer, "Arial");
+
 			tbRename = new TextBox(m_Title);
 			tbRename.SetPosition(16, 0);
 			tbRename.Height = 16;

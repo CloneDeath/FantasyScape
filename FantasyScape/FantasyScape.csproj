@@ -98,17 +98,17 @@
     <Compile Include="Blocks\BlockTypes.cs" />
     <Compile Include="Blocks\FSTextureReference.cs" />
     <Compile Include="CodeCompilation\CodeManager.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="HeightMap.cs" />
     <Compile Include="ListRandomizer.cs" />
     <Compile Include="Math\Vector2i.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MainCanvas.cs" />
-    <Compile Include="MapGenerator.cs" />
+    <Compile Include="RealmManagement\WorldGeneration\MapGenerator.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />
     <Compile Include="Math\Vector3i.cs" />
-    <Compile Include="NetworkMessages\Chunks\RequestChunk.cs" />
     <Compile Include="NetworkMessages\Code\AddCode.cs" />
     <Compile Include="NetworkMessages\Code\RemoveCode.cs" />
     <Compile Include="NetworkMessages\Code\UpdateCode.cs" />
@@ -122,7 +122,6 @@
     <Compile Include="NetworkMessages\BlockTypes\AddBlockType.cs" />
     <Compile Include="NetworkMessages\BlockTypes\RemoveBlockType.cs" />
     <Compile Include="NetworkMessages\BlockTypes\UpdateBlockType.cs" />
-    <Compile Include="NetworkMessages\Chunks\AddChunk.cs" />
     <Compile Include="NetworkMessages\Blocks\BlockRemove.cs" />
     <Compile Include="NetworkMessages\TextureRemove.cs" />
     <Compile Include="NetworkMessages\PlayerAdd.cs" />
@@ -134,6 +133,14 @@
     <Compile Include="NetworkMessages\Textures\UpdateTexture.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RealmManagement\ChunkRequester\NetworkChunk.cs" />
+    <Compile Include="RealmManagement\ChunkRequester\NetworkMessages\NetworkChunkRequest.cs" />
+    <Compile Include="RealmManagement\ChunkRequester\NetworkMessages\NetworkChunkResponse.cs" />
+    <Compile Include="RealmManagement\Realm.cs" />
+    <Compile Include="RealmManagement\RealmDrawing\RealmRenderer.cs" />
+    <Compile Include="RealmManagement\ChunkRequester\RealmRequester.cs" />
+    <Compile Include="RealmManagement\RealmDrawing\RenderChunk.cs" />
+    <Compile Include="RealmManagement\WorldGeneration\Sector.cs" />
     <Compile Include="Resources\CodeFile.cs" />
     <Compile Include="Resources\CodeLanguage_Enum.cs" />
     <Compile Include="Resources\CodeLocation_Enum.cs" />
@@ -145,10 +152,8 @@
     <Compile Include="ServerInfo.cs" />
     <Compile Include="Textures.cs" />
     <Compile Include="WorldGenerator.cs" />
-    <Compile Include="WorldHandlers\Chunk.cs" />
-    <Compile Include="WorldHandlers\ChunkManager.cs" />
-    <Compile Include="WorldHandlers\World.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /E /C /Y "$(ProjectDir)Data\*.*" "$(TargetDir)Data\"</PostBuildEvent>

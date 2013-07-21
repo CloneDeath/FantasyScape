@@ -54,7 +54,7 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
 				Texture.Defined = true;
 			}
 			RefreshAll();
-			Game.World.DirtyAll();
+			Game.Renderer.DirtyAll();
 			if (TextureChanged != null) {
 				TextureChanged(this, EventArgs.Empty);
 			}
@@ -63,7 +63,7 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
 		void Defined_CheckChanged(Base sender, EventArgs arguments) {
 			Texture.Defined = Defined.IsChecked;
 			RefreshAll();
-			Game.World.DirtyAll();
+			Game.Renderer.DirtyAll();
 			if (TextureChanged != null) {
 				TextureChanged(this, EventArgs.Empty);
 			}

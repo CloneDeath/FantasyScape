@@ -10,6 +10,8 @@ using System.Threading;
 using FantasyScape.NetworkMessages;
 using System.Diagnostics;
 using FantasyScape.Resources;
+using FantasyScape.RealmManagement;
+using FantasyScape.RealmManagement.RealmDrawing;
 
 namespace FantasyScape {
 	public enum HostType { Server, Client };
@@ -17,7 +19,10 @@ namespace FantasyScape {
 	public class Game {
 		public static HostType Host;
 
-		public static World World;
+		public static Realm Realm;
+		public static RealmRenderer Renderer;
+		public static MapGenerator MapGenerator;
+
 		public static List<Player> Players;
 		public static Player Self = null;
 
@@ -38,7 +43,10 @@ namespace FantasyScape {
 		}
 
 		static Game() {
-			World = new World();
+			Realm = new Realm();
+			Renderer = new RealmRenderer(Realm);
+			MapGenerator = new MapGenerator(Realm);
+
 			Players = new List<Player>();
 		}
 
@@ -52,7 +60,6 @@ namespace FantasyScape {
 				bool Ready = true;
 
 				Ready &= Package.Ready();
-				Ready &= World.Ready();
 				Ready &= (Self != null);
 				
 
@@ -65,19 +72,18 @@ namespace FantasyScape {
 					Game.CenterMouse();
 					State = GameState.Playing;
 					Stopwatch.StartNew();
-					World.RefreshExposedBlocks();
 				}
 			}
 		}
 
 		public static void UpdateServer() {
-			World.Update();
+			//World.Update();
 		}
 
 		public static void Draw() {
 			Game.Render = true;
 			if (State == GameState.Playing) {
-				World.Draw(Self);
+				Renderer.Draw();
 				Self.updateCamera();
 
 				foreach (Player p in Players) {

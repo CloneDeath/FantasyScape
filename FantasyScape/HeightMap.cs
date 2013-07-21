@@ -5,6 +5,7 @@ using System.Text;
 using LibNoise.Generator;
 using LibNoise.Utilities;
 using System.Drawing;
+using FantasyScape.RealmManagement.WorldGeneration;
 
 namespace FantasyScape {
 	class HeightMap {
@@ -24,11 +25,11 @@ namespace FantasyScape {
 			renderer.AddGradientPoint(1, Color.FromArgb(255, max, max, max));
 			heightMapBuilder.SetSourceModule(perlinModule);
 			heightMapBuilder.SetDestNoiseMap(heightMap);
-			heightMapBuilder.SetDestSize(Chunk.Size.X, Chunk.Size.Y);
+			heightMapBuilder.SetDestSize(Sector.Size.X, Sector.Size.Y);
 			renderer.SetSourceNoiseMap(heightMap);
 		}
 
-		static double Scale = Chunk.Size.Length / 160.0;
+		static double Scale = Sector.Size.Length / 160.0;
 		public static Bitmap GetHeightmap(int chunkx, int chunky) {
 			Vector2i location = new Vector2i(chunkx, chunky);
 			if (!Hashmap.ContainsKey(location)) {

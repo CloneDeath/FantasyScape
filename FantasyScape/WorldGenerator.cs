@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using FantasyScape.RealmManagement.WorldGeneration;
 
 namespace FantasyScape {
 	public class WorldGenerator {
@@ -28,29 +29,29 @@ namespace FantasyScape {
 			Guid.TryParse(Granite, out GraniteGuid);
 		}
 
-		public virtual void GenerateChunk(Chunk chunk) {
-			current_heightmap = HeightMap.GetHeightmap(chunk.Location.X, chunk.Location.Y);
-			GenerateBase(chunk, chunk.Location.Z);
-			GenerateWater(chunk, chunk.Location.Z);
+		public virtual void Generate(Sector chunk) {
+			current_heightmap = HeightMap.GetHeightmap(chunk.ChunkLocation.X, chunk.ChunkLocation.Y);
+			GenerateBase(chunk, chunk.ChunkLocation.Z);
+			GenerateWater(chunk, chunk.ChunkLocation.Z);
 		}
 
-		private void GenerateBase(Chunk chunk, int ChunkZ) {
+		private void GenerateBase(Sector chunk, int ChunkZ) {
 			Random ran = new Random();
 
 			//Create Terrain
-			for (int x = 0; x < Chunk.Size.X; x++) {
-				for (int y = 0; y < Chunk.Size.Y; y++) {
-					for (int z = 0; z < Chunk.Size.Z; z++) {
+			for (int x = 0; x < Sector.Size.X; x++) {
+				for (int y = 0; y < Sector.Size.Y; y++) {
+					for (int z = 0; z < Sector.Size.Z; z++) {
 						Vector3i Location = new Vector3i(x, y, z);
-						if (z + (ChunkZ * Chunk.Size.Z) < current_heightmap.GetPixel(x, y).R - 100) {
-							if (z + (ChunkZ * Chunk.Size.Z) > current_heightmap.GetPixel(x, y).R - 100 - (int)(5 + ran.Next(3))) {
+						if (z + (ChunkZ * Sector.Size.Z) < current_heightmap.GetPixel(x, y).R - 100) {
+							if (z + (ChunkZ * Sector.Size.Z) > current_heightmap.GetPixel(x, y).R - 100 - (int)(5 + ran.Next(3))) {
 								chunk[Location] = new Block(DirtGuid);
 							} else {
 								chunk[Location] = new Block(GraniteGuid);
 							}
 						}
 
-						if (z + (ChunkZ * Chunk.Size.Z) == current_heightmap.GetPixel(x, y).R - 100) {
+						if (z + (ChunkZ * Sector.Size.Z) == current_heightmap.GetPixel(x, y).R - 100) {
 							chunk[Location] = new Block(GrassGuid);
 						}
 					}
@@ -59,11 +60,11 @@ namespace FantasyScape {
 		}
 
 		private const int WaterLevel = 0;
-		private void GenerateWater(Chunk current, int ChunkZ) {
-			for (int x = 0; x < Chunk.Size.X; x++) {
-				for (int y = 0; y < Chunk.Size.Y; y++) {
+		private void GenerateWater(Sector current, int ChunkZ) {
+			for (int x = 0; x < Sector.Size.X; x++) {
+				for (int y = 0; y < Sector.Size.Y; y++) {
 					for (int z = (int)current_heightmap.GetPixel(x, y).R - 100 + 1; z <= WaterLevel; z++) {
-						current[new Vector3i(x, y, z - (ChunkZ * Chunk.Size.Z))] = new Block(WaterGuid);
+						current[new Vector3i(x, y, z - (ChunkZ * Sector.Size.Z))] = new Block(WaterGuid);
 					}
 				}
 			}

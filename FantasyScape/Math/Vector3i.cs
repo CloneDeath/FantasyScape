@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Lidgren.Network;
 
 namespace FantasyScape {
 	public class Vector3i {
@@ -39,13 +40,13 @@ namespace FantasyScape {
 			return (X << 22) & (Y << 11) & (Z);
 		}
 
-		internal void Write(Lidgren.Network.NetOutgoingMessage Message) {
+		internal void Write(NetOutgoingMessage Message) {
 			Message.Write((Int32)X);
 			Message.Write((Int32)Y);
 			Message.Write((Int32)Z);
 		}
 
-		internal void Read(Lidgren.Network.NetIncomingMessage Message) {
+		internal void Read(NetIncomingMessage Message) {
 			X = Message.ReadInt32();
 			Y = Message.ReadInt32();
 			Z = Message.ReadInt32();
@@ -65,6 +66,14 @@ namespace FantasyScape {
 
 		public static Vector3i operator *(Vector3i lhs, Vector3i rhs) {
 			return new Vector3i(lhs.X * rhs.X, lhs.Y * rhs.Y, lhs.Z * rhs.Z);
+		}
+
+		public static Vector3i operator /(Vector3i lhs, Vector3i rhs) {
+			return new Vector3i(
+				(int)Math.Floor(lhs.X * 1.0 / rhs.X),
+				(int)Math.Floor(lhs.Y * 1.0 / rhs.Y),
+				(int)Math.Floor(lhs.Z * 1.0 / rhs.Z)
+			);
 		}
 
 	}

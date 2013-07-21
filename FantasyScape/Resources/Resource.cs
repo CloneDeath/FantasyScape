@@ -6,10 +6,17 @@ using Lidgren.Network;
 
 namespace FantasyScape.Resources {
 	public abstract class Resource {
+		#region Public Members
 		public Guid ID;
 		public string Name = "[New Resource]";
+		#endregion
+
+		#region Abstract Functions
 		public abstract void Save(string path);
-		public abstract void Load(string path);		
+		public abstract void Load(string path);
+		public abstract void SendUpdate();
+		#endregion
+
 
 		protected string GetIDString() {
 			return "{" + ID.ToString().ToUpper() + "}";
@@ -47,7 +54,5 @@ namespace FantasyScape.Resources {
                 OnUpdate(sender, this);
             }
         }
-
-		public abstract void SendUpdate();
 	}
 }

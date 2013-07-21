@@ -9,13 +9,9 @@ using FantasyScape.Resources;
 
 namespace FantasyScape {
 	public class ServerInfo {
-		public enum ServerMode {
-			Gameplay,
-			Development
-		}
 		public string Name;
-		public Guid StartupPackage;
-		public ServerMode Mode;
+		public Guid CurrentConfig;
+		public List<Configuration> AllConfigs = new List<Configuration>();
 
 		public void Load(string ResourceLocation) {
 			string InfoFile = Path.Combine(ResourceLocation, "server.info");
@@ -23,8 +19,8 @@ namespace FantasyScape {
 				LoadServerInfo(ResourceLocation, InfoFile);
 			} else {
 				Name = "FantasyScape Server";
-				StartupPackage = Guid.Empty;
-				Mode = ServerMode.Development;
+				AllConfigs.Add(new Configuration());
+				CurrentConfig = AllConfigs[0].ID;
 			}
 		}
 
@@ -42,13 +38,10 @@ namespace FantasyScape {
 					case "Name":
 						this.Name = info.Value;
 						break;
-					case "StartupPackage":
-						if (!Guid.TryParse(info.Value, out StartupPackage)) {
-							throw new Exception("Unable to parse Guid for startup package");
+					case "CurrentConfig":
+						if (!Guid.TryParse(info.Value, out CurrentConfig)) {
+							throw new Exception("Unable to parse Guid for default configuration");
 						}
-						break;
-					case "Mode":
-						this.Mode = (ServerMode)Enum.Parse(typeof(ServerMode), info.Value);
 						break;
 					default:
 						throw new Exception("Unknown element in ServerInfo '" + info.Name + "'.");
@@ -64,11 +57,8 @@ namespace FantasyScape {
 					XElement Name = new XElement("Name", this.Name);
 					Base.Add(Name);
 
-					XElement Package = new XElement("StartupPackage", "{" + (this.StartupPackage.ToString().ToUpper()) + "}");
+					XElement Package = new XElement("CurrentConfig", "{" + (this.CurrentConfig.ToString().ToUpper()) + "}");
 					Base.Add(Package);
-
-					XElement Mode = new XElement("Mode", this.Mode.ToString());
-					Base.Add(Mode);
 				}
 				doc.Add(Base);
 			}
@@ -77,28 +67,19 @@ namespace FantasyScape {
 
 		internal void Write(NetOutgoingMessage Message) {
 			Message.Write(Name);
-			Message.Write(StartupPackage.ToString());
-			Message.Write((Int32)Mode);
-			Message.Write((Int32)Chunk.Size.X);
-			Message.Write((Int32)Chunk.Size.Y);
-			Message.Write((Int32)Chunk.Size.Z);
+			Message.Write(CurrentConfig.ToString());
 		}
 
 		internal void Read(NetIncomingMessage Message) {
 			Name = Message.ReadString();
-			if (!Guid.TryParse(Message.ReadString(), out StartupPackage)) {
-				throw new Exception("Unable to parse GUID for startup package in server info.");
+			if (!Guid.TryParse(Message.ReadString(), out CurrentConfig)) {
+				throw new Exception("Unable to parse GUID for CurrentConfig in server info.");
 			}
-			this.Mode = (ServerMode)Message.ReadInt32();
-			Chunk.Size.X = Message.ReadInt32();
-			Chunk.Size.Y = Message.ReadInt32();
-			Chunk.Size.Z = Message.ReadInt32();
 		}
 
 		internal void Copy(ServerInfo info) {
 			this.Name = info.Name;
-			this.StartupPackage = info.StartupPackage;
-			Chunk.SetSize(Chunk.Size.X, Chunk.Size.Y, Chunk.Size.Z);
+			this.CurrentConfig = info.CurrentConfig;
 		}
 	}
 }
