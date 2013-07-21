@@ -10,16 +10,22 @@ namespace FantasyScape {
 	public class MapGenerator {
 		private Realm Realm;
 
+		private Dictionary<Vector3i, Sector> Mappings = new Dictionary<Vector3i,Sector>();
+
 		public MapGenerator(Realm realm) {
 			this.Realm = realm;
 		}
 
-		public Sector GenerateTerrain(Vector3i Location) {
+		public void GenerateSector(Vector3i Location) {
 			Sector chunk = new Sector(Realm, Location);
 			foreach (WorldGenerator gen in Generators) {
 				gen.Generate(chunk);
 			}
-			return chunk;
+			Mappings.Add(Location, chunk);
+		}
+
+		public bool Exists(Vector3i Location) {
+			return Mappings.ContainsKey(Location);
 		}
 
 		List<WorldGenerator> Generators = new List<WorldGenerator>();

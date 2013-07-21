@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FantasyScape.RealmManagement.ChunkRequester.NetworkMessages;
 using Lidgren.Network;
+using FantasyScape.RealmManagement.WorldGeneration;
 
 namespace FantasyScape.RealmManagement.ChunkRequester {
 	class NetworkChunk {
@@ -48,6 +49,11 @@ namespace FantasyScape.RealmManagement.ChunkRequester {
 				for (int y = 0; y < Size.Y; y++) {
 					for (int z = 0; z < Size.Z; z++) {
 						Vector3i BlockAt = BlockCoords + new Vector3i(x, y, z);
+
+						if (!Game.World.MapGenerator.Exists(BlockAt / Sector.Size)) {
+							Game.World.MapGenerator.GenerateSector(BlockAt / Sector.Size);
+						}
+
 						Block Value = Realm.GetBlock(BlockAt);
 						if (Value != null) {
 							Message.Write(true);
