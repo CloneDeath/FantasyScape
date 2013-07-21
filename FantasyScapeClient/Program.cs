@@ -108,11 +108,16 @@ namespace FantasyScape.Client {
 			Game.Draw();
 		}
 
+		static Label lblDebug = new Label(MainCanvas.GetCanvas());
 		static void Draw2D() {
 			Game.Draw2D();
 
 			if (!escapemenu.Hidden || !DevelopmentMenu.Hidden) {
 				GraphicsManager.DrawRectangle(0, 0, GraphicsManager.WindowWidth, GraphicsManager.WindowHeight, Color.FromArgb(0, 0, 0, 250));
+			}
+
+			if (Game.Self != null) {
+				lblDebug.Text = "X: " + Game.Self.xpos + ", Y: " + Game.Self.ypos + ", Z: " + Game.Self.zpos;
 			}
 		}
 

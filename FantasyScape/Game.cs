@@ -12,6 +12,7 @@ using System.Diagnostics;
 using FantasyScape.Resources;
 using FantasyScape.RealmManagement;
 using FantasyScape.RealmManagement.RealmDrawing;
+using FantasyScape.RealmManagement.ChunkRequester;
 
 namespace FantasyScape {
 	public enum HostType { Server, Client };
@@ -21,6 +22,7 @@ namespace FantasyScape {
 
 		public static Realm Realm;
 		public static RealmRenderer Renderer;
+		public static RealmRequester Requester;
 		public static MapGenerator MapGenerator;
 
 		public static List<Player> Players;
@@ -46,6 +48,7 @@ namespace FantasyScape {
 			Realm = new Realm();
 			Renderer = new RealmRenderer(Realm);
 			MapGenerator = new MapGenerator(Realm);
+			Requester = new RealmRequester(Realm);
 
 			Players = new List<Player>();
 		}
@@ -54,6 +57,21 @@ namespace FantasyScape {
 		public static void UpdateClient() {
 			if (State == GameState.Playing) {
 				Self.Update();
+
+				//Make sure we have all nearby chunks
+				for (int x = -3; x <= 3; x++){
+					for (int y = -3; y <= 3; y++){
+						for (int z = -3; z <= 3; z++){
+							Vector3i Loc = new Vector3i(
+										(int)(Self.xpos + (x * NetworkChunk.Size.X)),
+										(int)(Self.xpos + (y * NetworkChunk.Size.Y)),
+										(int)(Self.xpos + (z * NetworkChunk.Size.Z)));
+							if (Realm.GetBlock(Loc) == null) {
+								Requester.QueueRequest(Loc);
+							}
+						}
+					}
+				}
 			}
 
 			if (State == GameState.Connecting) {

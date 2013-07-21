@@ -52,7 +52,7 @@ namespace FantasyScape {
 
 			for (int i = 0;; i++) {
 				Block Value = Game.Realm.GetBlock(new Vector3i((int)x, (int)y, i));
-				if (Value != null && Value.IsSolid()) {
+				if (Value == null || !Value.IsSolid()) {
 					zpos = i+1;
 					break;
 				}

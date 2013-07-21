@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace FantasyScape.RealmManagement.ChunkRequester {
-	class RealmRequester {
+	public class RealmRequester {
 		Realm Realm;
 		Dictionary<Vector3i, NetworkChunk> Outgoing = new Dictionary<Vector3i, NetworkChunk>();
 		Dictionary<Vector3i, NetworkChunk> Incomming = new Dictionary<Vector3i, NetworkChunk>();
