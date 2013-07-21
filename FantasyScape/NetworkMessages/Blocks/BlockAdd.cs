@@ -29,7 +29,7 @@ namespace FantasyScape.NetworkMessages {
 		}
 
 		protected override void ExecuteMessage() {
-			Game.Realm.SetBlock(Location, block);
+			Game.World[Location] = block;
 			this.Forward();
 		}
 	}

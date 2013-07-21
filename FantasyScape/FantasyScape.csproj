@@ -105,6 +105,7 @@
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MainCanvas.cs" />
+    <Compile Include="RealmManagement\World.cs" />
     <Compile Include="RealmManagement\WorldGeneration\MapGenerator.cs" />
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Utility.cs" />

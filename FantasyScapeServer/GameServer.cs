@@ -29,10 +29,10 @@ namespace FantasyScape.Server {
 			//StartUp.RunMain();
 			//Game.World.Chunks.ClearWorldGen();
 			//Game.World.Chunks.AddWorldGens(StartUp.GetWorldGens());
-			Game.MapGenerator.Clear();
+			Game.World.ClearWorldGen();
 			List<WorldGenerator> temp = new List<WorldGenerator>();
 			temp.Add(new WorldGenerator());
-			Game.MapGenerator.Add(temp);
+			Game.World.AddWorldGen(temp);
 
 
 			/* Listen for Clients */

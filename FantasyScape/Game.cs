@@ -11,7 +11,6 @@ using FantasyScape.NetworkMessages;
 using System.Diagnostics;
 using FantasyScape.Resources;
 using FantasyScape.RealmManagement;
-using FantasyScape.RealmManagement.RealmDrawing;
 using FantasyScape.RealmManagement.ChunkRequester;
 
 namespace FantasyScape {
@@ -20,11 +19,7 @@ namespace FantasyScape {
 	public class Game {
 		public static HostType Host;
 
-		public static Realm Realm;
-		public static RealmRenderer Renderer;
-		public static RealmRequester Requester;
-		public static MapGenerator MapGenerator;
-
+		public static World World;
 		public static List<Player> Players;
 		public static Player Self = null;
 
@@ -45,11 +40,7 @@ namespace FantasyScape {
 		}
 
 		static Game() {
-			Realm = new Realm();
-			Renderer = new RealmRenderer(Realm);
-			MapGenerator = new MapGenerator(Realm);
-			Requester = new RealmRequester(Realm);
-
+			World = new World();
 			Players = new List<Player>();
 		}
 
@@ -66,12 +57,14 @@ namespace FantasyScape {
 										(int)(Self.xpos + (x * NetworkChunk.Size.X)),
 										(int)(Self.xpos + (y * NetworkChunk.Size.Y)),
 										(int)(Self.xpos + (z * NetworkChunk.Size.Z)));
-							if (Realm.GetBlock(Loc) == null) {
-								Requester.QueueRequest(Loc);
+							if (World[Loc] == null) {
+								World.Request(Loc);
 							}
 						}
 					}
 				}
+
+				World.Update();
 			}
 
 			if (State == GameState.Connecting) {
@@ -101,8 +94,8 @@ namespace FantasyScape {
 		public static void Draw() {
 			Game.Render = true;
 			if (State == GameState.Playing) {
-				Renderer.Draw();
-				Self.updateCamera();
+				World.Draw();
+				Self.UpdateCamera();
 
 				foreach (Player p in Players) {
 					if (p != Self || KeyboardManager.IsDown(Key.F2)) {

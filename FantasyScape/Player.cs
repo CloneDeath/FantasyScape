@@ -51,7 +51,7 @@ namespace FantasyScape {
 			zspeed = 0;
 
 			for (int i = 0;; i++) {
-				Block Value = Game.Realm.GetBlock(new Vector3i((int)x, (int)y, i));
+				Block Value = Game.World[new Vector3i((int)x, (int)y, i)];
 				if (Value == null || !Value.IsSolid()) {
 					zpos = i+1;
 					break;
@@ -107,7 +107,7 @@ namespace FantasyScape {
 	
 		
 	
-		public void updateCamera(){		
+		public void UpdateCamera(){		
 			if (KeyboardManager.IsDown(Key.F2)){
 				//GLU.gluLookAt(xpos+20, ypos + 20, zpos+20, xpos, ypos, zpos, 0, 1, 0);
 				GraphicsManager.SetCamera(new Vector3d(xpos + 20, ypos + 20, zpos + 20));
@@ -202,8 +202,8 @@ namespace FantasyScape {
 					}
 				}
 
-				Block Below = Game.Realm.GetBlock(new Vector3i((int)xpos, (int)ypos, (int)zpos - 1));
-				Block Above = Game.Realm.GetBlock(new Vector3i((int)xpos, (int)ypos, (int)zpos + 2));
+				Block Below = Game.World[new Vector3i((int)xpos, (int)ypos, (int)zpos - 1)];
+				Block Above = Game.World[new Vector3i((int)xpos, (int)ypos, (int)zpos + 2)];
 				if (KeyboardManager.IsDown(Key.Space) && 
 					(Below == null || Below.IsSolid()) && 
 					(Above != null && !Above.IsSolid())) {
@@ -238,7 +238,7 @@ namespace FantasyScape {
 				}
 			}
 
-			Block Down = Game.Realm.GetBlock(new Vector3i((int)xpos, (int)ypos, (int)(zpos + zspeed)));
+			Block Down = Game.World[new Vector3i((int)xpos, (int)ypos, (int)(zpos + zspeed))];
 			if (Down != null && !Down.IsSolid()) {
 				zspeed -= Gravity;
 			}
@@ -283,7 +283,7 @@ namespace FantasyScape {
 			foreach (double X in XChecks) {
 				foreach (double Y in YChecks) {
 					foreach (double Z in ZChecks) {
-						Block Check = Game.Realm.GetBlock(new Vector3i((int)X, (int)Y, (int)Z));
+						Block Check = Game.World[new Vector3i((int)X, (int)Y, (int)Z)];
 						if (Check != null && Check.IsSolid()) {
 							return false;
 						}
@@ -317,7 +317,7 @@ namespace FantasyScape {
 			for (int x = -CDist; x <= CDist; x++){
 				for (int y = -CDist; y <= CDist; y++){
 					for (int z = -CDist; z <= CDist; z++){
-						Block BCDist = Game.Realm.GetBlock(new Vector3i((int)(xpos + x), (int)(ypos + y), (int)(zpos + z + PlayerHeight)));
+						Block BCDist = Game.World[new Vector3i((int)(xpos + x), (int)(ypos + y), (int)(zpos + z + PlayerHeight))];
 						if (BCDist != null && BCDist.IsSolid()) {
 							Vector3 B1 = new Vector3();
 							B1.X = (int)(xpos+x);
@@ -345,13 +345,13 @@ namespace FantasyScape {
 		
 			if (foundOne){
 				Vector3i Location = new Vector3i(bestX, bestY, bestZ);
-				Game.Realm.SetBlock(Location, null);
+				Game.World[Location] = null;
 				new BlockRemove(Location).Send();
 			}
 		}
 
 		bool CanPlaceBlock(Vector3i Location) {
-			return Inventory[SelectedItem].CanCombine(Game.Realm.GetBlock(Location));
+			return Inventory[SelectedItem].CanCombine(Game.World[Location]);
 		}
 	
 		void AddBlock(){
@@ -378,7 +378,7 @@ namespace FantasyScape {
 			for (int x = -CDist; x <= CDist; x++){
 				for (int y = -CDist; y <= CDist; y++){
 					for (int z = -CDist; z <= CDist; z++){
-						Block BCDist = Game.Realm.GetBlock(new Vector3i((int)(xpos + x), (int)(ypos + y), (int)(zpos + z + PlayerHeight)));
+						Block BCDist = Game.World[new Vector3i((int)(xpos + x), (int)(ypos + y), (int)(zpos + z + PlayerHeight))];
 						if (BCDist != null && BCDist.IsSolid()) {
 							Vector3 B1 = new Vector3();
 							B1.X = (int)(xpos+x);
@@ -424,7 +424,7 @@ namespace FantasyScape {
 				Block b = new Block(BlockName);
 
 				Vector3i Location = new Vector3i(bestX, bestY, bestZ);
-				Game.Realm.SetBlock(Location, b);
+				Game.World[Location] = b;
 				BlockAdd msg = new BlockAdd(Location, b);
 				msg.Send();
 			}

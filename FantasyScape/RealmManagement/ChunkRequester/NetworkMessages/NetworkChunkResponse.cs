@@ -3,27 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FantasyScape.NetworkMessages;
+using Lidgren.Network;
 
 namespace FantasyScape.RealmManagement.ChunkRequester.NetworkMessages {
 	class NetworkChunkResponse : Message {
+		NetworkChunk Chunk;
+
 		public NetworkChunkResponse() {
-			throw new NotImplementedException();
+			Chunk = new NetworkChunk(Game.World.Realm, new Vector3i());
 		}
 
 		public NetworkChunkResponse(NetworkChunk Chunk) {
-			throw new NotImplementedException();
+			this.Chunk = Chunk;
 		}
 
-		protected override void WriteData(Lidgren.Network.NetOutgoingMessage Message) {
-			throw new NotImplementedException();
+		protected override void WriteData(NetOutgoingMessage Message) {
+			Chunk.Write(Message);
 		}
 
-		protected override void ReadData(Lidgren.Network.NetIncomingMessage Message) {
-			throw new NotImplementedException();
+		protected override void ReadData(NetIncomingMessage Message) {
+			Chunk.Read(Message);
 		}
 
 		protected override void ExecuteMessage() {
-			throw new NotImplementedException();
+			Game.World.Requester.QueueResponse(Chunk);
 		}
 	}
 }

@@ -39,5 +39,9 @@ namespace FantasyScape.RealmManagement.ChunkRequester {
 				chunk.SendRequest();
 			}
 		}
+
+		internal void QueueResponse(NetworkChunk Chunk) {
+			Incomming.Add(Chunk.ChunkCoords, Chunk);
+		}
 	}
 }
