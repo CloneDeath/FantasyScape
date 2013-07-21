@@ -5,6 +5,7 @@ using System.Text;
 using GLImp;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
+using System.Drawing;
 
 namespace FantasyScape.RealmManagement.RealmDrawing {
 	class RenderChunk {
@@ -53,8 +54,8 @@ namespace FantasyScape.RealmManagement.RealmDrawing {
 
 			Block Adjacent;
 			Vector2d[] TexCoord = new Vector2d[]{
-				new Vector2d(0.0, 1 - (BlockValue.Level) / 16.0),
-				new Vector2d(1.0, 1 - (BlockValue.Level) / 16.0),
+				new Vector2d(0.0, 1 - ((BlockValue.Level) / 16.0)),
+				new Vector2d(1.0, 1 - ((BlockValue.Level) / 16.0)),
 				new Vector2d(1.0, 1.0),
 				new Vector2d(0.0, 1.0),
 			};
@@ -65,6 +66,8 @@ namespace FantasyScape.RealmManagement.RealmDrawing {
 			double Front = BlockCoord.Y + 1.0;
 			double Left = BlockCoord.X;
 			double Right = BlockCoord.X + 1.0;
+
+			GraphicsManager.SetColor(Color.White);
 
 			//Back
 			Adjacent = Realm.GetBlock(BlockCoord + new Vector3i(0, -1, 0));
@@ -138,7 +141,7 @@ namespace FantasyScape.RealmManagement.RealmDrawing {
 			}
 
 			//Top
-			Adjacent = Realm.GetBlock(BlockCoord + new Vector3i(0, 0, -1));
+			Adjacent = Realm.GetBlock(BlockCoord + new Vector3i(0, 0, 1));
 			if (Adjacent == null || Adjacent.BlockType.Transparent) {
 				GL.BindTexture(TextureTarget.Texture2D, BlockValue.BlockType.GetTexture(Blocks.BlockSide.Top).ID);
 				GL.Begin(BeginMode.Quads);
