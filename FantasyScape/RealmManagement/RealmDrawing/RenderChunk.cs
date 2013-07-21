@@ -13,7 +13,7 @@ namespace FantasyScape.RealmManagement.RealmDrawing {
 		Realm Realm;
 		Vector3i ChunkCoord;
 
-		public static readonly Vector3i Size = new Vector3i(16, 16, 16);
+		public static readonly Vector3i Size = new Vector3i(32, 32, 32);
 		public bool Dirty;
 
 		public RenderChunk(Realm Realm, Vector3i ChunkCoords) {

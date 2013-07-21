@@ -32,7 +32,9 @@ namespace FantasyScape.RealmManagement.RealmDrawing {
 		}
 
 		public void DirtyAll() {
-			throw new NotImplementedException();
+			foreach (RenderChunk chunk in Chunks.Values) {
+				chunk.Dirty = true;
+			}
 		}
 
 		public int ChunkCount() {
