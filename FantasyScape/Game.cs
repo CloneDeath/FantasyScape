@@ -45,39 +45,43 @@ namespace FantasyScape {
 		}
 
 		static bool RequestedPlayer = false;
+		static bool RequestedChunks = false;
 		public static void UpdateClient() {
+			World.Update();
+
 			if (State == GameState.Playing) {
 				Self.Update();
-
-				//Make sure we have all nearby chunks
-				for (int x = -3; x <= 3; x++){
-					for (int y = -3; y <= 3; y++){
-						for (int z = -3; z <= 3; z++){
-							Vector3i Loc = new Vector3i(
-										(int)(Self.xpos + (x * NetworkChunk.Size.X)),
-										(int)(Self.xpos + (y * NetworkChunk.Size.Y)),
-										(int)(Self.xpos + (z * NetworkChunk.Size.Z)));
-							if (World[Loc] == null) {
-								World.Request(Loc);
-							}
-						}
-					}
-				}
-
-				World.Update();
 			}
 
 			if (State == GameState.Connecting) {
-				bool Ready = true;
-
-				Ready &= Package.Ready();
-				Ready &= (Self != null);
-				
-
 				if (!RequestedPlayer) {
 					RequestedPlayer = true;
 					new RequestMessage(RequestType.NewPlayer).Send();
 				}
+
+				if (!RequestedChunks && (Self != null)) {
+					//Make sure we have all nearby chunks
+					for (int x = -3; x <= 3; x++) {
+						for (int y = -3; y <= 3; y++) {
+							for (int z = -3; z <= 3; z++) {
+								Vector3i Loc = new Vector3i(
+											(int)(Self.xpos + (x * NetworkChunk.Size.X)),
+											(int)(Self.xpos + (y * NetworkChunk.Size.Y)),
+											(int)(Self.xpos + (z * NetworkChunk.Size.Z)));
+								if (World[Loc] == null) {
+									World.Request(Loc);
+								}
+							}
+						}
+					}
+					RequestedChunks = true;
+				}
+
+				bool Ready = true;
+				Ready &= Package.Ready();
+				Ready &= (Self != null);
+				Ready &= World.Requester.OutgoingChunkCount() == 0;
+
 
 				if (Ready) {
 					Game.CenterMouse();

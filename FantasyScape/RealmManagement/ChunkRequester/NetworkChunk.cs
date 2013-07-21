@@ -8,18 +8,17 @@ using Lidgren.Network;
 namespace FantasyScape.RealmManagement.ChunkRequester {
 	class NetworkChunk {
 		private Realm Realm;
-		private int Timeout;
-		private const int TimeoutMax = 100;
 
 		public Vector3i ChunkCoords;
 		public readonly static Vector3i Size = new Vector3i(16, 16, 16);
+		public bool RequestSent;
 
 		public Block[, ,] BlockData = new Block[Size.X, Size.Y, Size.Z];
 
 		public NetworkChunk(Realm Realm, Vector3i ChunkCoords) {
 			this.Realm = Realm;
 			this.ChunkCoords = ChunkCoords;
-			Timeout = TimeoutMax;
+			RequestSent = false;
 		}
 
 		internal void Apply(Realm Realm) {
@@ -35,9 +34,9 @@ namespace FantasyScape.RealmManagement.ChunkRequester {
 		}
 
 		internal void SendRequest() {
-			if (Timeout-- <= 0) {
+			if (!RequestSent) {
 				new NetworkChunkRequest(this).Send();
-				Timeout = TimeoutMax;
+				RequestSent = true;
 			}
 		}
 

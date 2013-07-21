@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GLImp;
 
 namespace FantasyScape.RealmManagement.ChunkRequester {
 	public class RealmRequester {
@@ -28,20 +29,37 @@ namespace FantasyScape.RealmManagement.ChunkRequester {
 		public void HandleRequests() {
 			NetworkChunk Target;
 
-			foreach (NetworkChunk chunk in Incomming.Values) {
-				chunk.Apply(Realm);	
-				if (Outgoing.TryGetValue(chunk.ChunkCoords, out Target)){
+			for (int i = 0; i < 1 && Incomming.Count > 0; i++) {
+				Vector3i Key = Incomming.Keys.First();
+				NetworkChunk chunk = Incomming[Key];
+				chunk.Apply(Realm);
+				if (Outgoing.TryGetValue(chunk.ChunkCoords, out Target)) {
 					Outgoing.Remove(chunk.ChunkCoords);
 				}
+				Incomming.Remove(Key);
 			}
 
-			foreach (NetworkChunk chunk in Outgoing.Values) {
+			for (int i = 0; i < 1 && Outgoing.Count > 0; i++) {
+				Vector3i Key = Outgoing.Keys.First();
+				NetworkChunk chunk = Outgoing[Key];
 				chunk.SendRequest();
+				Outgoing.Remove(Key);
 			}
 		}
 
 		internal void QueueResponse(NetworkChunk Chunk) {
-			Incomming.Add(Chunk.ChunkCoords, Chunk);
+			Incomming[Chunk.ChunkCoords] = Chunk;
+			if (Outgoing.Keys.Contains(Chunk.ChunkCoords)) {
+				Outgoing.Remove(Chunk.ChunkCoords);
+			}
+		}
+
+		public int OutgoingChunkCount() {
+			return Outgoing.Count;
+		}
+
+		public int IncommingChunkCount() {
+			return Incomming.Count;
 		}
 	}
 }

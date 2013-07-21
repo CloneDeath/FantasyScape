@@ -34,5 +34,9 @@ namespace FantasyScape.RealmManagement.RealmDrawing {
 		public void DirtyAll() {
 			throw new NotImplementedException();
 		}
+
+		public int ChunkCount() {
+			return Chunks.Count;
+		}
 	}
 }

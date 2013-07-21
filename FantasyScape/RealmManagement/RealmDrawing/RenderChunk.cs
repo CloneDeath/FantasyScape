@@ -12,7 +12,7 @@ namespace FantasyScape.RealmManagement.RealmDrawing {
 		Realm Realm;
 		Vector3i ChunkCoord;
 
-		public static readonly Vector3i Size = new Vector3i(8, 8, 8);
+		public static readonly Vector3i Size = new Vector3i(16, 16, 16);
 		public bool Dirty;
 
 		public RenderChunk(Realm Realm, Vector3i ChunkCoords) {
@@ -23,6 +23,7 @@ namespace FantasyScape.RealmManagement.RealmDrawing {
 
 		internal void Draw() {
 			if (Dirty) {
+				Dirty = false;
 				ChunkDisplay.PassiveCapture();
 				{
 					for (int x = 0; x < Size.X; x++) {

@@ -6,21 +6,46 @@ using FantasyScape.Resources;
 
 namespace FantasyScape.RealmManagement {
 	public class Realm : Resource {
-		Dictionary<Vector3i, Block> Blocks = new Dictionary<Vector3i,Block>();
+		Dictionary<Vector3i, MemoryChunk> Blocks = new Dictionary<Vector3i, MemoryChunk>();
 		
 		public Action<Vector3i> OnBlockChanged;
 
+		private MemoryChunk Cache = null;
+
 		public Block GetBlock(Vector3i Location) {
-			Block Return;
-			if (Blocks.TryGetValue(Location, out Return)) {
-				return Return;
+			MemoryCoordinate coords = new MemoryCoordinate(Location);
+			MemoryChunk Return;
+
+			if (Cache != null && Cache.Location == coords.ChunkCoord) {
+				return Cache[coords.LocalCoords];
+			}
+			
+			if (Blocks.TryGetValue(coords.ChunkCoord, out Return)) {
+				Cache = Return;
+				return Return[coords.LocalCoords];
 			} else {
 				return null;
 			}
 		}
 
 		public void SetBlock(Vector3i Location, Block Data) {
-			Blocks[Location] = Data;
+			MemoryCoordinate coords = new MemoryCoordinate(Location);
+			MemoryChunk Return;
+
+			if (Cache != null && Cache.Location == coords.ChunkCoord) {
+				Cache[coords.LocalCoords] = Data;
+				return;
+			}
+
+			if (Blocks.TryGetValue(coords.ChunkCoord, out Return)) {
+				Return[coords.LocalCoords] = Data;
+			} else {
+				Return = new MemoryChunk(coords.ChunkCoord);
+				Blocks[coords.ChunkCoord] = Return;
+				Return[coords.LocalCoords] = Data;
+			}
+			Cache = Return;
+
 			if (OnBlockChanged != null) {
 				OnBlockChanged(Location);
 			}
@@ -36,6 +61,10 @@ namespace FantasyScape.RealmManagement {
 
 		public override void SendUpdate() {
 			throw new NotImplementedException();
+		}
+
+		public int ChunkCount() {
+			return Blocks.Count;
 		}
 	}
 }

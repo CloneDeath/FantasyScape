@@ -29,11 +29,7 @@ namespace FantasyScape {
 
 		public override bool Equals(object obj) {
 			Vector3i other = obj as Vector3i;
-			if (other == null) {
-				return false;
-			} else {
-				return (this.X == other.X) && (this.Y == other.Y) && (this.Z == other.Z);
-			}
+			return (other != null) && (this.X == other.X) && (this.Y == other.Y) && (this.Z == other.Z);
 		}
 
 		public override int GetHashCode() {
