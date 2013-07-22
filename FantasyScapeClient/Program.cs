@@ -117,11 +117,12 @@ namespace FantasyScape.Client {
 			}
 
 			if (Game.Self != null) {
-				lblDebug.Text = "X: " + Game.Self.xpos + ", Y: " + Game.Self.ypos + ", Z: " + Game.Self.zpos + "\n";
+				lblDebug.Text = "X: " + Game.Self.xpos.ToString("0.##") + ", Y: " + Game.Self.ypos.ToString("0.##") + ", Z: " + Game.Self.zpos.ToString("0.##") + "\n";
 				lblDebug.Text += "Render Chunks: " + Game.World.Renderer.ChunkCount() + "\n";
 				lblDebug.Text += "Memory Chunks: " + Game.World.Realm.ChunkCount() + "\n";
 				lblDebug.Text += "Outgoing Chunk Requests: " + Game.World.Requester.OutgoingChunkCount() + "\n";
 				lblDebug.Text += "Incomming Chunk Responses: " + Game.World.Requester.IncommingChunkCount() + "\n";
+				GraphicsManager.DrawRectangle(0, 0, 200, 75, Color.White);
 			}
 		}
 
