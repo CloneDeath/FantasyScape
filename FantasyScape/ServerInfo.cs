@@ -10,7 +10,23 @@ using FantasyScape.Resources;
 namespace FantasyScape {
 	public class ServerInfo {
 		public string Name;
-		public Guid CurrentConfig;
+		private Guid CurrentConfigGuid;
+
+		public Configuration CurrentConfig {
+			get {
+				foreach (Configuration config in AllConfigs) {
+					if (config.ID == CurrentConfigGuid) {
+						return config;
+					}
+				}
+				return null;
+			}
+
+			set {
+				CurrentConfigGuid = value.ID;
+			}
+		}
+
 		public List<Configuration> AllConfigs = new List<Configuration>();
 
 		public void Load(string ResourceLocation) {
@@ -20,7 +36,7 @@ namespace FantasyScape {
 			} else {
 				Name = "FantasyScape Server";
 				AllConfigs.Add(new Configuration());
-				CurrentConfig = AllConfigs[0].ID;
+				CurrentConfigGuid = AllConfigs[0].ID;
 			}
 		}
 
@@ -39,7 +55,7 @@ namespace FantasyScape {
 						this.Name = info.Value;
 						break;
 					case "CurrentConfig":
-						if (!Guid.TryParse(info.Value, out CurrentConfig)) {
+						if (!Guid.TryParse(info.Value, out CurrentConfigGuid)) {
 							throw new Exception("Unable to parse Guid for default configuration");
 						}
 						break;
@@ -57,7 +73,7 @@ namespace FantasyScape {
 					XElement Name = new XElement("Name", this.Name);
 					Base.Add(Name);
 
-					XElement Package = new XElement("CurrentConfig", "{" + (this.CurrentConfig.ToString().ToUpper()) + "}");
+					XElement Package = new XElement("CurrentConfig", "{" + (this.CurrentConfigGuid.ToString().ToUpper()) + "}");
 					Base.Add(Package);
 				}
 				doc.Add(Base);
@@ -67,19 +83,19 @@ namespace FantasyScape {
 
 		internal void Write(NetOutgoingMessage Message) {
 			Message.Write(Name);
-			Message.Write(CurrentConfig.ToString());
+			Message.Write(CurrentConfigGuid.ToString());
 		}
 
 		internal void Read(NetIncomingMessage Message) {
 			Name = Message.ReadString();
-			if (!Guid.TryParse(Message.ReadString(), out CurrentConfig)) {
+			if (!Guid.TryParse(Message.ReadString(), out CurrentConfigGuid)) {
 				throw new Exception("Unable to parse GUID for CurrentConfig in server info.");
 			}
 		}
 
 		internal void Copy(ServerInfo info) {
 			this.Name = info.Name;
-			this.CurrentConfig = info.CurrentConfig;
+			this.CurrentConfigGuid = info.CurrentConfigGuid;
 		}
 	}
 }

@@ -100,7 +100,7 @@
     <Compile Include="CodeCompilation\CodeManager.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="HeightMap.cs" />
-    <Compile Include="ListRandomizer.cs" />
+    <Compile Include="Math\ListRandomizer.cs" />
     <Compile Include="Math\Vector2i.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Game.cs" />
