@@ -95,7 +95,6 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockSide.cs" />
     <Compile Include="Blocks\BlockType.cs" />
-    <Compile Include="Blocks\BlockTypes.cs" />
     <Compile Include="Blocks\FSTextureReference.cs" />
     <Compile Include="CodeCompilation\CodeManager.cs" />
     <Compile Include="Configuration.cs" />

@@ -14,7 +14,7 @@ namespace FantasyScape {
 		public Guid BlockTypeID;
 		public BlockType BlockType {
 			get {
-				return BlockTypes.GetBlockType(BlockTypeID);
+				return BlockType.Get(BlockTypeID);
 			}
 		}
 

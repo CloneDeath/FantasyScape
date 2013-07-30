@@ -12,6 +12,18 @@ using FantasyScape.NetworkMessages;
 
 namespace FantasyScape {
 	public class BlockType : Resource {
+		static BlockType ErrorBlock = new BlockType();
+
+		static BlockType() {
+			ErrorBlock.ID = Guid.Empty;
+			ErrorBlock.Liquid = false;
+			ErrorBlock.Name = "Error";
+		}
+
+		public static BlockType Get(Guid BlockTypeID){
+			return Package.FindResource(BlockTypeID) as BlockType ?? ErrorBlock;
+		}
+
 		public BlockType() {
 			ID = Guid.NewGuid();
 			Liquid = false;
