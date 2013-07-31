@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Code>
+  <Name>ClientThink.cs</Name>
+  <Language>CSharp</Language>
+  <Location>Client</Location>
+  <Content>using FantasyScape;
+
+public class Program {	
+	public static void Main(){
+		World.Think += OnThink;
+		
+		Camera.Position = new Vector3(5, 4, 5);
+		Camera.LookAt = new Vector3(5, 4, 0);
+	}
+	
+	static void OnThink(){
+		Entity MyPaddle = Entity["Paddle.P" + Player.ID];
+		
+		if (KeyboardManager.IsDown(Key.DownArrow)){
+			MyPaddle.Y -= 0.5;
+		}
+		
+		if (KeyboardManager.IsDown(Key.UpArrow)){
+			MyPaddle.Y += 0.5;
+		}
+		
+		if (MyPaddle.Y &gt; 10){
+			MyPaddle.Y = 10;
+		}
+		
+		if (MyPaddle.Y &lt; 0){
+			MyPaddle.Y = 0;
+		}
+	}
+}</Content>
+</Code>

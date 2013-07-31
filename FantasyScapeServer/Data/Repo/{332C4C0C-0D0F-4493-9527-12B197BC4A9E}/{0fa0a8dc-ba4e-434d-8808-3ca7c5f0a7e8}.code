@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Code>
+  <Name>Paddle.cs</Name>
+  <Language>CSharp</Language>
+  <Location>Shared</Location>
+  <Content>using FantasyScape;
+
+public class Paddle : Entity {
+	public override void Draw(){
+		GraphicsManager.DrawQuad(
+			this.Position,
+			this.Position + new Vector3(1, 0, 0),
+			this.Position + new Vector3(1, 1, 0),
+			this.Position + new Vector3(0, 1, 0), Color.Black);
+	}
+}</Content>
+</Code>

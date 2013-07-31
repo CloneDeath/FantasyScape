@@ -1,14 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Code>
-  <Name>Main.cs</Name>
+  <Name>PongSetup.cs</Name>
   <Language>CSharp</Language>
-  <Location>0</Location>
+  <Location>Server</Location>
   <Content>using FantasyScape;
 
-public class Program {
+public class PongSetup {
 	public static void Main(){
-		Chunk.SetSize(32, 32, 2);
-		World.SetBounds(1, 1, 1);
+		//Setup game
+		for (int x = 0; x &lt; 10; x++){
+			for (int y = 0; y &lt; 8; y++){
+				World[x, y, 0] = new Block("Background.block");
+				
+				//Just to make sure there is some room to see the action.
+				for (int z = 1; z &lt; 10; z++){
+					World[x, y, z] = null;
+				}
+			}
+		}
+		
+		//Load paddles
+		if (Player.Count == 2){
+			Paddle P1 = new Paddle("Paddle." + Player[0].ID);
+			Paddle P2 = new Paddle("Paddle." + Player[1].ID);
+			
+			P1.Position = new Vector3i(1, 1, 1);
+			P2.Position = new Vector3i(8, 6, 1);
+		}
 	}
 }</Content>
 </Code>
