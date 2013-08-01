@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Block>
   <Name>Granite</Name>
-  <Texture Location="All">aa089940-01c7-49e1-b854-c99d33dbd1b7</Texture>
+  <Textures>
+	<Texture Location="All">aa089940-01c7-49e1-b854-c99d33dbd1b7</Texture>
+  </Textures>
 </Block>

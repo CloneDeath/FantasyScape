@@ -5,42 +5,39 @@ using System.Text;
 using System.Xml.Linq;
 using FantasyScape.Resources;
 using Lidgren.Network;
+using System.Xml.Serialization;
 
 namespace FantasyScape.Blocks {
+	[XmlRoot("Texture")]
 	public class FSTextureReference {
-		public bool Defined = false;
-		private Guid _TextureID = Guid.Empty;
-		public Guid TextureID {
-			get {
-				return _TextureID;
-			}
-			set {
-				_TextureID = value;
-				Defined = (_TextureID != Guid.Empty);
-			}
-		}
+		[XmlAttribute("Location")]
+		public BlockSide Location = BlockSide.All;
 
+		[XmlText()]
+		public Guid TextureID = Guid.Empty;
+
+		[XmlIgnore]
 		public FSTexture Texture {
 			get {
-				Resource res = Package.FindResource(_TextureID);
+				Resource res = Package.FindResource(TextureID);
 				return (res as FSTexture) ?? Textures.FSErrorTexture;
 			}
 
 			set {
-				_TextureID = value.ID;
+				TextureID = value.ID;
 			}
 		}
 
 		internal void Write(NetOutgoingMessage Message) {
-			Message.Write(Defined);
-			Message.Write(_TextureID.ToString());
+			Message.Write(TextureID.ToString());
+			Message.Write((Int32)Location);
 		}
 
 		internal void Read(NetIncomingMessage Message) {
-			Defined = Message.ReadBoolean();
-			if (!Guid.TryParse(Message.ReadString(), out _TextureID)) {
+			if (!Guid.TryParse(Message.ReadString(), out TextureID)) {
 				throw new Exception("Failed to parse Guid in FSTextureReference");
 			}
+			Location = (BlockSide)Message.ReadInt32();
 		}
 	}
 }

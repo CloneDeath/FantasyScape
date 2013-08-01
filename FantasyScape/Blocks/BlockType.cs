@@ -9,8 +9,10 @@ using System.Xml.Linq;
 using FantasyScape.Blocks;
 using System.IO;
 using FantasyScape.NetworkMessages;
+using System.Xml.Serialization;
 
 namespace FantasyScape {
+	[XmlRoot("Block")]
 	public class BlockType : Resource {
 		static BlockType ErrorBlock = new BlockType();
 
@@ -28,125 +30,43 @@ namespace FantasyScape {
 			ID = Guid.NewGuid();
 			Liquid = false;
 			Transparent = false;
-			for (int i = 0; i < Texture.Length; i++) {
-				Texture[i] = new FSTextureReference();
-			}
 		}
 
-		public bool Liquid;
-		public bool Transparent;
-		public FSTextureReference[] Texture = new FSTextureReference[(int)BlockSide.Count];
+		[XmlElement("Liquid")]
+		public bool Liquid = false;
+
+		[XmlElement("Transparent")]
+		public bool Transparent = false;
+
+		[XmlArray("Textures")]
+		[XmlArrayItem("Texture")]
+		public List<FSTextureReference> Texture = new List<FSTextureReference>();
 
 		public Texture GetTexture(BlockSide Side) {
-			switch (Side) {
-				case BlockSide.Top:
-				case BlockSide.Bottom:
-					if (Texture[(int)Side].Defined) {
-						return Texture[(int)Side].Texture.Texture;
+			FSTextureReference Candidate = null;
+			do {
+				Candidate = Texture.Find(delegate(FSTextureReference obj) { return obj.Location == Side; });
+				if (Candidate != null) {
+					return Candidate.Texture.Texture;
+				} else {
+					if (Side == BlockSide.All) {
+						return Textures.ErrorTexture;
+					} else if (Side == BlockSide.Side || Side == BlockSide.Top || Side == BlockSide.Bottom) {
+						Side = BlockSide.All;
 					} else {
-						goto case BlockSide.All;
+						Side = BlockSide.Side;
 					}
-				case BlockSide.Left:
-				case BlockSide.Right:
-				case BlockSide.Front:
-				case BlockSide.Back:
-					if (Texture[(int)Side].Defined) {
-						return Texture[(int)Side].Texture.Texture;
-					} else {
-						goto case BlockSide.Side;
-					}
-				case BlockSide.Side:
-					if (Texture[(int)BlockSide.Side].Defined) {
-						return Texture[(int)BlockSide.Side].Texture.Texture;
-					} else {
-						goto case BlockSide.All;
-					}
-				case BlockSide.All:
-					if (Texture[(int)BlockSide.All].Defined) {
-						return Texture[(int)BlockSide.All].Texture.Texture;
-					}
-					break;
-			}
-
+				}
+			} while (Candidate != null);
 			return Textures.ErrorTexture;
-		}
-
-		public override void Save(string path) {
-			string BlockPath = Path.Combine(path, GetIDString() + ".block");
-
-			XDocument doc = new XDocument();
-			{
-				XElement Base = new XElement("Block");
-				{
-					XElement Name = new XElement("Name", this.Name);
-					Base.Add(Name);
-
-					for (int i = 0; i < (int)BlockSide.Count; i++){
-						FSTextureReference tex = Texture[i];
-						if (tex.Defined){
-							XElement TexNode = new XElement("Texture");
-							TexNode.SetAttributeValue("Location", ((BlockSide)i).ToString());
-							TexNode.SetValue(tex.TextureID);
-							Base.Add(TexNode);
-						}
-					}
-
-					if (Liquid){
-						XElement LiquidNode = new XElement("Liquid");
-						Base.Add(LiquidNode);
-					}
-
-					if (Transparent) {
-						XElement LiquidNode = new XElement("Transparent");
-						Base.Add(LiquidNode);
-					}
-				}
-				doc.Add(Base);
-			}
-			doc.Save(BlockPath);
-		}
-
-		public override void Load(string path) {
-			if (!Guid.TryParse(Path.GetFileNameWithoutExtension(path), out this.ID)){
-				throw new Exception("Could not parse GUID: " + path);
-			}
-			XDocument doc = XDocument.Load(path);
-			XElement Base = doc.FirstNode as XElement;
-			if (Base == null || Base.Name != "Block") {
-				throw new Exception("Expected 'Block' as the base element for file: " + path);
-			}
-
-			List<XElement> BlockInfo = new List<XElement>(Base.Descendants());
-
-			foreach (XElement info in BlockInfo) {
-				switch (info.Name.ToString()) {
-					case "Name":
-						this.Name = info.Value;
-						break;
-					case "Texture":
-						Guid TexID;
-						if (!Guid.TryParse(info.Value, out TexID)) {
-							throw new Exception("Failed to parse texture guid");
-						}
-						Texture[(int)Enum.Parse(typeof(BlockSide), info.Attribute("Location").Value)].TextureID = TexID;
-						break;
-					case "Liquid":
-						Liquid = true;
-						break;
-					case "Transparent":
-						Transparent = true;
-						break;
-					default:
-						throw new Exception("Unknown element in blocktype '" + info.Name + "'.");
-				}
-			}
 		}
 
 		internal override void Write(NetOutgoingMessage Message) {
 			base.Write(Message);
 			Message.Write(Liquid);
 			Message.Write(Transparent);
-			for (int i = 0; i < (int)BlockSide.Count; i++) {
+			Message.Write((Int32)Texture.Count);
+			for (int i = 0; i < Texture.Count; i++) {
 				Texture[i].Write(Message);
 			}
 		}
@@ -155,8 +75,13 @@ namespace FantasyScape {
 			base.Read(Message);
 			Liquid = Message.ReadBoolean();
 			Transparent = Message.ReadBoolean();
-			for (int i = 0; i < (int)BlockSide.Count; i++) {
-				Texture[i].Read(Message);
+
+			int TexCount = Message.ReadInt32();
+			Texture.Clear();
+			for (int i = 0; i < TexCount; i++) {
+				FSTextureReference tex = new FSTextureReference();
+				tex.Read(Message);
+				Texture.Add(tex);
 			}
 		}
 

@@ -25,9 +25,9 @@ namespace FantasyScape.Client.Editor {
 			}
 
 			Configs.Clear();
-			foreach (Configuration config in Game.ServerInfo.AllConfigs) {
+			foreach (Configuration config in Game.ServerInfo.Configurations) {
 				ListBoxRow row = Configs.AddRow(config.Name, "", config);
-				if (Game.ServerInfo.CurrentConfig == config) {
+				if (Game.ServerInfo.CurrentConfiguration == config) {
 					row.Text += " (Active)";
 				}
 
@@ -46,7 +46,7 @@ namespace FantasyScape.Client.Editor {
 				MenuItem SetActive = RightClickMenu.AddItem("Set as Active Configuration");
 				{
 					SetActive.Clicked += delegate(Base sender, ClickedEventArgs args2) {
-						Game.ServerInfo.CurrentConfig = ClickedConfig;
+						Game.ServerInfo.CurrentConfiguration = ClickedConfig;
 					};
 				}
 			}

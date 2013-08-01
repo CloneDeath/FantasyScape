@@ -3,7 +3,7 @@
   <Name>Paddle.cs</Name>
   <Language>CSharp</Language>
   <Location>Shared</Location>
-  <Content>using FantasyScape;
+  <Source>using FantasyScape;
 
 public class Paddle : Entity {
 	public override void Draw(){
@@ -13,5 +13,5 @@ public class Paddle : Entity {
 			this.Position + new Vector3(1, 1, 0),
 			this.Position + new Vector3(0, 1, 0), Color.Black);
 	}
-}</Content>
+}</Source>
 </Code>

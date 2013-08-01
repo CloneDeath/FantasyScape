@@ -32,7 +32,7 @@ namespace FantasyScape.NetworkMessages.Code {
 			}
 			res.Name = Resource.Name;
 			res.Language = Resource.Language;
-			res.ExecutionLocation = Resource.ExecutionLocation;
+			res.Location = Resource.Location;
 			res.Source = Resource.Source;
 			res.TriggerUpdateEvent(this);
 

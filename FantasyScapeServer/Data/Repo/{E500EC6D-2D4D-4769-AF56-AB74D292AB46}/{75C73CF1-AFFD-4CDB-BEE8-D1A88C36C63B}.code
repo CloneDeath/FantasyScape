@@ -3,7 +3,7 @@
   <Name>TestCode.cs</Name>
   <Language>CSharp</Language>
   <Location>Shared</Location>
-  <Content>using System;
+  <Source>using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +15,5 @@ namespace City_Generation {
 		}
 	}
 }
-</Content>
+</Source>
 </Code>

@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Block>
-  <Name>Grass</Name>
-  <Texture Location="All">b3d9ebd0-9da6-4e97-9400-62dfc8826239</Texture>
-  <Texture Location="Top">d7fccb4f-ca82-42c3-990e-e88bdc9f2d6c</Texture>
+	<Name>Grass</Name>
+	<Textures>
+		<Texture Location="All">{b3d9ebd0-9da6-4e97-9400-62dfc8826239}</Texture>
+		<Texture Location="Top">{d7fccb4f-ca82-42c3-990e-e88bdc9f2d6c}</Texture>
+	</Textures>
 </Block>

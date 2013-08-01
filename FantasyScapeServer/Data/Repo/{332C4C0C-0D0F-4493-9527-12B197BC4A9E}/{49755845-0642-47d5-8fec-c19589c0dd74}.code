@@ -3,7 +3,7 @@
   <Name>ClientThink.cs</Name>
   <Language>CSharp</Language>
   <Location>Client</Location>
-  <Content>using FantasyScape;
+  <Source>using FantasyScape;
 
 public class Program {	
 	public static void Main(){
@@ -32,5 +32,5 @@ public class Program {
 			MyPaddle.Y = 0;
 		}
 	}
-}</Content>
+}</Source>
 </Code>

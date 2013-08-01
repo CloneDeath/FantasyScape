@@ -16,26 +16,8 @@ namespace FantasyScape.Resources {
 		}
 
 		public override void Save(string path) {
-			string FolderPath = Path.Combine(path, GetIDString());
-			if (!Directory.Exists(FolderPath)) {
-				Directory.CreateDirectory(FolderPath);
-			}
-
-			SaveFolderInfo(FolderPath);
-			this.SaveChildren(FolderPath);
-		}
-
-		protected virtual void SaveFolderInfo(string FolderDir) {
-			XDocument doc = new XDocument();
-			{
-				XElement Package = new XElement("Folder");
-				{
-					XElement Name = new XElement("Name", this.Name);
-					Package.Add(Name);
-				}
-				doc.Add(Package);
-			}
-			doc.Save(Path.Combine(FolderDir, "folder.info"));
+			base.Save(Path.Combine(path, "folder.info"));
+			this.SaveChildren(path);
 		}
 
 		internal void SaveChildren(string dir) {
@@ -44,65 +26,39 @@ namespace FantasyScape.Resources {
 			}
 		}
 
-		public override void Load(string path) {
-			string[] dirs = path.Split(Path.DirectorySeparatorChar);
-			if (!Guid.TryParse(dirs.Last(), out this.ID)) {
-				throw new Exception("Failed to parse GUID: " + dirs.Last());
-			}
-			LoadFolderInfo(path);
-			this.LoadChildren(path);
-		}
-
-		protected virtual void LoadFolderInfo(string dir) {
-			XDocument doc = XDocument.Load(new StreamReader(Path.Combine(dir, "folder.info")));
-
-			XElement Package = doc.Descendants("Folder").First();
-
-			if (Package == null) {
-				throw new Exception("Malformed folder. Expected 'Folder' element.");
-			}
-
-			List<XElement> PackageInfo = new List<XElement>(Package.Descendants());
-
-			foreach (XElement info in PackageInfo) {
-				switch (info.Name.ToString()) {
-					case "Name":
-						this.Name = info.Value;
-						break;
-					default:
-						throw new Exception("Unknown element in package '" + info.Name + "'.");
-				}
-			}
+		public static new Folder Load(string path) {
+			Folder dir = (Folder)Resource.Load(Path.Combine(path, "folder.info"), typeof(Folder));
+			dir.LoadChildren(path);
+			return dir;
 		}
 
 		public void LoadChildren(string dir) {
-			string[] Files = Directory.GetFiles(dir);
-			foreach (string file in Files) {
-				string FileType = Path.GetExtension(file);
-				Resource res = null;
-				switch (FileType) {
-					case ".tex":
-						res = new FSTexture();
-						break;
-
+			foreach (string file in Directory.GetFiles(dir)) {
+				Type restype;
+				switch (Path.GetExtension(file)) {
 					case ".block":
-						res = new BlockType();
+						restype = typeof(BlockType);
 						break;
-
+					case ".tex":
+						FSTexture resource = (FSTexture)FSTexture.Load(file, typeof(FSTexture));
+						resource.Load(new System.Drawing.Bitmap(file.Replace("tex", "png")));
+						resource.ID = Guid.Parse(Path.GetFileNameWithoutExtension(file));
+						Children.Add(resource);
+						continue;
 					case ".code":
-						res = new CodeFile();
+						restype = typeof(CodeFile);
 						break;
+					default:
+						continue;
 				}
-				if (res != null) {
-					res.Load(file);
-					Children.Add(res);
-				}
+				Resource res = Resource.Load(file, restype);
+				res.ID = Guid.Parse(Path.GetFileNameWithoutExtension(file));
+				Children.Add(res);
 			}
 
-			string[] folders = Directory.GetDirectories(dir);
-			foreach (string child in folders) {
-				Folder f = new Folder();
-				f.Load(child);
+			foreach (string child in Directory.GetDirectories(dir)) {
+				Folder f = Folder.Load(child);
+				f.ID = Guid.Parse(Path.GetFileName(child));
 				Children.Add(f);
 			}
 		}

@@ -8,12 +8,15 @@ using System.Xml.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
 using FantasyScape.NetworkMessages;
+using System.Xml.Serialization;
 
 namespace FantasyScape.Resources {
 	/// <summary>
 	/// Fantasy Scape Texture. Basically a Texture wrapper that holds the associated GUID.
 	/// </summary>
+	[XmlRoot("Texture")]
 	public class FSTexture : Resource {
+		[XmlIgnore]
 		public Texture Texture {
 			get;
 			private set;
@@ -41,32 +44,6 @@ namespace FantasyScape.Resources {
 				doc.Add(Base);
 			}
 			doc.Save(TexturePath + ".tex");
-		}
-
-		public override void Load(string path) {
-			if (!Guid.TryParse(Path.GetFileNameWithoutExtension(path), out this.ID)) {
-				throw new Exception("Could not parse GUID: " + path);
-			}
-			Texture = new GLImp.Texture(path.Replace(".tex", ".png"));
-
-			XDocument doc = XDocument.Load(path);
-			XElement Base = doc.FirstNode as XElement;
-			if (Base == null || Base.Name != "Texture") {
-				throw new Exception("Expected 'Texture' as the base element for file: " + path);
-			}
-
-			List<XElement> BlockInfo = new List<XElement>(Base.Descendants());
-
-			foreach (XElement info in BlockInfo) {
-				switch (info.Name.ToString()) {
-					case "Name":
-						this.Name = info.Value;
-						break;
-					default:
-						throw new Exception("Unknown element in blocktype '" + info.Name + "'.");
-				}
-			}
-			
 		}
 
 		public override void SendUpdate() {

@@ -39,34 +39,37 @@ namespace FantasyScape.Client.Editor.BlockTypeEditing {
         }
 
         private void RefreshAll() {
-            if (Texture.Defined) {
-                TextureName.Text = Texture.Texture.Name;
-            } else {
-                TextureName.Text = "[None]";
-            }
-            Defined.IsChecked = Texture.Defined;
-            panel.Texture = Texture.Texture.Texture; //lol, I need better names
+			throw new NotImplementedException();
+			//if (Texture.Defined) {
+			//    TextureName.Text = Texture.Texture.Name;
+			//} else {
+			//    TextureName.Text = "[None]";
+			//}
+			//Defined.IsChecked = Texture.Defined;
+			//panel.Texture = Texture.Texture.Texture; //lol, I need better names
         }
 
 		private void SetTexture(FSTexture tex) {
-			Texture.Texture = tex;
-			if (tex.ID != Guid.Empty) {
-				Texture.Defined = true;
-			}
-			RefreshAll();
-			Game.World.DirtyAll();
-			if (TextureChanged != null) {
-				TextureChanged(this, EventArgs.Empty);
-			}
+			throw new NotImplementedException();
+			//Texture.Texture = tex;
+			//if (tex.ID != Guid.Empty) {
+			//    Texture.Defined = true;
+			//}
+			//RefreshAll();
+			//Game.World.DirtyAll();
+			//if (TextureChanged != null) {
+			//    TextureChanged(this, EventArgs.Empty);
+			//}
 		}
 
 		void Defined_CheckChanged(Base sender, EventArgs arguments) {
-			Texture.Defined = Defined.IsChecked;
-			RefreshAll();
-			Game.World.DirtyAll();
-			if (TextureChanged != null) {
-				TextureChanged(this, EventArgs.Empty);
-			}
+			throw new NotImplementedException();
+			//Texture.Defined = Defined.IsChecked;
+			//RefreshAll();
+			//Game.World.DirtyAll();
+			//if (TextureChanged != null) {
+			//    TextureChanged(this, EventArgs.Empty);
+			//}
 		}
     }
 }

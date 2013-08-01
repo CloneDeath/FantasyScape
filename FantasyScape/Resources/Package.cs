@@ -8,8 +8,10 @@ using System.Xml.Linq;
 using FantasyScape.NetworkMessages;
 using Lidgren.Network;
 using FantasyScape.CodeCompilation;
+using System.Xml.Serialization;
 
 namespace FantasyScape.Resources {
+	[XmlRoot("Package")]
 	public partial class Package : Folder {
 		public List<Guid> References = new List<Guid>();
 		public CodeManager CodeManager = new CodeManager();
@@ -22,55 +24,16 @@ namespace FantasyScape.Resources {
 			this.ID = UID;
 		}
 
-		#region Save
-		protected override void SaveFolderInfo(string PackageDir) {
-			XDocument doc = new XDocument();
-			{
-				XElement Package = new XElement("Package");
-				{
-					XElement Name = new XElement("Name", this.Name);
-					Package.Add(Name);
-
-					foreach (Guid guid in References) {
-						XElement Reference = new XElement("Reference", guid.ToString());
-						Package.Add(References);
-					}
-				}
-				doc.Add(Package);
-			}
-			doc.Save(Path.Combine(PackageDir, "package.info"));
+		public override void Save(string path) {
+			base.Save(Path.Combine(path, "package.info"));
+			this.SaveChildren(path);
 		}
-		#endregion
 
-		#region Load
-		protected override void LoadFolderInfo(string dir) {
-			XDocument doc = XDocument.Load(new StreamReader(Path.Combine(dir, "package.info")));
-
-			XElement Package = doc.Descendants("Package").First();
-
-			if (Package == null) {
-				throw new Exception("Malformed package. Expected 'Package' element.");
-			}
-
-			List<XElement> PackageInfo = new List<XElement>(Package.Descendants());
-
-			foreach (XElement info in PackageInfo) {
-				switch (info.Name.ToString()) {
-					case "Name":
-						this.Name = info.Value;
-						break;
-					case "Reference":
-						Guid ReferenceGuid;
-						if (Guid.TryParse(info.Value, out ReferenceGuid)) {
-							References.Add(ReferenceGuid);
-						}
-						break;
-					default:
-						throw new Exception("Unknown element in package '" + info.Name + "'.");
-				}
-			}
+		public static new Package Load(string path) {
+			Package dir = (Package)Resource.Load(Path.Combine(path, "package.info"), typeof(Package));
+			dir.LoadChildren(path);
+			return dir;
 		}
-		#endregion
 
 		static bool RequestSent = false;
 		internal static bool Ready() {

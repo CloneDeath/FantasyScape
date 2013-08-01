@@ -13,8 +13,25 @@ namespace FantasyScape {
 		public void Load() {
 			LoadRepository();
 
-			Game.ServerInfo.Load(ResourceLocation);
-			Package.LoadAll(ResourceLocation);
+			foreach (string File in Directory.GetFiles(ResourceLocation)) {
+				string Type = Path.GetExtension(File);
+				if (Type == ".info") {
+					Game.ServerInfo = (ServerInfo)Resource.Load(File, typeof(ServerInfo));
+					Game.ServerInfo.ID = Guid.Parse(Path.GetFileNameWithoutExtension(File));
+				} else {
+					throw new Exception("Unrecognized type: '" + Type + "'");
+				}
+			}
+
+			foreach (string Dir in Directory.GetDirectories(ResourceLocation)) {
+				Guid ID;
+				if (!Guid.TryParse(Path.GetFileName(Dir), out ID)){
+					continue;
+				}
+				Package pack = Package.Load(Dir);
+				pack.ID = ID;
+				Package.AddPackage(pack);
+			}
 		}
 
 		public void Save() {

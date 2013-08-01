@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FantasyScape.Resources;
+using System.Xml.Serialization;
 
 namespace FantasyScape.RealmManagement {
 	public class Realm : Resource {
 		Dictionary<Vector3i, MemoryChunk> Blocks = new Dictionary<Vector3i, MemoryChunk>();
 		
+		[XmlIgnore]
 		public Action<Vector3i> OnBlockChanged;
 
 		private MemoryChunk Cache = null;
@@ -49,14 +51,6 @@ namespace FantasyScape.RealmManagement {
 			if (OnBlockChanged != null) {
 				OnBlockChanged(Location);
 			}
-		}
-
-		public override void Save(string path) {
-			throw new NotImplementedException();
-		}
-
-		public override void Load(string path) {
-			throw new NotImplementedException();
 		}
 
 		public override void SendUpdate() {

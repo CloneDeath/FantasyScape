@@ -3,7 +3,7 @@
   <Name>PongSetup.cs</Name>
   <Language>CSharp</Language>
   <Location>Server</Location>
-  <Content>using FantasyScape;
+  <Source>using FantasyScape;
 
 public class PongSetup {
 	public static void Main(){
@@ -28,5 +28,5 @@ public class PongSetup {
 			P2.Position = new Vector3i(8, 6, 1);
 		}
 	}
-}</Content>
+}</Source>
 </Code>
